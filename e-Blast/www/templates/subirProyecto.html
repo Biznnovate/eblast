@@ -1,0 +1,24 @@
+<ion-view title="Subir Proyecto" id="page5">
+  <ion-content padding="true" class="has-header">
+    <form id="subirProyecto-form2" class="list">
+      <label class="item item-input" id="subirProyecto-input5">
+        <span class="input-label">Nombre del Proyecto</span>
+        <input type="text" placeholder="Proyecto 1">
+      </label>
+      <div id="subirProyecto-button-bar2" class="button-bar">
+        <button 
+        id="subirProyecto-button35" ng-click="addCSV()"  ng-disabled="showupload" style="border-radius:50px 50px 50px 50px;" 
+        class="button button-positive button-block icon-right ion-android-upload">Cargar</button>
+        <button 
+        id="subirProyecto-button35" ng-click="cleanDB()" ng-disabled="showcleanup" style="border-radius:50px 50px 50px 50px;" 
+        class="button button-positive button-block icon-right ion-android-delete">Limpiar</button>
+        <a ui-sref="menu.ajustarCSV()" 
+        id="subirProyecto-button41" ng-disabled="showcleanup" style="border-radius:50px 50px 50px 50px;" 
+        class="button button-positive button-block icon-right ion-android-arrow-dropright-circle">Continuar</a>
+      </div>
+    </form>
+    <ion-list id="subirProyecto-list10">
+      <ion-item id="subirProyecto-list-item17" ng-repeat="barrenos in Barrenos | orderBy:'+'" ng-model="Barrenos">Col1: {{barrenos.Col1}} Col2: {{barrenos.Col2}} Col3: {{barrenos.Col3}} Col4: {{barrenos.Col4}}</ion-item>
+    </ion-list>
+  </ion-content>
+</ion-view>

@@ -1,0 +1,70 @@
+<ion-view title="Parametros - Voladura 1" id="page8">
+  <ion-content padding="true" class="has-header">
+    <form id="parametrosVoladura1-form15" class="list">
+      <label class="item item-input" id="parametrosVoladura1-input93">
+        <span class="input-label">Titulo de Barreno</span>
+        <input type="text" placeholder="Escriba el Nombre del Barreno" ng-model="newBarreno.nam" ng-hide="barrForm =='Yes'" ng-value="newBarreno.nam">
+      </label>
+      <button id="parametrosVoladura1-button26" ng-click="showBarrForm()" ng-hide="barrForm !=''" style="border-radius:26px 26px 26px 26px;" class="button button-positive button-block icon ion-android-add-circle"></button>
+    </form>
+    <div id="parametrosVoladura1-markdown8" style="text-align:center;" class="show-list-numbers-and-dots">
+      <p style="color:#000000;font-size:25px;">
+        <strong>{{newTipoBarr.nam}}</strong>
+      </p>
+
+      <p style="color:#000000;font-size:25px;">{{newBarreno.nam}}</p>
+    </div>
+    <form id="parametrosVoladura1-formupdate" class="list" ng-show="updateForm!=''">
+     <div id="parametrosVoladura1-formupdate7" ng-model="newProd" class="show-list-numbers-and-dots">
+        <p style="color:#000000;font-size:25px;">
+          <strong>Profundidad</strong>: {{tipoBarrdb.prof}}
+          <strong>Peso</strong>: {{tipoBarrdb.peso}}
+          </p>
+          <ion-item id="parametrosVoladura1-list-itemupd11" ng-repeat="tipo in tipoBarrdb.carga track by $index" ng-model="readType">Producto:{{tipo.prod}} Tipo: {{tipo.tipo}}</ion-item>
+      <div id="parametrosVoladura1-markdown6" class="show-list-numbers-and-dots"></div> 
+      </div>
+    <button id="parametrosVoladura1-button53" ng-click="showBarrFormUpdate()" style="border-radius:25px 25px 25px 25px;" 
+      class="button button-positive button-block icon-right ion-android-add-circle">Actualizar</button>
+
+    </form>
+    <form id="parametrosVoladura1-form6" class="list" ng-show="barrForm!=''">
+      <ion-toggle toggle-class="toggle-positive" id="parametrosVoladura1-toggle10">Precorte?</ion-toggle>
+      <label class="item item-select" id="parametrosVoladura1-select13">
+        <span class="input-label">Tipo de Producto</span>
+        <select ng-options="tipo as tipo.tipo for tipo in tipodeprod_list" ng-model="tipoProd"></select>
+      </label>
+      <label class="item item-select" id="parametrosVoladura1-select25">
+        <span class="input-label">{{tipoProd.tipo}}</span>
+        <select ng-model="newProd" ng-options="producto as producto.prod for producto in listed_productos | filter:producto.tipoid=tipoProd.id"></select>
+      </label>
+      <div style="margin-right:-20px;">
+     
+        <button id="parametrosVoladura1-button24" ng-click="add(newProd)" style="left:-10px;border-radius:0px 0px 0px 0px;" 
+        class="button button-positive button-full button-clear icon ion-android-add-circle">Agregar Producto</button>
+      </div>
+      <div id="parametrosVoladura1-markdown7" ng-model="newProd" class="show-list-numbers-and-dots">
+        <p style="color:#000000;">
+          <strong>Largo Total</strong>: {{getLargoTotal()}}
+          <strong>Carga a Granel </strong>: {{getPesoGra()}}</p>
+      </div>
+      <ion-item id="parametrosVoladura1-list-item11" ng-repeat="prod in prods track by $index" ng-model="newProd">Producto:{{prod.prod}} Tipo: {{prod.tipo}}</ion-item>
+      <div id="parametrosVoladura1-markdown6" class="show-list-numbers-and-dots"></div>
+    </form>
+ 
+    <div id="parametrosVoladura1-button-bar1" class="button-bar">
+      <a ui-sref="menu.tiposDeBarreno({})" id="parametrosVoladura1-button48" style="border-radius:25px 25px 25px 25px;" 
+      class="button button-positive button-block icon-left ion-android-list">Ver Tipos de Barreno</a>
+      <button id="parametrosVoladura1-button51" ng-click="createType()" style="border-radius:25px 25px 25px 25px;" 
+      class="button button-positive button-block icon-right ion-android-add-circle" ng-show="createButton!=''">Crear Tipo</button>
+      <button id="parametrosVoladura1-button55" ng-click="updateType()" ng-show="updateButton!=''" style="border-radius:25px 25px 25px 25px;" 
+      class="button button-positive button-block icon-right ion-android-add-circle">Actualizar Tipo</button>
+      <button id="parametrosVoladura1-buttonreload55" ng-click="reloadPage()" ng-show="reloadButton!=''" style="border-radius:25px 25px 25px 25px;" 
+      class="button button-positive button-block icon-right ion-android-add-circle">Nuevo Tipo</button>
+      <a ui-sref="menu.editarVoladuraMapa({})" id="parametrosVoladura1-button60" style="border-radius:25px 25px 25px 25px;" 
+      class="button button-positive button-block icon-right ion-android-arrow-forward"  >Continuar</a>
+    </div>
+    <!--div id="parametrosVoladura1-markdown11" class="show-list-numbers-and-dots">
+      <p style="color:#000000;">{{newTipoBars.nam}} {{newTipoBars.carga}} tipolocal {{TipoLocal}} tipolocalload {{TipoLocalLoad}} new BArreno {{$scope.newBarreno}}</p>
+    </div-->
+  </ion-content>
+</ion-view>

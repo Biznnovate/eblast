@@ -1,0 +1,91 @@
+<ion-view title="Generar Reporte - Productos" id="page14">
+  <ion-content padding="true" class="has-header">
+    <form id="generarReporteProductos-form13" class="list">
+      <label class="item item-select" id="generarReporteProductos-select18">
+        <span class="input-label">Tipo de Producto</span>
+        <select>
+          <option>Componentes / Emulsión a Granel</option>
+          <option>Emulsión Empacada</option>
+          <option>Booster (iniciador)</option>
+          <option>Detonadores duales</option>
+          <option>Conector de Superficie</option>
+          <option>Líneas de Inicio</option>
+          <option>Cordón detonante</option>
+          <option>Detonadores Eléctricos y Electrónicos</option>
+          <option>Otros</option>
+        </select>
+      </label>
+      <label class="item item-select" id="generarReporteProductos-select21">
+        <span class="input-label">Producto</span>
+        <select>
+          <option>Hydromite 70 - Emulsión Gasificada</option>
+          <option>Hydromite 100 - Emulsión Gasificada</option>
+        </select>
+      </label>
+      <label class="item item-input" id="generarReporteProductos-input46">
+        <span class="input-label">Entrega</span>
+        <input type="number" placeholder="5">
+      </label>
+      <label class="item item-input" id="generarReporteProductos-input47">
+        <span class="input-label">Devolución</span>
+        <input type="number" placeholder="0">
+      </label>
+      <label class="item item-input" id="generarReporteProductos-input38">
+        <span class="input-label">Consumo</span>
+        <input type="number" placeholder="5">
+      </label>
+    </form>
+    <button id="generarReporteProductos-button44" class="button button-positive button-block icon-right ion-android-add-circle">Agregar Producto</button>
+    <div>
+      <div class="row">
+        <div class="col">
+          <strong>Produtos</strong>
+        </div>
+        <div class="col">
+          <strong>Entrega</strong>
+        </div>
+        <div class="col">
+          <strong>Devolución</strong>
+        </div>
+        <div class="col">
+          <strong>Consumo</strong>
+        </div>
+      </div>
+      <div class="row">
+        <strong>Componentes Emulsión a granel</strong>
+      </div>
+
+      <div class="row">
+        <div class="col">Hydromite 70 - Emulsíon Gasificada</div>
+        <div class="col">5</div>
+        <div class="col">0</div>
+        <div class="col">5</div>
+      </div>
+      <div class="row">
+        <strong>Emulsión empacada</strong>
+      </div>
+      <div class="row">
+        <div class="col">Hydromite 3 (63x400mm)</div>
+        <div class="col">3</div>
+        <div class="col">2</div>
+        <div class="col">1</div>
+      </div>
+      <div class="row">
+        <div class="col">Emulex 1 (25x400)</div>
+        <div class="col">5</div>
+        <div class="col">0</div>
+        <div class="col">5</div>
+      </div>
+      <div class="row">
+        <strong>Booster (Iniciador)</strong>
+      </div>
+      <div class="row">
+        <div class="col">Booster HDP - 1/2 lb</div>
+        <div class="col">35</div>
+        <div class="col">2</div>
+        <div class="col">33</div>
+      </div>
+    </div>
+    <a ui-sref="menu.vistaDeReporte({})" id="generarReporteProductos-button46" class="button button-positive button-block icon-right ion-android-arrow-forward">Continuar</a>
+  </ion-content>
+</ion-view>
