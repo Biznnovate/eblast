@@ -806,6 +806,8 @@ localDB.get($scope.selectedbarr_id).then(function(doc) {
              doc.aire= $scope.aire_u;
              doc.bordo= $scope.bordo_u;
              doc.espaciamiento= $scope.espaciamiento_u;
+             doc.diametro= $scope.diametro_u;
+             doc.cargasinaire = $scope.cargaSinAire;
              doc.status= "Updated";
 
                  return localDB.put(doc);
