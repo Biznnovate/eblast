@@ -146,9 +146,10 @@ angular.module('app.services', [])
         Col2: o[1],
         Col3: o[2],
         Col4: o[3],
+        Col5: o[4],
         //CordY: "not sent"
       });
-      let localDB = pouchDB('barrenos');
+      let localDB = pouchDB('barrenoscsv');
       localDB.put(obj).then(function (response) {
   // handle response
     }).catch(function (err) {
@@ -162,9 +163,25 @@ angular.module('app.services', [])
 .service('pouchdbserv', ['pouchDB', function(pouchDB) {
   var db = pouchDB('name');
     var PouchDB = require('pouchdb');
+    PouchDB.plugin(require('pouchdb-find'));
     PouchDB.plugin(require('pouchdb-load'));
-}]);
+}])
 
+.filter('getById', function() {
+  return function(input, id) {
+    var i=0, len=input.length;
+    for (; i<len; i++) {
+      if (+input[i] == +id) {
+        return input[i];
+      }
+    }
+    return null;
+  }
+})
+
+
+
+;
 
 
         
