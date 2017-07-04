@@ -51,28 +51,28 @@
 
       <ion-item id="listatiposelec" ng-repeat="carga in selectedTipo.doc.carga track by $index" ng-model="selectedTipolist"> <strong>Producto:</strong> {{carga.prod}} <strong>Tipo: </strong>{{carga.tipo}}</ion-item>
       <label class="item item-input" id="editarVoladuraMapa-input25">
-        <span class="input-label">Profundidad Real (m)</span>
+        <span class="input-label">Profundidad Real (mm)</span>
         <input type="number" placeholder="{{selectedBarreno.doc.Col4}}" ng-model="profreal" ng-change="updateProfReal(profreal)">
       </label>
       <label class="item item-input" id="editarVoladuraMapa-inputtaco">
-        <span class="input-label">Taco</span>
-        <input type="number" placeholder=" mts" ng-model="taco" ng-change="updateTaco(taco)">
+        <span class="input-label">Taco (mm)</span>
+        <input type="number" placeholder="" ng-model="taco" ng-change="updateTaco(taco)">
       </label>
       <label class="item item-input" id="editarVoladuraMapa-inputaire">
-        <span class="input-label">Aire</span>
-        <input type="number" placeholder=" mts" ng-model="aire" ng-change="updateAire(aire)">
+        <span class="input-label">Aire (mm)</span>
+        <input type="number" placeholder="" ng-model="aire" ng-change="updateAire(aire)">
       </label>
       <label class="item item-input" id="editarVoladuraMapa-inputbordo">
-        <span class="input-label">Bordo</span>
-        <input type="number" placeholder=" mts" ng-model="bordo" ng-change="updateBordo(bordo)">
+        <span class="input-label">Bordo (mm)</span>
+        <input type="number" placeholder=" " ng-model="bordo" ng-change="updateBordo(bordo)">
       </label>
       <label class="item item-input" id="editarVoladuraMapa-inputespaciamiento">
-        <span class="input-label">Espaciamiento</span>
-        <input type="number" placeholder=" mts" ng-model="espaciamiento" ng-change="updateEspaciamiento(espaciamiento)">
+        <span class="input-label">Espaciamiento (mm)</span>
+        <input type="number" placeholder=" " ng-model="espaciamiento" ng-change="updateEspaciamiento(espaciamiento)">
       </label>
       <label class="item item-input" id="editarVoladuraMapa-inputdiametro">
-        <span class="input-label">Diametro</span>
-        <input type="number" placeholder=" mts" ng-model="diametro" ng-change="updateDiametro(diametro)">
+        <span class="input-label">Diametro </span>
+        <input type="number" placeholder=" " ng-model="diametro" ng-change="updateDiametro(diametro)">
       </label>
       <label class="item item-select" id="editarVoladuraMapa-select14">
         <span class="input-label">Carga a Granel</span>
@@ -90,7 +90,7 @@
     </div>
     <div id="editarVoladuraMapa-button-bar5" class="button-bar">
       <a ui-sref="menu.editarVoladuraCaptaciN()" id="editarVoladuraMapa-button25" style="border-radius:50px 50px 50px 50px;" class="button button-positive button-block icon-left ion-edit">Editar Barreno</a>
-      <a ui-sref="menu.verBarrenos({})" id="editarVoladuraMapa-button29" style="border-radius:50px 50px 50px 50px;" class="button button-positive button-block icon-left ion-android-add-circle">Agregar Barreno</a>
+      <button id="editarVoladuraMapa-button30" ng-click="createBarr()" style="border-radius:50px 50px 50px 50px;" class="button button-positive button-block icon-left ion-android-add-circle">Agregar Barreno</button>
       <button id="editarVoladuraMapa-button30" ng-click="calculos()" style="border-radius:50px 50px 50px 50px;" class="button button-positive button-block icon-left ion-android-checkmark-circle">Calc</button>
       <button id="editarVoladuraMapa-button30" ng-click="updateBarr()" style="border-radius:50px 50px 50px 50px;" class="button button-positive button-block icon-left ion-android-checkmark-circle">Guardar</button>
     </div>

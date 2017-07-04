@@ -20,38 +20,67 @@
     </div>
     <form id="ajustarCSV-form18" class="list" ng-show="titleToggle == True" ng-hide="titleToggle==false">
       <label class="item item-select" id="ajustarCSV-select23">
-        <span class="input-label">Primera Columna</span>
-        <select ng-options="nam as nam.nam for nam in column_type_list" ng-model="column_type.a"></select>
+        <span class="input-label">Barreno</span>
+        <select ng-options="nam as nam.nam for nam in column_type_list" ng-model="barrcol" ng-change="selectBarreno(barrcol)"></select>
       </label>
       <label class="item item-select" id="ajustarCSV-select28">
-        <span class="input-label">Segunda Columna</span>
-        <select ng-options="nam as nam.nam for nam in column_type_list" ng-model="column_type.b"></select>
+        <span class="input-label">Coordenada X</span>
+        <select ng-options="nam as nam.nam for nam in column_type_list" ng-model="coordx" ng-change="selectCoordx(coordx)"></select>
       </label>
       <label class="item item-select" id="ajustarCSV-select29">
-        <span class="input-label">Tercera Columna</span>
-        <select ng-options="nam as nam.nam for nam in column_type_list" ng-model="column_type.c"></select>
+        <span class="input-label">Coordenada Y</span>
+        <select ng-options="nam as nam.nam for nam in column_type_list" ng-model="coordy" ng-change="selectCoordy(coordy)"></select>
       </label>
+      <div class="row">
+      <h4>Profundidad</h4>
+      </div>
+      <div class="row">
+      <div class="col">
       <label class="item item-select" id="ajustarCSV-select30">
-        <span class="input-label">Cuarta Columna</span>
-        <select ng-options="nam as nam.nam for nam in column_type_list" ng-model="column_type.d"></select>
+        <span class="input-label">Profundidad</span>
+        <select ng-options="nam as nam.nam for nam in column_type_list" ng-model="prof" ng-change="selectProf(prof)"></select>
       </label>
+      </div>
+      <div class="col">
+      <label class="item item-select" id="ajustarCSV-selectprofunit">
+        <span class="input-label">Medida</span>
+        <select ng-options="nam as nam.nam for nam in unitTableProf" ng-model="unitprof" ng-change="selectUnitProf(unitprof)"></select>
+      </label>
+      </div>
+      </div>
+      <div class="row">
+      <h4>Diámetro</h4>
+      </div>
+      <div class="row">
+      <div class="col">
             <label class="item item-select" id="ajustarCSV-select31">
-        <span class="input-label">Quinta Columna</span>
-        <select ng-options="nam as nam.nam for nam in column_type_list" ng-model="column_type.e"></select>
+        <span class="input-label">Diámetro</span>
+        <select ng-options="nam as nam.nam for nam in column_type_list" ng-model="diametro" ng-change="selectDia(diametro)"></select>
       </label>
+      </div>
+      <div class="col">
+      <label class="item item-select" id="ajustarCSV-selectprofunit">
+        <span class="input-label">Medida</span>
+        <select ng-options="nam as nam.nam for nam in unitTableProf" ng-model="unitdiametro" ng-change="selectUnitDia(unitdiametro)"></select>
+      </label>
+      </div>
+      </div>
+
     </form>
     <!--button id="ajustarCSV-button10" ng-click="columnType()" class="button button-positive button-block button-clear icon ion-checkmark-circled"></button-->
     <div id="ajustarCSV-button-bar4" class="button-bar">
       <a ui-sref="menu.subirProyecto()" id="ajustarCSV-button62" style="border-radius:50px 50px 50px 50px;" 
       class="button button-positive button-block icon-left ion-android-arrow-dropleft-circle">Atras</a>
       <a id="ajustarCSV-button63"  style="border-radius:50px 50px 50px 50px;" 
-      class="button button-positive button-block icon-right ion-checkmark-circled" ng-click="columnType()" >Aceptar</a>
+      class="button button-positive button-block icon-right ion-checkmark-circled" ng-click="createDB1()" >Aceptar</a>
       <a ui-sref="menu.parametrosVoladura1()" id="ajustarCSV-button63" ng-disabled="continueOpt" style="border-radius:50px 50px 50px 50px;" 
       class="button button-positive button-block icon-right ion-android-arrow-dropright-circle" ng-disabled="continueOpt">Continuar</a>
     </div>
+    
     <div class="row">
+      <p>Barrenos: {{Barrenos.Col1}}</p>
       <p>Cantidad Total de Barrenos: {{Barrenos.total_rows}}</p>
-      
+      <p>tempbardata: {{valuepushtemp}} resulthting: {{tempCSVdiv}}</p>
     </div>
     <div class="row">
       <div class="col">{{column_type.a.nam}}</div>
@@ -73,6 +102,8 @@
         </div>
       </ion-item>
     </ion-list>
-  <p>Barrenos: {{Barrenos.rows}}</p>
+
+     
+  <p>Barrenos: {{Barrenos.rows.doc.Col1}}</p>
   </ion-content>
 </ion-view>

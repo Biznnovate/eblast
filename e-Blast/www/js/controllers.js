@@ -47,8 +47,8 @@ function ($scope, $stateParams, $filter, $window, $firebaseArray, Uploadcsv, Csv
 
 $scope.showcleanup= true;
 $scope.showupload= false;
-let localDB = new pouchDB('barrenos');
-let remoteDB = new PouchDB('https://biznnovate.cloudant.com/eblast-barrenos');    
+let localDB = new pouchDB('barrenoscsv');
+let remoteDB = new PouchDB('https://biznnovate.cloudant.com/eblast-barrenoscsv');    
 localDB.sync(remoteDB).on('complete', function () {
   // yay, we're in sync!
 }).on('error', function (err) {
@@ -57,8 +57,8 @@ localDB.sync(remoteDB).on('complete', function () {
 
  
 $scope.addCSV = function() {
-    let localDB = new pouchDB('barrenos');
-    let remoteDB = new PouchDB('https://biznnovate.cloudant.com/eblast-barrenos');  
+    let localDB = new pouchDB('barrenoscsv');
+    let remoteDB = new PouchDB('https://biznnovate.cloudant.com/eblast-barrenoscsv');  
     localDB.sync(remoteDB).on('complete', function () {
   // yay, we're in sync!
 }).on('error', function (err) {
@@ -92,6 +92,11 @@ $scope.addCSV = function() {
   console.log(err);
 });
     });
+     localDB.sync(remoteDB).on('complete', function () {
+  // yay, we're in sync!
+}).on('error', function (err) {
+  // boo, we hit an error!
+});
   
 });
 
@@ -104,24 +109,15 @@ $scope.addCSV = function() {
 $scope.cleanDB = function (){
         $scope.showupload= false;
         $scope.showcleanup= true;
-        localDB.destroy().then(function (response) {
-         // success
-             }).catch(function (err) {
-               console.log(err);
-             });
-         remoteDB.destroy().then(function (response) {
-  // success
-            }).catch(function (err) {
-                 console.log(err);
-            });
+
    }
 
 }])
    
-.controller('ajustarCSVCtrl', ['$scope', '$stateParams', '$window', 'pouchDB', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+.controller('ajustarCSVCtrl', ['$scope', '$stateParams', '$window', '$filter',  'pouchDB', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
-function ($scope, $stateParams, $window, pouchDB) {
+function ($scope, $stateParams, $window, $filter, pouchDB) {
 //tipos de columna
 let localDB = new pouchDB('barrenos');
 let remoteDB = new PouchDB('https://biznnovate.cloudant.com/eblast-barrenos');    
@@ -132,15 +128,308 @@ localDB.sync(remoteDB).on('complete', function () {
   // boo, we hit an error!
 });
 
+let localCSVDB = new pouchDB('barrenoscsv');
+let remoteCSVDB = new PouchDB('https://biznnovate.cloudant.com/eblast-barrenoscsv');    
+//call barrenos from CSV
+            localCSVDB.allDocs({
+            include_docs: true,
+            attachments: true
+            }).then(function (result) {
+            // handle result
+            $scope.Barrenos = result ;
+            }).catch(function (err) {
+            console.log(err);
+        });
+
+//aqui
+
+var cleanDB = function (){
+     let localDivCSV = new pouchDB('barrenoscsvdiv');
+    let remoteDivCSV = new PouchDB('https://biznnovate.cloudant.com/eblast-barrenoscsvdiv');
+
+           localDivCSV.destroy().then(function (response) {
+         // success
+             }).catch(function (err) {
+               console.log(err);
+             });
+         remoteDivCSV.destroy().then(function (response) {
+  // success
+            }).catch(function (err) {
+                 console.log(err);
+            });
+        
+ localDivCSV.sync(remoteDivCSV).on('complete', function () {
+                    // yay, we're in sync!
+                    }).on('error', function (err) {
+                    // boo, we hit an error!
+                });
+
+   }
+
+//var divideCSV = function() {
+//newdb to store things
+let localDivCSV = new pouchDB('barrenoscsvdiv');
+let remoteDivCSV = new PouchDB('https://biznnovate.cloudant.com/eblast-barrenoscsvdiv');
+localDivCSV.sync(remoteDivCSV).on('complete', function () {
+                    // yay, we're in sync!
+                    }).on('error', function (err) {
+                    // boo, we hit an error!
+                });
+  
+var col1Funct = function(){
+    cleanDB();   
+//For Column 1
+ $scope.tempCSVdiv = [];
+let localCSVDB = new pouchDB('barrenoscsv');
+localCSVDB.find({
+            selector: {Col1: {$gte: null}},
+            fields: ['_id', 'Col1'],
+            sort: ['Col1']
+}).then(function (result) {
+  // handle result
+   $scope.tempCSVdiv = result;
+   // var rows = $scope.tempCSVdiv.split('\n');
+   let localDivCSV = new pouchDB('barrenoscsvdiv');
+    angular.forEach($scope.tempCSVdiv.docs, function(value, key){  
+
+         localDivCSV.put({
+                _id: value._id+'Col1',
+                oldid: value._id,
+                nam: 'Col1',
+                val: value.Col1,
+                                 
+                }).then(function(response) {
+            // handle response
+            }).catch(function (err) {
+            console.log(err);
+        });   
+        
+        });
+  
+  //  $scope.tempCSVdiv = result;
+}).catch(function (err) {
+  console.log(err);
+})
+
+
+
+}
+var col2Funct = function(){
+//For column2
+         $scope.tempCSVdiv = [];
+        let localCSVDB = new pouchDB('barrenoscsv');
+                localCSVDB.find({
+                        selector: {Col2: {$gte: null}},
+                        fields: ['_id', 'Col2'],
+                       // sort: ['Col2']
+            }).then(function (result) {
+            // handle result
+            $scope.tempCSVdiv = result;
+            // var rows = $scope.tempCSVdiv.split('\n');
+            let localDivCSV = new pouchDB('barrenoscsvdiv');
+            
+                angular.forEach($scope.tempCSVdiv.docs, function(value, key){  
+                    
+                    localDivCSV.put({
+                            _id: value._id+'Col2',
+                            oldid: value._id,
+                            nam: 'Col2',
+                            val: value.Col2,
+                                            
+                            }).then(function(response) {
+                        // handle response
+                        }).catch(function (err) {
+                        console.log(err);
+                    });   
+                    
+                    });
+            
+            //  $scope.tempCSVdiv = result;
+            }).catch(function (err) {
+            console.log(err);
+            })
+
+
+}
+var col3Funct = function(){
+    //For column3
+    let localCSVDB = new pouchDB('barrenoscsv');
+                localCSVDB.find({
+                        selector: {Col3: {$gte: null}},
+                        fields: ['_id', 'Col3'],
+                       // sort: ['Col3']
+            }).then(function (result) {
+            // handle result
+            $scope.tempCSVdiv = result;
+            // var rows = $scope.tempCSVdiv.split('\n');
+            let localDivCSV = new pouchDB('barrenoscsvdiv');
+                angular.forEach($scope.tempCSVdiv.docs, function(value, key){  
+
+                    localDivCSV.put({
+                            _id: value._id+'Col3',
+                            oldid: value._id,
+                            nam: 'Col3',
+                            val: value.Col3,
+                                            
+                            }).then(function(response) {
+                        // handle response
+                        }).catch(function (err) {
+                        console.log(err);
+                    });   
+
+                    });
+            
+            //  $scope.tempCSVdiv = result;
+            }).catch(function (err) {
+            console.log(err);
+            })
+
+
+
+}
+var col4Funct = function(){
+//For column4
+                let localCSVDB = new pouchDB('barrenoscsv');
+                localCSVDB.find({
+                        selector: {Col4: {$gte: null}},
+                        fields: ['_id', 'Col4'],
+                       // sort: ['Col4']
+            }).then(function (result) {
+            // handle result
+            $scope.tempCSVdiv = result;
+            // var rows = $scope.tempCSVdiv.split('\n');
+            let localDivCSV = new pouchDB('barrenoscsvdiv');
+                angular.forEach($scope.tempCSVdiv.docs, function(value, key){  
+
+                    localDivCSV.put({
+                            _id: value._id+'Col4',
+                            oldid: value._id,
+                            nam: 'Col4',
+                            val: value.Col4,
+                                            
+                            }).then(function(response) {
+                        // handle response
+                        }).catch(function (err) {
+                        console.log(err);
+                    });   
+
+                    });
+            
+            //  $scope.tempCSVdiv = result;
+            }).catch(function (err) {
+            console.log(err);
+            })
+
+
+               
+
+}
+var col5Funct = function(){
+    //For column5
+    let localCSVDB = new pouchDB('barrenoscsv');
+                localCSVDB.find({
+                        selector: {Col5: {$gte: null}},
+                        fields: ['_id', 'Col5'],
+                        //sort: ['Col5']
+            }).then(function (result) {
+            // handle result
+            $scope.tempCSVdiv = result;
+            // var rows = $scope.tempCSVdiv.split('\n');
+            let localDivCSV = new pouchDB('barrenoscsvdiv');
+                angular.forEach($scope.tempCSVdiv.docs, function(value, key){  
+
+                    localDivCSV.put({
+                            _id: value._id+'Col5',
+                            oldid: value._id,
+                            nam: 'Col5',
+                            val: value.Col5,
+                                            
+                            }).then(function(response) {
+                        // handle response
+                        }).catch(function (err) {
+                        console.log(err);
+                    });   
+
+                    });
+            
+            //  $scope.tempCSVdiv = result;
+            }).catch(function (err) {
+            console.log(err);
+            })
+
+
+          
+}
+col1Funct();
+col2Funct();
+col3Funct();
+col4Funct();
+col5Funct();
+var syncDBs = function(){
+                 localDivCSV.sync(remoteDivCSV).on('complete', function () {
+                    // yay, we're in sync!
+                    }).on('error', function (err) {
+                    // boo, we hit an error!
+                });
+                      localCSVDB.sync(remoteCSVDB).on('complete', function () {
+                    // yay, we're in sync!
+                    }).on('error', function (err) {
+                    // boo, we hit an error!
+                });
+}
+syncDBs();
+
+//divideCSV();
+var divideCSV2  = function() {
+    let localDivCSV = new pouchDB('barrenoscsvdiv');
+    let remoteDivCSV = new PouchDB('https://biznnovate.cloudant.com/eblast-barrenoscsvdiv');
+    
+    angular.forEach($scope.Barrenos.rows, function(value, key){
+                localDivCSV.put({
+                _id: value.doc._id,
+                _rev: value.doc._rev,
+                nam: 'Col1',
+                val: value.doc.Col1,
+                                 
+                }).then(function(response) {
+            // handle response
+            }).catch(function (err) {
+            console.log(err);
+        });   
+        
+    }); 
+    localDivCSV.sync(remoteDivCSV).on('complete', function () {
+        // yay, we're in sync!
+        }).on('error', function (err) {
+        // boo, we hit an error!
+        });
+}
+
+
+localCSVDB.sync(remoteCSVDB).on('complete', function () {
+// yay, we're in sync!
+}).on('error', function (err) {
+  // boo, we hit an error!
+});
 
 $scope.column_type_list = [  
-    {'id': 'barr', 'nam': 'Barreno', 'value': ''} , 
-    {'id': 'coordx', 'nam': 'Coordenada X', 'value': ''  } , 
-    {'id': 'coordy', 'nam': 'Coordenada Y', 'value': ''  } ,
-    {'id': 'prof', 'nam': 'Profundidad', 'value': '' } , 
-    {'id': 'diametro', 'nam': 'Diametro', 'value': ''  } ,
+    {'id': 'Col1', 'nam': 'Columna 1'} , 
+    {'id': 'Col2', 'nam': 'Columna 2'} , 
+    {'id': 'Col3', 'nam': 'Columna 3'} , 
+    {'id': 'Col4', 'nam': 'Columna 4'} , 
+    {'id': 'Col5', 'nam': 'Columna 5'} , 
+
 ];
 
+
+$scope.unitTableProf = [
+   {'id': 'mm', 'val': 1, 'nam': 'Milímetros (mm)'} ,
+   {'id': 'cm', 'val': 0.1, 'nam': 'Centímetros (cm)'} ,
+   {'id': 'dm', 'val': 0.01, 'nam': 'Decímetros (dm)'} ,
+   {'id': 'mts', 'val': 0.001, 'nam': 'Metros (mts)'} ,
+   {'id': 'ft', 'val': 0.00328084 , 'nam': 'Pies (ft)'} ,
+   {'id' : 'in', 'val': 0.0393701, 'nam': 'Pulgadas (in)'},
+];
 $scope.column_type = {};
 
 $scope.continueOpt = true;
@@ -150,66 +439,217 @@ $scope.continueOpt = true;
 $scope.columninfo = [];
 
 
-$scope.columnType = function(){
-    $scope.columninfo=[]
-    $scope.columninfo=[
-        {'_id': 'col1', 'name': $scope.column_type.a },
-        {'_id': 'col2', 'name': $scope.column_type.b},
-        {'_id': 'col3', 'name': $scope.column_type.c},
-        {'_id': 'col4', 'name': $scope.column_type.d},
-        {'_id': 'col5', 'name': $scope.column_type.e},
-    ]
+
+$scope.createDB = function () {
+    var tempBarrData = $scope.barrcol_u.id;
+    
+  
+
+
+
+}
+
+
+
+//function to createdb
+$scope.createDB1 = function() {
+    let localCSVDB = new pouchDB('barrenoscsv');
+        localCSVDB.allDocs({
+            include_docs: true,
+            attachments: true
+            }).then(function (result) {
+            // handle result
+            $scope.Barrenos = result ;
+            }).catch(function (err) {
+            console.log(err);
+            });
+  var cleanDB = function (){
+    let localDB = new pouchDB('barrenos');
+    let remoteDB = new PouchDB('https://biznnovate.cloudant.com/eblast-barrenos');   
+
+           localDB.destroy().then(function (response) {
+         // success
+             }).catch(function (err) {
+               console.log(err);
+             });
+         remoteDB.destroy().then(function (response) {
+  // success
+            }).catch(function (err) {
+                 console.log(err);
+            });
+ localDB.sync(remoteDB).on('complete', function () {
+                    // yay, we're in sync!
+                    }).on('error', function (err) {
+                    // boo, we hit an error!
+                });
+
+   }
+
+   
+ // cleanDB();
+
+ var createnewDB = function(){  
+     let localCSVDB = new pouchDB('barrenoscsv');
+        localCSVDB.allDocs({
+            include_docs: true,
+            attachments: true
+            }).then(function (result) {
+            // handle result
+            $scope.Barrenos = result ;
+            }).catch(function (err) {
+            console.log(err);
+            });
+    let localDB = new pouchDB('barrenos');
+    let remoteDB = new PouchDB('https://biznnovate.cloudant.com/eblast-barrenos');    
+    let localDivCSV = new pouchDB('barrenoscsvdiv');
+
+         angular.forEach($scope.Barrenos.rows, function(value, key){
+           //alert(value.doc._id)
+                   localDivCSV.get(value.doc._id).then(function (doc) {
+                     $scope.colval1 = doc;
+                      
+                
+                 
+                }).then(function(response) {
+                    // alert ($scope.colval1.val)
+                    let localDB = new pouchDB('barrenos');
+
+                      localDB.put({
+                            _id:  $scope.colval1._id,
+                            _rev: $scope.colval1._rev,
+                            barr: $scope.colval1.val,
+            // handle response
+
+            }).catch(function (err) {
+            console.log(err);
+            });
+
+
+            }).catch(function (err) {
+            console.log(err);
+           });
+             
+
+  //Los valores de profundiad coord y barreno solo son IDS necesito para cada barreno decir columna 1 = barr           
+  //para cada barreno buscar por el indice creado en los _u es decir for each barreno search
+  //value en tabla que tenog que hacer             
+
+  });
+ }
+    createnewDB();
+  var syncDB = function () {
+            localDB.sync(remoteDB).on('complete', function () {
+                    // yay, we're in sync!
+                    }).on('error', function (err) {
+                    // boo, we hit an error!
+                });
+
+  }
+  syncDB();   
+}
 
     //declare db with columntypes
-    let collocalDB = new pouchDB('coltype');
-    let colremoteDB = new PouchDB('https://biznnovate.cloudant.com/eblast-coltype');    
+    
 
-    collocalDB.sync(colremoteDB).on('complete', function () {
-        // yay, we're in sync!
-            }).on('error', function (err) {
-         // boo, we hit an error!
-            });
-        $scope.coltype = {};
-        angular.forEach($scope.columninfo, function(value, key){
-                
+$scope.continueOpt = false;
 
-        collocalDB.get(value._id).then(function(doc) {
-            return collocalDB.put({
-                _id: value._id,
-                _rev: doc._rev,
-                name: value.name.nam,
-                type: value.name.id,
-                value: value.name.value
-                 });
+$scope.blahblafunc = function(){
+                localDB.put({
+                _id: value.doc._id,
+                _rev: value.doc._rev,
+                barr: $scope.barrcol_u,
+                coordx: $scope.coordx_u,
+                coordy: $scope.coordy_u,
+                prof: $scope.prof_u * $scope.unitprof_u,
+                diametro: $scope.diametro * $scope.unitdiametro_u
+                 
                 }).then(function(response) {
             // handle response
             }).catch(function (err) {
             console.log(err);
             });
-  });
-
-$scope.continueOpt = false;
-
 }
 
-localDB.allDocs({
-  include_docs: true,
-  attachments: true
-}).then(function (result) {
-  // handle result
-  $scope.Barrenos = result ;
-}).catch(function (err) {
-  console.log(err);
-});
-  // handle doc
+
+
+$scope.selectBarreno= function(obj){
+        console.log(obj)
+        console.log($scope.barrcol)
+        $scope.barrcol_u = obj.id;
+
+        var barrcol_uvar = obj.id
+
+            //array
+    var items = [{  id: "5", country: "UAE" }, { id: "4",  country: "India" }];
+
+    //search value
+    var id2Search = "4";
+
+    //filter the array
+    var foundItem = $filter('filter')(items, { id: id2Search  }, true)[0];
+
+    //get the index
+    var index = items.indexOf(foundItem );
+    alert(index) ;
+    
+            //alert(value.doc)
 
 
 
-//llama barrenos
-//$scope.Barrenos = JSON.parse($window.localStorage['barrenos']);
+        };
+$scope.tempfunct = function(){
+          $scope.resulttemp = [];
+          $scope.valuepushtemp = [];
+         angular.forEach($scope.Barrenos.rows, function(value, barrcol_uvar){
+            var array = JSON.stringify(value.doc); 
+            var result =  $filter('filter')(array, barrcol_uvar); 
+            var test = function(array) {
+                return array === barrcol_uvar;
+            };
+            test();
+            $scope.valuepushtemp.push (JSON.parse(array));
+            $scope.resulttemp.push(result);
+            //alert(result);
+            
+         } )
+}
+$scope.selectCoordx= function(obj){
+        console.log(obj)
+        console.log($scope.coordx)
+        $scope.coordx_u = obj;
+    };
 
+$scope.selectCoordy= function(obj){
+        console.log(obj)
+        console.log($scope.coordy)
+        $scope.coordy_u = obj;
+    };
 
-//muestra creacion de titulos para cada columna
+$scope.selectProf= function(obj){
+        console.log(obj)
+        console.log($scope.prof)
+        $scope.prof_u = obj;
+    };
+
+$scope.selectDia= function(obj){
+        console.log(obj)
+        console.log($scope.diametro)
+        $scope.diametro_u = obj;
+    };
+
+$scope.selectUnitProf= function(obj){
+        console.log(obj)
+        console.log($scope.unitprof)
+        $scope.unitprof_u = obj.val;
+        
+    };
+
+$scope.selectUnitDia= function(obj){
+        console.log(obj)
+        console.log($scope.unitdiametro)
+        $scope.unitdiametro_u = obj.val;
+
+    };
 $scope.tittleToggle = '';
 
 
@@ -360,6 +800,33 @@ $scope.showBarrFormUpdate = function (){
         
 }
 
+$scope.updateTaco = function(obj){
+        console.log(obj)
+        console.log($scope.taco)
+        $scope.taco_u = obj;
+    };
+$scope.updateAire = function(obj){
+        console.log(obj)
+        console.log($scope.aire)
+        $scope.aire_u = obj;
+    };
+
+$scope.updateBordo = function(obj){
+        console.log(obj)
+        console.log($scope.bordo)
+        $scope.bordo_u = obj;
+    };
+$scope.updateEspaciamiento = function(obj){
+        console.log(obj)
+        console.log($scope.espaciamiento)
+        $scope.espaciamiento_u = obj;
+    };
+$scope.updateDiametro = function(obj){
+        console.log(obj)
+        console.log($scope.diametro)
+        $scope.diametro_u = obj;
+    };
+    
 //producto as producto.prod for producto in listed_productos | filter:producto.id=tipoProdv2.id
 
 
@@ -473,6 +940,11 @@ $scope.updateType = function(){
              doc.carga= $scope.prods;
              doc.prof= $scope.LargoTotal;
              doc.peso= $scope.PesoTotal;
+             doc.taco = $scope.taco_u;
+             doc.aire = $scope.aire_u;
+             doc.bordo = $scope.bordo_u;
+             doc.espaciamiento = $scope.espaciamiento_u;
+             doc.diametro = $scope.diametro_u;
                  return tipolocalDB.put(doc);
                 }).then(function() {
             return tipolocalDB.get($scope.newBarreno.nam);
@@ -500,10 +972,15 @@ $scope.updateType = function(){
 $scope.createType = function (){
 
        tipolocalDB.put({        
-             _id: $scope.newBarreno.nam, 
-             carga: $scope.prods,
-             prof: $scope.LargoTotal,
-            peso: $scope.PesoTotal
+            _id: $scope.newBarreno.nam, 
+            carga: $scope.prods,
+            prof: $scope.LargoTotal,
+            peso: $scope.PesoTotal,
+            taco: $scope.taco_u,
+            aire: $scope.aire_u,
+            bordo: $scope.bordo_u,
+            espaciamiento: $scope.espaciamiento_u,
+            diametro: $scope.diametro_u
            
           }).then(function (response) {
   // handle response
@@ -659,8 +1136,8 @@ function ($scope, $stateParams, Survey, $window, $state, pouchDB) {
 
 
 //Load BD de Tipo de Barrenos
-let localDB = new pouchDB('barrenos');
-let remoteDB = new PouchDB('https://biznnovate.cloudant.com/eblast-barrenos');    
+let localDB = new pouchDB('barrenoscsv');
+let remoteDB = new PouchDB('https://biznnovate.cloudant.com/eblast-barrenoscsv');    
 
     localDB.sync(remoteDB).on('complete', function () {
     // yay, we're in sync!
@@ -727,6 +1204,10 @@ let tiporemoteDB = new PouchDB('https://biznnovate.cloudant.com/eblast-bartype')
 
 //templist   
 
+//download info
+
+
+
 
 $scope.updateSelectedBarr = function(obj){
         console.log(obj)
@@ -739,6 +1220,15 @@ $scope.updateSelectedTipo = function(obj){
         console.log(obj)
         console.log($scope.selectedTipo)
         $scope.selectedTipo_u = obj.doc;
+        $scope.taco = obj.doc.taco/1;
+        $scope.aire = obj.doc.aire/1;
+        $scope.bordo = obj.doc.bordo/1;
+        $scope.espaciamiento = obj.doc.espaciamiento/1;
+       
+        $scope.taco_u =  $scope.taco;
+        $scope.aire_u = $scope.aire;
+        $scope.bordo_u = $scope.bordo;
+        $scope.espaciamiento_u = $scope.espaciamiento;
     };
 $scope.updateProfReal = function(obj){
         console.log(obj)
@@ -792,7 +1282,7 @@ $scope.calculos= function () {
    // Carga a Grandel Disponible *1000*3.1416*(Diametro*Diametro)/4
 
 }
-
+//agrega valores al barreno
 $scope.updateBarr = function (){
 
     
@@ -806,7 +1296,16 @@ localDB.get($scope.selectedbarr_id).then(function(doc) {
              doc.aire= $scope.aire_u;
              doc.bordo= $scope.bordo_u;
              doc.espaciamiento= $scope.espaciamiento_u;
+             doc.diametro= $scope.diametro_u;
              doc.status= "Updated";
+             doc.cargasinaire =  $scope.cargaSinAire;
+             doc.cargamenosaire = $scope.cargaMenosAire;
+             doc.cargaagraneldisp = $scope.cargaAgraneldisp;
+             doc.volumencil = $scope.volumenCil;
+             doc.cargaagranel = $scope.cargaAgranel;
+             doc.volumentotal = $scope.volumenTotal;
+             doc.pesototal = $scope.pesoTotal;
+             doc.factordecarga = $scope.factorDeCarga;
 
                  return localDB.put(doc);
                 }).then(function() {
@@ -827,8 +1326,43 @@ localDB.get($scope.selectedbarr_id).then(function(doc) {
 
 }
      
+//create a new Barreno
+$scope.createBarr = function (){
+    localDB.put({        
+            _id: new Date().toISOString(), 
+            Col1: new Date().toISOString(),
+            tipo: $scope.selectedTipo_u,
+            profreal: $scope.profreal_u,
+            taco: $scope.taco_u,
+            aire: $scope.aire_u,
+            bordo: $scope.bordo_u,
+            espaciamiento: $scope.espaciamiento_u,
+            diametro: $scope.diametro_u,
+            status : "Updated",
+            cargasinaire :  $scope.cargaSinAire,
+            cargamenosaire : $scope.cargaMenosAire,
+            cargaagraneldisp : $scope.cargaAgraneldisp,
+            volumencil : $scope.volumenCil,
+            cargaagranel : $scope.cargaAgranel,
+            volumentotal : $scope.volumenTotal,
+            pesototal : $scope.pesoTotal,
+            factordecarga : $scope.factorDeCarga
+           
+          }).then(function (response) {
+  // handle response
+   
+  console.log(err);
+    }); 
 
 
+
+     localDB.sync(remoteDB).on('complete', function () {
+        // yay, we're in sync!
+            }).on('error', function (err) {
+         // boo, we hit an error!
+            });
+
+}
 $scope.barrInfo = $scope.selectedTipo || [];
 
 $scope.BarrenosParam = $scope.BarrenosParam || [];
@@ -845,45 +1379,11 @@ $scope.BarrData = [];
 $scope.TipoData = [];
 
 
-//lo que quiero calcular
-$scope.BarrProfCarga = 0;
-$scope.BarrProfDes = 0;
-
-// Selecciona los parametros de ese Barreno predeterminado (prueba solo con profundidad)
-$scope.selectedBarr = function (item) {
-
-    $scope.BarrData = [];
-    $scope.BarrData.push(item.Col4)
-    $scope.BarrProfDes = parseFloat($scope.BarrData);
-};
-// Selecciona los parametros de ese Tipo predeterminado (prueba solo con profundidad)
-$scope.selectedType = function (item) {
-    $scope.TipoData = [];
-    $scope.TipoData.push(item.prof);
-    $scope.BarrProfCarga = parseFloat($scope.TipoData);
-};
-// and fire it after definition
-
-
-
-var a = $scope.BarrProfCarga;
-var b = $scope.BarrProfDes;
-
-
-$scope.BarrGraSug =  b - a;
 
   $scope.selectedProfReal = function (item){
       $scope.BarrProfDes=item;
 
   }
-
-$scope.BarrenosParam = $window.localStorage['barrenosparam'];
-    $window.localStorage['barrenosparam'] = JSON.stringify($scope.BarrParam);
-      
-      $scope.addParam = function (BarrParam){
-         //$scope.BarrenosParam.push(BarrParam);
-         $window.localStorage['barrenosparam'] = JSON.stringify($scope.BarrParam);
-}
 
 
 
