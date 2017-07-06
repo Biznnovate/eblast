@@ -72,15 +72,17 @@
       <a ui-sref="menu.subirProyecto()" id="ajustarCSV-button62" style="border-radius:50px 50px 50px 50px;" 
       class="button button-positive button-block icon-left ion-android-arrow-dropleft-circle">Atras</a>
       <a id="ajustarCSV-button63"  style="border-radius:50px 50px 50px 50px;" 
-      class="button button-positive button-block icon-right ion-checkmark-circled" ng-click="createDB1()" >Aceptar</a>
-      <a ui-sref="menu.parametrosVoladura1()" id="ajustarCSV-button63" ng-disabled="continueOpt" style="border-radius:50px 50px 50px 50px;" 
+      class="button button-positive button-block icon-right ion-checkmark-circled" ng-click="createDB()" >Aceptar</a>
+      <a  id="ajustarCSV-button63" ng-disabled="continueOpt" style="border-radius:50px 50px 50px 50px;" 
+      class="button button-positive button-block icon-right ion-android-arrow-dropright-circle" ng-disabled="continueOpt" ng-click="tempcreateBarr()">Limpiar</a>
+       <a ui-sref="menu.parametrosVoladura1()" id="ajustarCSV-button63" ng-disabled="continueOpt" style="border-radius:50px 50px 50px 50px;" 
       class="button button-positive button-block icon-right ion-android-arrow-dropright-circle" ng-disabled="continueOpt">Continuar</a>
     </div>
     
     <div class="row">
-      <p>Barrenos: {{Barrenos.Col1}}</p>
+      <p>Barrenos: {{tempresp}} otro {{valrows}}</p>
       <p>Cantidad Total de Barrenos: {{Barrenos.total_rows}}</p>
-      <p>tempbardata: {{valuepushtemp}} resulthting: {{tempCSVdiv}}</p>
+ 
     </div>
     <div class="row">
       <div class="col">{{column_type.a.nam}}</div>
