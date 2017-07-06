@@ -40,10 +40,10 @@ function ($scope, $stateParams) {
 
 }])
    
-.controller('subirProyectoCtrl', ['$scope', '$stateParams', '$filter', '$window', '$firebaseArray', 'Uploadcsv', 'CsvParser','pouchDB', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+.controller('subirProyectoCtrl', ['$scope', '$stateParams', '$filter', '$window',  'Uploadcsv', 'CsvParser','pouchDB', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
-function ($scope, $stateParams, $filter, $window, $firebaseArray, Uploadcsv, CsvParser, pouchDB,) {
+function ($scope, $stateParams, $filter, $window,  Uploadcsv, CsvParser, pouchDB,) {
 
 $scope.showcleanup= true;
 $scope.showupload= false;
@@ -391,7 +391,7 @@ function ($scope, $stateParams, $window, $filter, pouchDB) {
 //tipos de columna
 let localDB = new pouchDB('barrenos');
 let remoteDB = new PouchDB('https://biznnovate.cloudant.com/eblast-barrenos');    
-
+//syncDBs();
 localDB.sync(remoteDB).on('complete', function () {
 // yay, we're in sync!
 }).on('error', function (err) {
