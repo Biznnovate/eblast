@@ -74,7 +74,7 @@
       <a id="ajustarCSV-button63"  style="border-radius:50px 50px 50px 50px;" 
       class="button button-positive button-block icon-right ion-checkmark-circled" ng-click="createDB()" >Aceptar</a>
       <a  id="ajustarCSV-button63" ng-disabled="continueOpt" style="border-radius:50px 50px 50px 50px;" 
-      class="button button-positive button-block icon-right ion-android-arrow-dropright-circle" ng-disabled="continueOpt" ng-click="tempcreateBarr()">Limpiar</a>
+      class="button button-positive button-block icon-right ion-android-arrow-dropright-circle" ng-disabled="continueOpt" ng-click="cleanDB()">Limpiar</a>
        <a ui-sref="menu.parametrosVoladura1()" id="ajustarCSV-button63" ng-disabled="continueOpt" style="border-radius:50px 50px 50px 50px;" 
       class="button button-positive button-block icon-right ion-android-arrow-dropright-circle" ng-disabled="continueOpt">Continuar</a>
     </div>
@@ -105,7 +105,18 @@
       </ion-item>
     </ion-list>
 
-     
-  <p>Barrenos: {{Barrenos.rows.doc.Col1}}</p>
+<ion-list id="ajustarCSV-list11">
+      
+      <ion-item class="assertive" id="ajustarCSV-list-item18" ng-repeat="barreno in Barrenostest.rows | orderBy:'doc.barr'">
+        <div class="row">
+          <!--div class="col">{{barreno.id}}</div-->
+          <div class="col">{{barreno.doc.barr}}</div>
+          <div class="col">{{barreno.doc.coordx}}</div>
+          <div class="col">{{barreno.doc.coordy}}</div>
+          <div class="col">{{barreno.doc.prof}}</div>
+          <div class="col">{{barreno.doc.diametro}}</div>
+        </div>
+      </ion-item>
+    </ion-list>
   </ion-content>
 </ion-view>
