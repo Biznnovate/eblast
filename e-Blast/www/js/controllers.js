@@ -414,40 +414,7 @@ let localDivCSV = new pouchDB('barrenoscsvdiv');
 let remoteDivCSV = new PouchDB('https://biznnovate.cloudant.com/eblast-barrenoscsvdiv');
 //aqui
 
-$scope.cleanDB = function (){
-           
-           
-        
-          localDB.allDocs().then(function (result) {
-            // Promise isn't supported by all browsers; you may want to use bluebird
-            return Promise.all(result.rows.map(function (row) {
-                return localDB.remove(row.id, row.value.rev);
-            }));
-            }).then(function () {
-            // done!
-            }).catch(function (err) {
-            // error!
-            });
-       remoteDB.allDocs().then(function (result) {
-            // Promise isn't supported by all browsers; you may want to use bluebird
-            return Promise.all(result.rows.map(function (row) {
-                return remoteDB.remove(row.id, row.value.rev);
-            }));
-            }).then(function () {
-            // done!
-            }).catch(function (err) {
-            // error!
-            });
 
-   }
-
-   var createdbsagain = function (){
-        let localDB = new pouchDB('barrenos');
-        let remoteDB = new PouchDB('https://biznnovate.cloudant.com/eblast-barrenos');  
-        let localDivCSV = new pouchDB('barrenoscsvdiv');
-        let remoteDivCSV = new PouchDB('https://biznnovate.cloudant.com/eblast-barrenoscsvdiv');
-
-   }
 
 //var divideCSV = function() {
 //newdb to store things
@@ -459,16 +426,7 @@ localDivCSV.sync(remoteDivCSV).on('complete', function () {
                     }).on('error', function (err) {
                     // boo, we hit an error!
                 });
-localDB.allDocs({
-         include_docs: true,
-         attachments: true
-         }).then(function (result) {
-         // handle result
-         $scope.barrenostest = result;
 
-          }).catch(function (err) {
-        console.log(err);
-    });
 
 var syncDBs = function(){
         let localDB = new pouchDB('barrenos');
@@ -553,12 +511,65 @@ $scope.columninfo = [];
 
  $scope.valrows = [];
 
-   var createDBbarr = function (){
-    var col = $scope.barrcol_u ;
 
-           
-                
-                        localDivCSV.createIndex({
+$scope.createWDB = function(){
+
+     angular.forEach( $scope.Barrenos.rows, function(value, key){
+                    var id = value.doc._id;
+                    $scope.tempresp= value;
+     
+                         localDB.put({
+                               _id: value.doc._id,  
+                             
+                                     
+                                
+                                      
+                                   }).then(function(response){
+                                       
+                                   }).catch(function(err){
+                                       console.log(err);
+                                   });    
+                    }); 
+                    localDB.sync(remoteDB).on('complete', function () {
+                                        // yay, we're in sync!
+                                        }).on('error', function (err) {
+                                        // boo, we hit an error!
+                                    });
+                    localDB.allDocs({
+                            include_docs: true,
+                            attachments: true
+                            }).then(function (result) {
+                            // handle result
+                            $scope.barrenosw = result;
+
+                            }).catch(function (err) {
+                            console.log(err);
+                        });
+                        $scope.showBarrSelect = 'yes';
+                    
+}
+
+
+    //declare db with columntypes
+    
+
+
+
+
+$scope.showBarrSelect = '';
+$scope.showCoordxSelect = '';
+$scope.showCoordySelect = '';
+$scope.showProf = '';
+$scope.showProfunit = '';
+$scope.showDiam = '';
+$scope.showDiamunit = '';
+
+$scope.selectBarreno= function(obj){
+        console.log(obj)
+        console.log($scope.barrcol)
+        $scope.barrcol_u = obj.id;
+        var col = obj.id;
+        localDivCSV.createIndex({
                                 index: {
                                     fields: ['nam', 'val', 'oldid' ]
                                 }
@@ -569,259 +580,248 @@ $scope.columninfo = [];
                                         // sort: ['oldid']
 
                                 }).then(function (result) {
-                                    $scope.valrows = result.docs;
-                                          angular.forEach( $scope.valrows, function(value, key){
-                    var varoldid = value.oldid;
-                    $scope.tempresp= value;
-                 //  alert(value.val);
-
-                                   let localDB = new pouchDB('barrenos');        
-                                   localDB.put({
-                                                _id: value.oldid,
-                                               _rev: value._rev,
-                                                barr: value.val,
-                                              }).then(function(response){
-                                       
-                                   }).catch(function(err){
-                                       console.log(err);
-                                   });      }); 
-                                    });
             
-                             });
-    
-     syncDBs();
-                   
-                                
-
-                                   
-}
-var createDBbarr2 = function (){
-  
-     syncDBs();
-}
-var createDBcoordx = function (){
-   var col = $scope.coordx_u ;
-   let localDB = new pouchDB('barrenos');
-                                localDivCSV.find({
-                                            selector: {nam: col},
-                                            fields: ['oldid', 'val', '_rev'],
-                                        // sort: ['oldid']
-
-                                }).then(function (result) {
                                     $scope.valrows = result.docs;
-
-                                    });
-    
-                             
-}
-var createDBcoordx2 = function (){
-    angular.forEach( $scope.valrows, function(value, key){
-                                        var varoldid = value.oldid;
-                                        //$scope.tempresp= value;
-                                       // alert(value.val);
-                                   let localDB = new pouchDB('barrenos');
-                                   localDB.get(varoldid).then(function(doc){
-                                              localDB.put({
-                                                //_id: doc._id,  
-                                                _rev: doc._rev,
-                                                barr: doc.barr,
-                                                coordx: value.val,
-                                   });
-                                      
-                                   }).then(function(response){
-                                       
-                                   }).catch(function(err){
-                                       console.log(err);
-                                   });        
-    
-                                    });
-                                     syncDBs();
-}
-var createDBcoordy = function (){
-   var col = $scope.coordy_u ;
-      angular.forEach($scope.Barrenos.rows, function(value, key){
-
-               var varoldid = value.doc._id;
-                    localDivCSV.createIndex({
-                            index: {
-                                fields: ['nam', 'val', 'oldid' ]
-                            }
-                            }).then(function () {
-                            return localDivCSV.find({
-                                        selector: {nam: col, oldid: varoldid },
-                                        fields: ['oldid', 'val'],
-                                    // sort: ['oldid']
-                            }).then(function (result) {
-                                $scope.tempresp = result;
-                                let localDB = new pouchDB('barrenos');
-                                localDB.put({
-                                             _id: value.doc._id,
-                                            _rev: value.doc._rev,
-                                            coordy: result.docs.val,
-   
-                                            }).then(function(response) {
-                                        // handle response
-                                        }).catch(function (err) {
-                                        console.log(err);
-                                            });
-                                    });
-                                });
-        }); 
-}
-var createDBprof = function (){
-   var col = $scope.prof_u;
-   var colval = $scope.unitprof_u;
-      angular.forEach($scope.Barrenos.rows, function(value, key){
-
-               var varoldid = value.doc._id;
-              
-                    localDivCSV.createIndex({
-                            index: {
-                                fields: ['nam', 'val', 'oldid' ]
-                            }
-                            }).then(function () {
-                            return localDivCSV.find({
-                                        selector: {nam: col, oldid: varoldid },
-                                        fields: ['oldid', 'val'],
-                                    // sort: ['oldid']
-                            }).then(function (result) {
-                                $scope.tempresp = result;
-                                let localDB = new pouchDB('barrenos');
-                                localDB.put({
-                                             _id: value.doc._id,
-                                            _rev: value.doc._rev,
-                                            prof: result.docs.val * colval,
-                                                                                                    
-                                            }).then(function(response) {
-                                        // handle response
-                                        }).catch(function (err) {
-                                        console.log(err);
-                                            });  
-                                    });
-                                });
-        }); 
-}
-var createDBdiametro = function (){
-   var col = $scope.diametro;
-   var colval = $scope.unitdiametro_u;
-      angular.forEach($scope.Barrenos.rows, function(value, key){
-
-               var varoldid = value.doc._id;
-                    localDivCSV.createIndex({
-                            index: {
-                                fields: ['nam', 'val', 'oldid' ]
-                            }
-                            }).then(function () {
-                            return localDivCSV.find({
-                                        selector: {nam: col, oldid: varoldid },
-                                        fields: ['oldid', 'val'],
-                                    // sort: ['oldid']
-                            }).then(function (result) {
-                                $scope.tempresp = result;
-                                let localDB = new pouchDB('barrenos');
-                                localDB.put({
-                                             _id: value.doc._id,
-                                            _rev: value.doc._rev,
-                                            diametro: result.docs.val * colval,
-                                                                                                    
-                                            }).then(function(response) {
-                                        // handle response
-                                        }).catch(function (err) {
-                                        console.log(err);
-                                            });  
-                                    });
-                                });
-        }); 
-}
-//function to createdb
-
-$scope.createDB = function () {
-   
-    createDBbarr();
-    createDBcoordx();
-   createDBcoordy();
-    createDBprof();
-    createDBdiametro();
-    syncDBs();
-    
-}
-
-
-    //declare db with columntypes
-    
-
-$scope.continueOpt = false;
-
-$scope.blahblafunc = function(){
-                localDB.put({
-                _id: value.doc._id,
-                _rev: value.doc._rev,
-                barr: $scope.barrcol_u,
-                coordx: $scope.coordx_u,
-                coordy: $scope.coordy_u,
-                prof: $scope.prof_u * $scope.unitprof_u,
-                diametro: $scope.diametro * $scope.unitdiametro_u
-                 
-                }).then(function(response) {
-            // handle response
-            }).catch(function (err) {
-            console.log(err);
+            
+            angular.forEach( $scope.valrows, function(value, key){
+                    var id = value.oldid;
+  
+                                    localDB.get(id).then(function(doc) {
+                                                return localDB.put({
+                                                    _id: doc._id,
+                                                    _rev: doc._rev,
+                                                    barr: value.val,
+                                                });
+                                                }).then(function(response) {
+                                                // handle response
+                                                }).catch(function (err) {
+                                                console.log(err);
+                                                });                          
+                         }); 
+                 });
+            
             });
-}
-
-
-$scope.selectBarreno= function(obj){
-        console.log(obj)
-        console.log($scope.barrcol)
-        $scope.barrcol_u = obj.id;
-        createDBbarr();
-        //createDBbarr2();
    
-     
+     localDB.sync(remoteDB).on('complete', function () {
+                    // yay, we're in sync!
+                    }).on('error', function (err) {
+                    // boo, we hit an error!
+                });
+         $scope.showCoordxSelect = 'yes';         
         };
 
 $scope.selectCoordx= function(obj){
         console.log(obj)
         console.log($scope.coordx)
         $scope.coordx_u = obj.id;
-        createDBcoordx();
-        createDBcoordx2();
+        var col = obj.id;
+        localDivCSV.createIndex({
+                                index: {
+                                    fields: ['nam', 'val', 'oldid' ]
+                                }
+                                }).then(function () {
+                                return localDivCSV.find({
+                                            selector: {nam: col},
+                                            fields: ['oldid', 'val', '_rev'],
+                                        // sort: ['oldid']
+
+                                }).then(function (result) {
+            
+                                    $scope.valrows = result.docs;
+            
+            angular.forEach( $scope.valrows, function(value, key){
+                    var id = value.oldid;
+              
+                                    localDB.get(id).then(function(doc) {
+                                                return localDB.put({
+                                                    _id: doc._id,
+                                                    _rev: doc._rev,
+                                                    barr: doc.barr,
+                                                    coordx: value.val,
+
+                                                });
+                                                }).then(function(response) {
+                                                // handle response
+                                                }).catch(function (err) {
+                                                console.log(err);
+                                                });                          
+                         }); 
+                 });
+            
+            });
+   
+     localDB.sync(remoteDB).on('complete', function () {
+                    // yay, we're in sync!
+                    }).on('error', function (err) {
+                    // boo, we hit an error!
+                });
+    $scope.showCoordySelect = 'yes';            
     };
 
 $scope.selectCoordy= function(obj){
         console.log(obj)
         console.log($scope.coordy)
         $scope.coordy_u = obj.id;
-        createDBcoordy();
+        var col = obj.id;
+        localDivCSV.createIndex({
+                                index: {
+                                    fields: ['nam', 'val', 'oldid' ]
+                                }
+                                }).then(function () {
+                                return localDivCSV.find({
+                                            selector: {nam: col},
+                                            fields: ['oldid', 'val', '_rev'],
+                                        // sort: ['oldid']
+
+                                }).then(function (result) {
+            
+                                    $scope.valrows = result.docs;
+            
+            angular.forEach( $scope.valrows, function(value, key){
+                    var id = value.oldid;
+
+                                    localDB.get(id).then(function(doc) {
+                                                return localDB.put({
+                                                    _id: doc._id,
+                                                    _rev: doc._rev,
+                                                    barr: doc.barr,
+                                                    coordx: doc.coordx,
+                                                    coordy: value.val,
+                                                });
+                                                }).then(function(response) {
+                                                // handle response
+                                                }).catch(function (err) {
+                                                console.log(err);
+                                                });                          
+                         }); 
+                 });
+            
+            });
+   
+     localDB.sync(remoteDB).on('complete', function () {
+                    // yay, we're in sync!
+                    }).on('error', function (err) {
+                    // boo, we hit an error!
+                });
+    $scope.showProf = 'yes'; 
     };
 
 $scope.selectProf= function(obj){
         console.log(obj)
         console.log($scope.prof)
         $scope.prof_u = obj.id;
-         
+        $scope.showProfunit = 'yes';
     };
 
 $scope.selectDia= function(obj){
         console.log(obj)
         console.log($scope.diametro)
         $scope.diametro_u = obj.id;
+        $scope.showDiamunit = 'yes';
     };
 
 $scope.selectUnitProf= function(obj){
         console.log(obj)
         console.log($scope.unitprof)
         $scope.unitprof_u = obj.val;
-        
+        var col = $scope.prof_u;
+        localDivCSV.createIndex({
+                                index: {
+                                    fields: ['nam', 'val', 'oldid' ]
+                                }
+                                }).then(function () {
+                                return localDivCSV.find({
+                                            selector: {nam: col},
+                                            fields: ['oldid', 'val', '_rev'],
+                                        // sort: ['oldid']
+
+                                }).then(function (result) {
+            
+                                    $scope.valrows = result.docs;
+            
+            angular.forEach( $scope.valrows, function(value, key){
+                    var id = value.oldid;
+                    $scope.tempresp= value;
+                 //  alert(value.val);
+                                    localDB.get(id).then(function(doc) {
+                                                return localDB.put({
+                                                    _id: doc._id,
+                                                    _rev: doc._rev,
+                                                    barr: doc.barr,
+                                                    coordx: doc.coordx,
+                                                    coordy: doc.coordy,
+                                                    prof: value.val*obj.val,
+                                                });
+                                                }).then(function(response) {
+                                                // handle response
+                                                }).catch(function (err) {
+                                                console.log(err);
+                                                });                          
+                         }); 
+                 });
+            
+            });
+   
+     localDB.sync(remoteDB).on('complete', function () {
+                    // yay, we're in sync!
+                    }).on('error', function (err) {
+                    // boo, we hit an error!
+                });
+    $scope.showDiam = 'yes';
     };
 
 $scope.selectUnitDia= function(obj){
         console.log(obj)
         console.log($scope.unitdiametro)
         $scope.unitdiametro_u = obj.val;
+        var col = $scope.diametro_u;
+        localDivCSV.createIndex({
+                                index: {
+                                    fields: ['nam', 'val', 'oldid' ]
+                                }
+                                }).then(function () {
+                                return localDivCSV.find({
+                                            selector: {nam: col},
+                                            fields: ['oldid', 'val', '_rev'],
+                                        // sort: ['oldid']
 
+                                }).then(function (result) {
+            
+                                    $scope.valrows = result.docs;
+            
+            angular.forEach( $scope.valrows, function(value, key){
+                    var id = value.oldid;
+                    $scope.tempresp= value;
+                 //  alert(value.val);
+                                    localDB.get(id).then(function(doc) {
+                                                return localDB.put({
+                                                    _id: doc._id,
+                                                    _rev: doc._rev,
+                                                    barr: doc.barr,
+                                                    coordx: doc.coordx,
+                                                    coordy: doc.coordy,
+                                                    prof:doc.prof, 
+                                                    diam: value.val*obj.val,
+                                                });
+                                                }).then(function(response) {
+                                                // handle response
+                                                }).catch(function (err) {
+                                                console.log(err);
+                                                });                          
+                         }); 
+                 });
+            
+            });
+   
+     localDB.sync(remoteDB).on('complete', function () {
+                    // yay, we're in sync!
+                    }).on('error', function (err) {
+                    // boo, we hit an error!
+                });
+    $scope.continueOpt = false;
     };
 $scope.tittleToggle = '';
+
 
 
 
@@ -1269,13 +1269,7 @@ $scope.produ = Productos.keys;
 };
 
  
-//crea localstorage de tipode prod
 
-//$scope.saveTipoBar = function (newTipoBar){
-
-     // $window.localStorage['my-data'] = JSON.stringify($scope.newTipoBar);
-     
-//}
 }])
    
 .controller('editarVoladuraMapaCtrl', ['$scope', '$stateParams', 'Survey', '$window', '$state', 'pouchDB', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
@@ -1286,29 +1280,9 @@ function ($scope, $stateParams, Survey, $window, $state, pouchDB) {
 //$scope.Math = window.Math;
 
 
-//declare db with columntypes
-    let collocalDB = new pouchDB('coltype');
-    let colremoteDB = new PouchDB('https://biznnovate.cloudant.com/eblast-coltype');    
-
-    collocalDB.sync(colremoteDB).on('complete', function () {
-        // yay, we're in sync!
-            }).on('error', function (err) {
-         // boo, we hit an error!
-            });
-    collocalDB.allDocs({
-         include_docs: true,
-         attachments: true
-         }).then(function (result) {
-         // handle result
-        $scope.columnType = result ;
-          }).catch(function (err) {
-        console.log(err);
-    });
-
-
 //Load BD de Tipo de Barrenos
-let localDB = new pouchDB('barrenoscsv');
-let remoteDB = new PouchDB('https://biznnovate.cloudant.com/eblast-barrenoscsv');    
+let localDB = new pouchDB('barrenos');
+let remoteDB = new PouchDB('https://biznnovate.cloudant.com/eblast-barrenos');    
 
     localDB.sync(remoteDB).on('complete', function () {
     // yay, we're in sync!
@@ -1373,10 +1347,7 @@ let tiporemoteDB = new PouchDB('https://biznnovate.cloudant.com/eblast-bartype')
     $scope.surveys = [];
     $scope.tipobar_list = [];
 
-//templist   
-
-//download info
-
+//count barrenos
 
 
 
@@ -1385,6 +1356,23 @@ $scope.updateSelectedBarr = function(obj){
         console.log($scope.selectedBarreno)
       //alert($scope.selectedBarreno.doc)
         $scope.selectedbarr_id = obj.doc._id;
+        $scope.selectedbarr = obj.doc;
+        $scope.profreal = obj.doc.prof;
+        $scope.profreal_u = $scope.profreal;
+        $scope.diametro = obj.doc.diam;
+        $scope.diametro_u = $scope.diametro;
+        
+    $scope.countUpdatedBarras = function(){
+
+            var rows = $scope.Barrenos.rows;
+            var count = 0;
+            angular.forEach(rows, function(barreno){
+                count += barreno.status ? 1 : 0;
+            });
+            return count; 
+           
+
+}
        // alert($scope.selectedbarr_id)
     };
 $scope.updateSelectedTipo = function(obj){
@@ -1486,14 +1474,16 @@ localDB.get($scope.selectedbarr_id).then(function(doc) {
             console.log(err);
            });
 
- 
-    
+
 
      localDB.sync(remoteDB).on('complete', function () {
         // yay, we're in sync!
             }).on('error', function (err) {
          // boo, we hit an error!
             });
+
+      $window.location.href = '/#/side-menu21/page12'      
+
 
 }
      
@@ -1534,48 +1524,14 @@ $scope.createBarr = function (){
             });
 
 }
-$scope.barrInfo = $scope.selectedTipo || [];
-
-$scope.BarrenosParam = $scope.BarrenosParam || [];
-
- $scope.BarrParam = {
-
- };              
 
 
 
-$scope.BarrParamGra = '0';
-
-$scope.BarrData = [];
-$scope.TipoData = [];
 
 
 
-  $scope.selectedProfReal = function (item){
-      $scope.BarrProfDes=item;
-
-  }
 
 
-
-    
-    $scope.loadData = function(){
-        
-        if ($scope.params.id || $scope.params.status){
-            Survey.query($scope.params).then(function(res){
-                $scope.surveys = res;
-                $scope.$broadcast('scroll.refreshComplete');
-            })
-        }else{
-            Survey.all().then(function(res){
-                $scope.surveys = res;
-                $scope.$broadcast('scroll.refreshComplete');
-            })
-        }
-        
-    }
- $scope.loadData();
- 
 }])
    
 .controller('editarVoladuraCaptaciNCtrl', ['$scope', '$stateParams', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller

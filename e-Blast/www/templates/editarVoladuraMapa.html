@@ -7,13 +7,13 @@
       <div>
         <div class="row">
           <div class="col">
-            <strong>Avance: </strong>{{selectedBarreno.doc.Col1}}/{{Barrenos.total_rows}}
+            <strong>Avance: </strong>{{countUpdatedBarras()}}/{{Barrenos.total_rows}}
           </div>
           <div class="col">
             <strong>Total de KG: </strong> {{pesoTotal}}
           </div>
           <div class="col">
-            <strong>Profundidad Diseño</strong> (m): {{selectedBarreno.doc.Col4}}
+            <strong>Profundidad Real</strong> (mm): {{profreal_u}}
           </div>
         </div>
       </div>
@@ -26,12 +26,12 @@
             <strong>FC:</strong> {{factorDeCarga}}
           </div>
           <div class="col">
-            <strong>Carga Granel Sugerida</strong> {{cargaAgranel}} mts
+            <strong>Carga Granel Sugerida</strong> {{cargaAgranel}}
           </div>
         </div>
         
       </div>
-
+      
       <label class="item item-input" id="editarVoladuraMapa-search4">
         <i class="icon ion-search placeholder-icon"></i>
         <input type="search" placeholder="Buscar agujero por ID">
@@ -41,7 +41,7 @@
         <label class="item item-select" id="editarVoladuraMapa-select19">
           <span class="input-label">Barrenos</span>
 
-          <select ng-options="tipo as tipo.doc.Col1 for tipo in Barrenos.rows | orderBy: 'doc.Col1/1' " ng-model="selectedBarreno" ng-change="updateSelectedBarr(selectedBarreno)"></select>
+          <select ng-options="tipo as tipo.doc.barr for tipo in Barrenos.rows | orderBy: 'doc.barr/1' " ng-model="selectedBarreno" ng-change="updateSelectedBarr(selectedBarreno)"></select>
         </label>
         <label class="item item-select" id="editarVoladuraMapa-select14">
           <span class="input-label">Valores Predeterminados</span>
@@ -52,7 +52,7 @@
       <ion-item id="listatiposelec" ng-repeat="carga in selectedTipo.doc.carga track by $index" ng-model="selectedTipolist"> <strong>Producto:</strong> {{carga.prod}} <strong>Tipo: </strong>{{carga.tipo}}</ion-item>
       <label class="item item-input" id="editarVoladuraMapa-input25">
         <span class="input-label">Profundidad Real (mm)</span>
-        <input type="number" placeholder="{{selectedBarreno.doc.Col4}}" ng-model="profreal" ng-change="updateProfReal(profreal)">
+        <input type="number" placeholder="" ng-model="profreal" ng-change="updateProfReal(profreal)">
       </label>
       <label class="item item-input" id="editarVoladuraMapa-inputtaco">
         <span class="input-label">Taco (mm)</span>
