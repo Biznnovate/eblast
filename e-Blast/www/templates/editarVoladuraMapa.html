@@ -34,7 +34,7 @@
       
       <label class="item item-input" id="editarVoladuraMapa-search4">
         <i class="icon ion-search placeholder-icon"></i>
-        <input type="search" placeholder="Buscar agujero por ID">
+        <input type="search" placeholder="Buscar agujero por Nombre" ng-model = "searchBarr" ng-change = "searchBarrfunc()">
       </label>
       
       <ion-list id="editarVoladuraMapa-list7">
@@ -43,12 +43,13 @@
 
           <select ng-options="tipo as tipo.doc.barr for tipo in Barrenos.rows | orderBy: 'doc.barr/1' " ng-model="selectedBarreno" ng-change="updateSelectedBarr(selectedBarreno)"></select>
         </label>
+        <span class="input-label"> <h4> {{selectedbarr.status}}</h4> {{tempresult}}</span>
         <label class="item item-select" id="editarVoladuraMapa-select14">
           <span class="input-label">Valores Predeterminados</span>
           <select ng-options="tipo as tipo.id for tipo in tipobarr.rows | orderBy: 'id'" ng-model="selectedTipo" ng-change="updateSelectedTipo(selectedTipo)"></select>
         </label>
       </ion-list>
-
+      <ion-toggle toggle-class="toggle-positive" id="ajustarCSV-toggle5" ng-change="barrDetailstoggle()" ng-model="barrDetails">Ver Detalles</ion-toggle>
       <ion-item id="listatiposelec" ng-repeat="carga in selectedTipo.doc.carga track by $index" ng-model="selectedTipolist"> <strong>Producto:</strong> {{carga.prod}} <strong>Tipo: </strong>{{carga.tipo}}</ion-item>
       <label class="item item-input" id="editarVoladuraMapa-input25">
         <span class="input-label">Profundidad Real (mm)</span>
@@ -62,15 +63,15 @@
         <span class="input-label">Aire (mm)</span>
         <input type="number" placeholder="" ng-model="aire" ng-change="updateAire(aire)">
       </label>
-      <label class="item item-input" id="editarVoladuraMapa-inputbordo">
+      <label class="item item-input" id="editarVoladuraMapa-inputbordo" ng-show="barrDetails">
         <span class="input-label">Bordo (mm)</span>
         <input type="number" placeholder=" " ng-model="bordo" ng-change="updateBordo(bordo)">
       </label>
-      <label class="item item-input" id="editarVoladuraMapa-inputespaciamiento">
+      <label class="item item-input" id="editarVoladuraMapa-inputespaciamiento" ng-show="barrDetails">
         <span class="input-label">Espaciamiento (mm)</span>
         <input type="number" placeholder=" " ng-model="espaciamiento" ng-change="updateEspaciamiento(espaciamiento)">
       </label>
-      <label class="item item-input" id="editarVoladuraMapa-inputdiametro">
+      <label class="item item-input" id="editarVoladuraMapa-inputdiametro" ng-show="barrDetails">
         <span class="input-label">Diametro </span>
         <input type="number" placeholder=" " ng-model="diametro" ng-change="updateDiametro(diametro)">
       </label>

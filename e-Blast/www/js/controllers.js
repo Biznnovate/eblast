@@ -448,34 +448,6 @@ var syncDBs = function(){
                 });
 }
 
-
-//divideCSV();
-var divideCSV2  = function() {
-    let localDivCSV = new pouchDB('barrenoscsvdiv');
-    let remoteDivCSV = new PouchDB('https://biznnovate.cloudant.com/eblast-barrenoscsvdiv');
-    
-    angular.forEach($scope.Barrenos.rows, function(value, key){
-                localDivCSV.put({
-                _id: value.doc._id,
-                _rev: value.doc._rev,
-                nam: 'Col1',
-                val: value.doc.Col1,
-                                 
-                }).then(function(response) {
-            // handle response
-            }).catch(function (err) {
-            console.log(err);
-        });   
-        
-    }); 
-    localDivCSV.sync(remoteDivCSV).on('complete', function () {
-        // yay, we're in sync!
-        }).on('error', function (err) {
-        // boo, we hit an error!
-        });
-}
-
-
 localCSVDB.sync(remoteCSVDB).on('complete', function () {
 // yay, we're in sync!
 }).on('error', function (err) {
@@ -1348,7 +1320,17 @@ let tiporemoteDB = new PouchDB('https://biznnovate.cloudant.com/eblast-bartype')
     $scope.tipobar_list = [];
 
 //count barrenos
+    $scope.countUpdatedBarras = function(){
+            
+            var rows = $scope.Barrenos.rows;
+            var count = 0;
+            angular.forEach(rows, function(barreno){
+                count += barreno.doc.status == 'Updated' ? 1 : 0;
+            });
+            return count; 
+           
 
+        }
 
 
 $scope.updateSelectedBarr = function(obj){
@@ -1362,19 +1344,10 @@ $scope.updateSelectedBarr = function(obj){
         $scope.diametro = obj.doc.diam;
         $scope.diametro_u = $scope.diametro;
         
-    $scope.countUpdatedBarras = function(){
 
-            var rows = $scope.Barrenos.rows;
-            var count = 0;
-            angular.forEach(rows, function(barreno){
-                count += barreno.status ? 1 : 0;
-            });
-            return count; 
-           
+//count barrenos
 
-}
-       // alert($scope.selectedbarr_id)
-    };
+};
 $scope.updateSelectedTipo = function(obj){
         console.log(obj)
         console.log($scope.selectedTipo)
@@ -1441,11 +1414,33 @@ $scope.calculos= function () {
    // Carga a Grandel Disponible *1000*3.1416*(Diametro*Diametro)/4
 
 }
-//agrega valores al barreno
-$scope.updateBarr = function (){
+$scope.barrDetailstoggle = function (){
+    $scope.barrDetails = true;
+}
+$scope.searchBarrfunc = function (){
+    var item = $scope.searchBarr; 
+    localDB.find({
+            selector: {barr: item },
+            fields: ['_id'],
+           // sort: ['Col1']
+}).then(function (result) {
+  // handle result
+    $scope.tempresult = result;
+    alert(result.docs._id)
+   // var rows = $scope.tempCSVdiv.split('\n');
+   
+            // handle response
+            }).catch(function (err) {
+            console.log(err);
+        });   
+        
+       
+}
+$scope.oldupdateBarr = function (){
 
-    
-localDB.get($scope.selectedbarr_id).then(function(doc) {
+    var id =  $scope.selectedbarr._id ;
+    alert (id);    
+    localDB.get(id).then(function(doc) {
                    
              //doc._id= $scope.newBarreno.nam;
              doc.rev = doc._rev;
@@ -1468,8 +1463,9 @@ localDB.get($scope.selectedbarr_id).then(function(doc) {
 
                  return localDB.put(doc);
                 }).then(function() {
-            return localDB.get($scope.selectedbarr_id);
+            return localDB.get(id);
             // handle response
+     
             }).catch(function (err) {
             console.log(err);
            });
@@ -1486,12 +1482,76 @@ localDB.get($scope.selectedbarr_id).then(function(doc) {
 
 
 }
+//agrega valores al barreno
+$scope.updateBarr = function (){
+
+    var id =  $scope.selectedbarr._id ;
+       
+    localDB.get(id).then(function(doc) {
+                   
+             //doc._id= $scope.newBarreno.nam;
+             doc.rev = doc._rev;
+             doc.tipo= $scope.selectedTipo_u;
+             doc.profreal= $scope.profreal_u;
+             doc.taco= $scope.taco_u;
+             doc.aire= $scope.aire_u;
+             doc.bordo= $scope.bordo_u;
+             doc.espaciamiento= $scope.espaciamiento_u;
+             doc.diametro= $scope.diametro_u;
+             doc.status= "Updated";
+             doc.cargasinaire =  $scope.cargaSinAire;
+             doc.cargamenosaire = $scope.cargaMenosAire;
+             doc.cargaagraneldisp = $scope.cargaAgraneldisp;
+             doc.volumencil = $scope.volumenCil;
+             doc.cargaagranel = $scope.cargaAgranel;
+             doc.volumentotal = $scope.volumenTotal;
+             doc.pesototal = $scope.pesoTotal;
+             doc.factordecarga = $scope.factorDeCarga;
+
+                 return localDB.put(doc);
+                }).then(function() {
+            return localDB.get(id);
+            // handle response
+     
+            }).catch(function (err) {
+            console.log(err);
+           });
+
+
+
+     localDB.sync(remoteDB).on('complete', function () {
+        // yay, we're in sync!
+            }).on('error', function (err) {
+         // boo, we hit an error!
+            });
+
+         localDB.allDocs({
+         include_docs: true,
+         attachments: true
+         }).then(function (result) {
+         // handle result
+        $scope.Barrenos = result ;
+          }).catch(function (err) {
+        console.log(err);
+    });      
+        tipolocalDB.allDocs({
+         include_docs: true,
+         attachments: true
+         }).then(function (result) {
+         // handle result
+        $scope.tipobarr = result ;
+          }).catch(function (err) {
+        console.log(err);
+    });
+     
+
+}
      
 //create a new Barreno
 $scope.createBarr = function (){
     localDB.put({        
             _id: new Date().toISOString(), 
-            Col1: new Date().toISOString(),
+            barr: 'newbarr' + new Date().toISOString(),
             tipo: $scope.selectedTipo_u,
             profreal: $scope.profreal_u,
             taco: $scope.taco_u,
@@ -1522,6 +1582,7 @@ $scope.createBarr = function (){
             }).on('error', function (err) {
          // boo, we hit an error!
             });
+
 
 }
 
