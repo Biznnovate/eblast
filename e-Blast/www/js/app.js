@@ -5,7 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('app', ['ionic','pouchdb', 'ngcsv', 'app.controllers', 'app.routes', 'app.directives','app.services','barrenos','productos','iniciadores','firebase','firebaseConfig','productosgranel','ionic.native',])
+angular.module('app', ['ionic','pouchdb', 'ngcsv','ngSanitize', 'ngCsv', 'app.controllers', 'app.routes', 'app.directives','app.services','barrenos','productos','iniciadores','firebase','firebaseConfig','productosgranel','ionic.native',])
 
 .config(function($ionicConfigProvider, $sceDelegateProvider){
 
@@ -80,4 +80,32 @@ angular.module('app', ['ionic','pouchdb', 'ngcsv', 'app.controllers', 'app.route
       });
     }
   };
-});
+})
+.directive('exportToCsv',function(){
+  	return {
+    	restrict: 'A',
+    	link: function (scope, element, attrs) {
+    		var el = element[0];
+	        element.bind('click', function(e){
+	        	var table = e.target.nextElementSibling;
+	        	var csvString = '';
+	        	for(var i=0; i<table.rows.length;i++){
+	        		var rowData = table.rows[i].cells;
+	        		for(var j=0; j<rowData.length;j++){
+	        			csvString = csvString + rowData[j].innerHTML + ",";
+	        		}
+	        		csvString = csvString.substring(0,csvString.length - 1);
+	        		csvString = csvString + "\n";
+			    }
+	         	csvString = csvString.substring(0, csvString.length - 1);
+	         	var a = $('<a/>', {
+		            style:'display:none',
+		            href:'data:application/octet-stream;base64,'+btoa(csvString),
+		            download:'emailStatistics.csv'
+		        }).appendTo('body')
+		        a[0].click()
+		        a.remove();
+	        });
+    	}
+  	}
+	});

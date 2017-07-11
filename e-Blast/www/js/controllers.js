@@ -16,12 +16,68 @@ function ($scope, $stateParams) {
 
 }])
    
-.controller('vistaDeReporteCtrl', ['$scope', '$stateParams', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+.controller('vistaDeReporteCtrl', ['$scope', '$stateParams',  'pouchDB', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
-function ($scope, $stateParams) {
+function ($scope, $stateParams, pouchDB, ) {
+let localDB = new pouchDB('barrenos');
+let remoteDB = new PouchDB('https://biznnovate.cloudant.com/eblast-barrenos');    
+localDB.sync(remoteDB).on('complete', function () {
+  // yay, we're in sync!
+}).on('error', function (err) {
+  // boo, we hit an error!
+});
 
+localDB.allDocs({
+            include_docs: true,
+            attachments: true
+            }).then(function (result) {
+            // handle result
+            $scope.Barrenos = result ;
+            }).catch(function (err) {
+            console.log(err);
+        });
 
+$scope.butGen=true;
+$scope.butExp=false;
+$scope.dataExport = []
+$scope.createDataExp = function(){
+    angular.forEach( $scope.Barrenos.rows, function(value, key){
+        var dataExp = {
+            'Barreno': value.doc.barr,
+            'CoordX': value.doc.coordx,
+            'CoordY' : value.doc.coordy,
+            'ProfDis': value.doc.prof,
+            'Diam': value.doc.diametro,
+            'ProfReal' : value.doc.profreal,
+            'Taco' : value.doc.taco,
+            'Aire' : value.doc.aire,
+            'Bordo' : value.doc.bordo,
+            'Espaciamiento': value.doc.espaciamiento,
+            'Diametro' : value.doc.diametro,
+            'Status' : value.doc.status,
+            'CargasinAire' : value.doc.cargasinaire,
+            'CargaMenosAire' : value.doc.cargamenosaire,
+            'cargaAgraneldisp' : value.doc.cargaagraneldisp,
+            'volumcil' : value.doc.volumencil,
+            'cargaagranel': value.doc.cargaagranel,
+            'volumentotal': value.doc.volumentotal,
+            'pesototal' : value.doc.pesototal,
+            'factordecarga': value.doc.factordecarga,
+         }
+     $scope.dataExport.push(dataExp);
+
+    });
+    $scope.butGen=false;
+    $scope.butExp=true;
+}
+
+ $scope.ExportCSV = function (obj){
+       
+        console.log(obj)
+        console.log($scope.barreno)
+        $scope.dataExport = obj;   
+ };
 }])
    
 .controller('menuCtrl', ['$scope', '$stateParams', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller

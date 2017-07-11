@@ -2,6 +2,30 @@
   <ion-content padding="true" class="has-header">
     <a ui-sref="menu.generarReporteDatosGenerales()" id="vistaDeReporte-button47" class="button button-positive button-block icon-left ion-edit">Editar Reporte</a>
     <button id="vistaDeReporte-button49" class="button button-positive button-block icon-left ion-android-contract">Vista Previa de Reporte</button>
-    <button id="vistaDeReporte-button50" class="button button-positive button-block icon-left ion-android-download">Descargar Reporte</button>
+    <button id="vistaDeReporte-button50" class="button button-positive button-block icon-left ion-android-contract" ng-show="butGen" ng-click="createDataExp()">Generar Reporte</button>
+ 
+ <button class="button button-positive button-block icon-left ion-android-download" ng-show="butExp" type="button" ng-csv="dataExport" 
+    csv-header="['Barreno', 
+            'Coordx', 
+            'Coordy',  
+            'Prof Dis',
+            'Diametro',
+            'Prof Real',
+            'Taco',
+            'Aire',
+            'Bordo',
+            'Espaciamiento',
+            'Diametro',
+            'Status',
+            'Carga sin Aire',
+            'Carga menos Aire',
+            'Carga a granel Disp',
+            'Volumen cil',
+            'Carga a granel',
+            'Volumen total',
+            'Peso total',
+            'Factor de carga']" filename="test.csv">Descargar Reporte</button>
+
+ 
   </ion-content>
 </ion-view>
