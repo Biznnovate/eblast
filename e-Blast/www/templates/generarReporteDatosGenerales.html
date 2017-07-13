@@ -3,45 +3,42 @@
     <form id="generarReporteDatosGenerales-form16" class="list">
       <label class="item item-input" id="generarReporteDatosGenerales-input51">
         <span class="input-label">N de Voladura Stracon</span>
-        <input type="number" placeholder="">
+        <input type="number" placeholder="" ng-model="stracon" ng-change="updateStracon(stracon)">
       </label>
       <label class="item item-input" id="generarReporteDatosGenerales-input52">
         <span class="input-label">N de Voladura Austin</span>
-        <input type="number" placeholder="">
+        <input type="number" placeholder="" ng-model="voladuranum" ng-change="updateVoladuranum(voladuranum)">
       </label>
       <label class="item item-input" id="generarReporteDatosGenerales-input53">
         <span class="input-label">Hora de Inicio de Carga</span>
-        <input type="time" placeholder="10">
+        <input type="time" placeholder="10" ng-model="horaini" ng-change="updateHoraini(horaini)">
       </label>
       <label class="item item-input" id="generarReporteDatosGenerales-input54">
         <span class="input-label">Tipo de Tiro</span>
-        <input type="text" placeholder="">
+        <input type="text" placeholder="" ng-model="tipotiro" ng-change="updateTipotiro(tipotiro)">
       </label>
       <label class="item item-input" id="generarReporteDatosGenerales-input55">
         <span class="input-label">Fecha de Tiro</span>
-        <input type="date" placeholder="Camion 1">
+        <input type="date" placeholder="" ng-model="fechatiro" ng-change="updateFechatiro(fechatiro)">
       </label>
       <label class="item item-input" id="generarReporteDatosGenerales-input56">
         <span class="input-label">Fecha Inicio Cargado</span>
-        <input type="date" placeholder="Camion 1">
+        <input type="date" placeholder="" ng-model="fechacarga" ng-change="updateFechacarga(fechacarga)">
       </label>
       <label class="item item-input" id="generarReporteDatosGenerales-input57">
         <span class="input-label">Frente de Trabajo</span>
-        <input type="text" placeholder="">
+        <input type="text" placeholder="" ng-model="frentetrab"ng-change="updateFrentetrab(frentetrab)">
       </label>
       <label class="item item-select" id="generarReporteDatosGenerales-select20">
         <span class="input-label">Explosivista</span>
-        <select>
-          <option>Arnaldo Barria</option>
-          <option>Eliodoro Olmos</option>
-          <option>Hernan de Leon</option>
-          <option>Jose Luis Hernandez</option>
-          <option>Nelson Martinez</option>
+        <select ng-options="explo as explo.doc.name for explo in explolist.rows" 
+        ng-change="updateExplo(selectedExplo)" ng-model="selectedExplo"> 
+      
         </select>
       </label>
       <label class="item item-input" id="generarReporteDatosGenerales-input58">
         <span class="input-label">Licencia de Explosivista </span>
-        <input type="text" placeholder="DIASP-00380-040615">
+        <input type="text" placeholder="" ng-model="selectedExplo.doc.lic">
       </label>
       <label class="item item-input" id="generarReporteDatosGenerales-input59">
         <span class="input-label">Bordo</span>
@@ -80,6 +77,10 @@
         <input type="text" placeholder="">
       </label>
     </form>
-    <a ui-sref="menu.generarReporteProductos()" id="generarReporteDatosGenerales-button45" class="button button-positive button-block icon-right ion-android-arrow-forward">Siguiente</a>
+    <div id="editarVoladuraMapa-button-bar5" class="button-bar">
+      <button id="editarVoladuraMapa-button33" ng-click="saveDataGral()" style="border-radius:50px 50px 50px 50px;" class="button button-positive button-block icon-left ion-android-checkmark-circle">Guardar</button>
+      <button ui-sref="menu.generarReporteProductos()" id="generarReporteDatosGenerales-button45" style="border-radius:50px 50px 50px 50px;" class="button button-positive button-block icon-right ion-android-arrow-forward">Siguiente</button>
+    </div>
+    
   </ion-content>
 </ion-view>

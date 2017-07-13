@@ -34,9 +34,9 @@
       
       <label class="item item-input" id="editarVoladuraMapa-search4">
         <i class="icon ion-search placeholder-icon"></i>
-        <input type="search" placeholder="Buscar agujero por Nombre" ng-model = "searchBarr" ng-change = "searchBarrfunc()">
+        <input type="search" placeholder="Buscar agujero por Nombre" ng-model = "searchBarr" ng-change="srchchange()">
       </label>
-      
+      <p>{{names}}</p>
       <ion-list id="editarVoladuraMapa-list7">
         <label class="item item-select" id="editarVoladuraMapa-select19">
           <span class="input-label">Barrenos</span>
@@ -83,17 +83,19 @@
     <div id="editarVoladuraMapa-markdown9" class="show-list-numbers-and-dots"></div>
     <div id="editarVoladuraMapa-markdown10" class="show-list-numbers-and-dots">
      
-       <p style="color:#000000;">Carga Sin Aire: {{cargaSinAire}} Carga menos Aire: {{cargaMenosAire}} 
+       <!--p style="color:#000000;">Carga Sin Aire: {{cargaSinAire}} Carga menos Aire: {{cargaMenosAire}} 
         Carga a Granel Disponible: {{cargaAgraneldisp}} Volumen Cilindrico: {{volumenCil}} Carga a Granel: {{cargaAgranel}}
-        Volumen Total: {{volumenTotal}} Factor de Carga: {{factorDeCarga}} </p>
+        Volumen Total: {{volumenTotal}} Factor de Carga: {{factorDeCarga}} </p-->
 
 
     </div>
     <div id="editarVoladuraMapa-button-bar5" class="button-bar">
       <a ui-sref="menu.editarVoladuraCaptaciN()" id="editarVoladuraMapa-button25" style="border-radius:50px 50px 50px 50px;" class="button button-positive button-block icon-left ion-edit">Editar Barreno</a>
-      <button id="editarVoladuraMapa-button30" ng-click="createBarr()" style="border-radius:50px 50px 50px 50px;" class="button button-positive button-block icon-left ion-android-add-circle">Agregar Barreno</button>
-      <button id="editarVoladuraMapa-button30" ng-click="calculos()" style="border-radius:50px 50px 50px 50px;" class="button button-positive button-block icon-left ion-android-checkmark-circle">Calc</button>
-      <button id="editarVoladuraMapa-button30" ng-click="updateBarr()" style="border-radius:50px 50px 50px 50px;" class="button button-positive button-block icon-left ion-android-checkmark-circle">Guardar</button>
+      <button id="editarVoladuraMapa-button31" ng-click="createBarr()" style="border-radius:50px 50px 50px 50px;" class="button button-positive button-block icon-left ion-android-add-circle">Agregar Barreno</button>
+      <button id="editarVoladuraMapa-button32" ng-click="calculos()" style="border-radius:50px 50px 50px 50px;" class="button button-positive button-block icon-left ion-android-checkmark-circle">Calc</button>
+      <button id="editarVoladuraMapa-button33" ng-click="updateBarr()" style="border-radius:50px 50px 50px 50px;" class="button button-positive button-block icon-left ion-android-checkmark-circle">Guardar</button>
     </div>
+    <button id="editarVoladuraMapa-button34" ng-click="gotoMenu()" style="border-radius:50px 50px 50px 50px;" class="button button-positive button-block icon-right ios-arrow-dropright">Finalizar</button>
+    
   </ion-content>
 </ion-view>

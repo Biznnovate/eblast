@@ -15,7 +15,7 @@
             <option>4</option>
           </select>
         </label>
-        <ion-toggle toggle-class="toggle-positive" id="ajustarCSV-toggle5" ng-model="titleToggle">Contiene Titulos?</ion-toggle>
+        <!--ion-toggle toggle-class="toggle-positive" id="ajustarCSV-toggle5" ng-model="titleToggle">Contiene Titulos?</ion-toggle-->
        </form>
     </div>
          <a id="ajustarCSV-button63"  style="border-radius:50px 50px 50px 50px;" 
@@ -80,13 +80,6 @@
     <div class="row">
       <p>Cantidad Total de Barrenos: {{Barrenos.total_rows}}</p>
     </div>
-    <div class="row">
-      <div class="col">{{column_type.a.nam}}</div>
-      <div class="col">{{column_type.b.nam}}</div>
-      <div class="col">{{column_type.c.nam}}</div>
-      <div class="col">{{column_type.d.nam}}</div>
-      <div class="col">{{column_type.e.nam}}</div>
-    </div>
 
     <ion-list id="ajustarCSV-list11">
       
@@ -101,18 +94,6 @@
       </ion-item>
     </ion-list>
 
-<ion-list id="ajustarCSV-list11">
-      
-      <ion-item class="assertive" id="ajustarCSV-list-item18" ng-repeat="barreno in Barrenostest.rows | orderBy:'doc.barr'">
-        <div class="row">
-          <!--div class="col">{{barreno.id}}</div-->
-          <div class="col">{{barreno.doc.barr}}</div>
-          <div class="col">{{barreno.doc.coordx}}</div>
-          <div class="col">{{barreno.doc.coordy}}</div>
-          <div class="col">{{barreno.doc.prof}}</div>
-          <div class="col">{{barreno.doc.diametro}}</div>
-        </div>
-      </ion-item>
-    </ion-list>
+
   </ion-content>
 </ion-view>

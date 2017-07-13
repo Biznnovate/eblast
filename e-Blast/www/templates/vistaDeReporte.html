@@ -1,8 +1,15 @@
 <ion-view title="Vista de Reporte" id="page16">
   <ion-content padding="true" class="has-header">
+    <ion-list id="editarVoladuraMapa-list7">
+        <label class="item item-select" id="editarVoladuraMapa-select19">
+          <span class="input-label">Proyecto</span>
+
+          <select ng-options="proj as proj.doc.voladuranum for proj in projInfo.rows | orderBy: 'doc.voladuranum/1' " ng-model="selectedProj" ng-change="selectProj(selectedProj)"></select>
+    </label>
+    </ion-list>
     <a ui-sref="menu.generarReporteDatosGenerales()" id="vistaDeReporte-button47" class="button button-positive button-block icon-left ion-edit">Editar Reporte</a>
-    <button id="vistaDeReporte-button49" class="button button-positive button-block icon-left ion-android-contract">Vista Previa de Reporte</button>
-    <button id="vistaDeReporte-button50" class="button button-positive button-block icon-left ion-android-contract" ng-show="butGen" ng-click="createDataExp()">Generar Reporte</button>
+
+    
  
  <button class="button button-positive button-block icon-left ion-android-download" ng-show="butExp" type="button" ng-csv="dataExport" 
     csv-header="['Barreno', 
@@ -24,8 +31,17 @@
             'Carga a granel',
             'Volumen total',
             'Peso total',
-            'Factor de carga']" filename="test.csv">Descargar Reporte</button>
+            'Factor de carga']" filename="{{dataName}}.csv">Descargar Reporte</button>
 
- 
+  <button class="button button-positive button-block icon-left ion-android-download" ng-show="butExp" type="button" ng-csv="frontExport" 
+    csv-header="['stracon',
+                'voladuranum',
+                'horaini',
+                'tipotiro',
+                'fechatiro',
+                'fechacarga',
+                'frentetrab',
+                'explosivista',
+                'explolic',]" filename="{{infoName}}.csv">Descargar Front</button>
   </ion-content>
 </ion-view>

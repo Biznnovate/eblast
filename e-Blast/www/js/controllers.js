@@ -20,6 +20,7 @@ function ($scope, $stateParams) {
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
 function ($scope, $stateParams, pouchDB, ) {
+    //llama bd de data
 let localDB = new pouchDB('barrenos');
 let remoteDB = new PouchDB('https://biznnovate.cloudant.com/eblast-barrenos');    
 localDB.sync(remoteDB).on('complete', function () {
@@ -37,10 +38,82 @@ localDB.allDocs({
             }).catch(function (err) {
             console.log(err);
         });
+let localprojDB = new pouchDB('projects');
+let remoteprojDB = new PouchDB('https://biznnovate.cloudant.com/eblast-proj'); 
+      localprojDB.sync(remoteprojDB).on('complete', function () {
+        // yay, we're in sync!
+        }).on('error', function (err) {
+        // boo, we hit an error!
+    });
+//llama datos de DB de Explosivistas
+localprojDB.allDocs({
+         include_docs: true,
+         attachments: true
+         }).then(function (result) {
+         // handle result
+        $scope.projInfo = result ;
+          }).catch(function (err) {
+        console.log(err);
+    });
 
 $scope.butGen=true;
 $scope.butExp=false;
 $scope.dataExport = []
+$scope.frontExport = []
+
+ $scope.selectProj = function (obj){
+       
+        console.log(obj)
+        console.log($scope.selectedProj)
+        $scope.selectedProj_u = obj;   
+        angular.forEach( $scope.Barrenos.rows, function(value, key){
+        var dataExp = {
+            'Barreno': value.doc.barr,
+            'CoordX': value.doc.coordx,
+            'CoordY' : value.doc.coordy,
+            'ProfDis': value.doc.prof,
+            'Diam': value.doc.diametro,
+            'ProfReal' : value.doc.profreal,
+            'Taco' : value.doc.taco,
+            'Aire' : value.doc.aire,
+            'Bordo' : value.doc.bordo,
+            'Espaciamiento': value.doc.espaciamiento,
+            'Diametro' : value.doc.diametro,
+            'Status' : value.doc.status,
+            'CargasinAire' : value.doc.cargasinaire,
+            'CargaMenosAire' : value.doc.cargamenosaire,
+            'cargaAgraneldisp' : value.doc.cargaagraneldisp,
+            'volumcil' : value.doc.volumencil,
+            'cargaagranel': value.doc.cargaagranel,
+            'volumentotal': value.doc.volumentotal,
+            'pesototal' : value.doc.pesototal,
+            'factordecarga': value.doc.factordecarga,
+         }
+     $scope.dataExport.push(dataExp);
+        
+    });
+ 
+        
+            var projExp = {
+                'stracon': $scope.selectedProj_u.doc.stracon,
+                'voladuranum': $scope.selectedProj_u.doc.voladuranum,
+                'horaini': $scope.selectedProj_u.doc.horaini,
+                'tipotiro': $scope.selectedProj_u.doc.tipotiro,
+                'fechatiro': $scope.selectedProj_u.doc.fechatiro,
+                'fechacarga': $scope.selectedProj_u.doc.fechacarga,
+                'frentetrab': $scope.selectedProj_u.doc.frentetrab,
+                'explosivista': $scope.selectedProj_u.doc.explosivista,
+                'explolic': $scope.selectedProj_u.doc.explolic,
+            
+         }
+        $scope.frontExport.push(projExp);
+
+    $scope.butGen=false;
+    $scope.butExp=true;
+    $scope.dataName = 'Reporte ' + Date();
+    $scope.infoName = 'Front '+ Date();
+ };
+
 $scope.createDataExp = function(){
     angular.forEach( $scope.Barrenos.rows, function(value, key){
         var dataExp = {
@@ -66,11 +139,30 @@ $scope.createDataExp = function(){
             'factordecarga': value.doc.factordecarga,
          }
      $scope.dataExport.push(dataExp);
-
+        
     });
+
+    var projExp = {
+                'stracon': $scope.selectedProj_u.stracon,
+                'voladuranum': $scope.selectedProj_u.voladuranum,
+                'horaini': $scope.selectedProj_u.doc.horaini,
+                'tipotiro': $scope.selectedProj_u.doc.tipotiro,
+                'fechatiro': $scope.selectedProj_u.doc.fechatiro,
+                'fechacarga': $scope.selectedProj_u.doc.fechacarga,
+                'frentetrab': $scope.selectedProj_u.doc.frentetrab,
+                'explosivista': $scope.selectedProj_u.doc.explosivista,
+                'explolic': $scope.selectedProj_u.explolic,
+            
+         }
+        $scope.frontExport.push(projExp);
+   
     $scope.butGen=false;
     $scope.butExp=true;
+    $scope.dataName = 'Reporte ' + Date();
+    $scope.infoName = 'Front '+ Date();
 }
+
+
 
  $scope.ExportCSV = function (obj){
        
@@ -78,6 +170,7 @@ $scope.createDataExp = function(){
         console.log($scope.barreno)
         $scope.dataExport = obj;   
  };
+
 }])
    
 .controller('menuCtrl', ['$scope', '$stateParams', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
@@ -959,6 +1052,7 @@ $scope.tipodeprod_list = [
         {'id': 'cg', 'tipo': 'Carga a Granel'},
     ];
 
+
 //muestra los datos a capturar
 $scope.barrForm = '';
 $scope.reloadButton = '';
@@ -998,7 +1092,13 @@ $scope.showBarrFormUpdate = function (){
         $scope.reloadButton = '';
         
 }
-
+ $scope.tipodecarga_u = '';
+  $scope.tipodecarga = 'Fija';
+    $scope.tipoprodchange = function(obj){
+        console.log(obj)
+        console.log($scope.tipodecarga)
+   
+    };
 $scope.updateTaco = function(obj){
         console.log(obj)
         console.log($scope.taco)
@@ -1009,7 +1109,12 @@ $scope.updateAire = function(obj){
         console.log($scope.aire)
         $scope.aire_u = obj;
     };
-
+$scope.cantprod_u = 1;    
+$scope.updateCant = function(obj){
+        console.log(obj)
+        console.log($scope.cantprod)
+        $scope.cantprod_u = obj;
+    };
 $scope.updateBordo = function(obj){
         console.log(obj)
         console.log($scope.bordo)
@@ -1300,10 +1405,10 @@ $scope.produ = Productos.keys;
 
 }])
    
-.controller('editarVoladuraMapaCtrl', ['$scope', '$stateParams', 'Survey', '$window', '$state', 'pouchDB', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+.controller('editarVoladuraMapaCtrl', ['$scope', '$stateParams', 'Survey', '$window', '$state', '$filter', 'pouchDB', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
-function ($scope, $stateParams, Survey, $window, $state, pouchDB) {
+function ($scope, $stateParams, Survey, $window, $state, $filter, pouchDB) {
 //tipo as tipo.tipo for tipo in newTipoBars
 //$scope.Math = window.Math;
 
@@ -1473,6 +1578,28 @@ $scope.calculos= function () {
 $scope.barrDetailstoggle = function (){
     $scope.barrDetails = true;
 }
+$scope.Barrenosnames = $scope.Barrenos;
+$scope.srchchange = function () {
+
+        $scope.Barrenosnames = null;
+        var filtervalue = [];
+		var serachData=$scope.Barrenos.rows;
+		console.log(serachData);
+        for (var i = 0; i <serachData.length; i++) {
+
+            var fltvar = $filter('uppercase')($scope.searchBarr);
+            var jsval = $filter('uppercase')(serachData[i].barr);
+
+            if (jsval.indexOf(fltvar) >= 0) {
+                filtervalue.push(serachData[i]);
+            }
+        }
+       // console.log("last");
+        console.log(filtervalue);
+        $scope.Barrenosnames = filtervalue;
+        alert(filtervalue)
+    };
+
 $scope.searchBarrfunc = function (){
     var item = $scope.searchBarr; 
     localDB.find({
@@ -1643,7 +1770,9 @@ $scope.createBarr = function (){
 }
 
 
-
+    $scope.gotoMenu = function(){
+        $state.go('menu.vistaDeProyecto');
+    }
 
 
 
@@ -1675,12 +1804,151 @@ function ($scope, $stateParams) {
 
 }])
    
-.controller('generarReporteDatosGeneralesCtrl', ['$scope', '$stateParams', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+.controller('generarReporteDatosGeneralesCtrl', ['$scope', '$stateParams', 'pouchDB', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
-function ($scope, $stateParams) {
+function ($scope, $stateParams, pouchDB) {
 
 
+$scope.explisttemp = [
+        {'name': 'Arnaldo Barría', 'lic' : 'DIASP-00380-040615'},
+        {'name': 'Eliodoro Olmos', 'lic' : 'DIASP-00378-200515'},
+        {'name': 'Hernan de Leon', 'lic' : 'DIASP-00261-190314'},
+        {'name': 'José Luis Hernandez', 'lic' : 'DIASP-00381-190615'},
+        {'name': 'Nelson Martinez', 'lic' : 'DIASP-00267-070414'},
+        {'name': 'Omar Rodriguez', 'lic' : 'DIASP-00266-070414'},
+        {'name': 'Osman Jiménez', 'lic' : 'DIASP-00382-250615'},
+        ];
+//declara db de Explosivistas
+
+let localexpDB = new pouchDB('explo');
+let remoteexpDB = new PouchDB('https://biznnovate.cloudant.com/eblast-explo'); 
+      localexpDB.sync(remoteexpDB).on('complete', function () {
+        // yay, we're in sync!
+        }).on('error', function (err) {
+        // boo, we hit an error!
+    });
+
+//declara db de Proyecto
+
+let localprojDB = new pouchDB('projects');
+let remoteprojDB = new PouchDB('https://biznnovate.cloudant.com/eblast-proj'); 
+      localprojDB.sync(remoteprojDB).on('complete', function () {
+        // yay, we're in sync!
+        }).on('error', function (err) {
+        // boo, we hit an error!
+    });
+//llama datos de DB de Explosivistas
+localexpDB.allDocs({
+         include_docs: true,
+         attachments: true
+         }).then(function (result) {
+         // handle result
+        $scope.explolist = result ;
+          }).catch(function (err) {
+        console.log(err);
+    });
+
+var uploadExplosivista = function(){
+    angular.forEach($scope.explisttemp, function(value, key){  
+        
+         
+        localexpDB.post({
+                
+                name: value.name,
+                lic: value.lic,
+                                 
+                }).then(function(response) {
+            // handle response
+            }).catch(function (err) {
+            console.log(err);
+        });   
+        });
+      localexpDB.sync(remoteexpDB).on('complete', function () {
+        // yay, we're in sync!
+        }).on('error', function (err) {
+        // boo, we hit an error!
+        });
+}
+
+
+$scope.updateStracon = function(obj){
+        console.log(obj)
+        console.log($scope.stracon)
+        $scope.stracon_u = obj;
+        
+    };
+
+$scope.updateVoladuranum = function(obj){
+        console.log(obj)
+        console.log($scope.voladuranum)
+        $scope.voladuranum_u = obj;
+        
+    };
+
+$scope.updateHoraini = function(obj){
+        console.log(obj)
+        console.log($scope.horaini)
+        $scope.horaini_u = obj;
+        
+    };
+$scope.updateTipotiro = function(obj){
+        console.log(obj)
+        console.log($scope.tipotiro)
+        $scope.tipotiro_u = obj;
+        
+    };
+$scope.updateFechatiro = function(obj){
+        console.log(obj)
+        console.log($scope.fechatiro)
+        $scope.fechatiro_u = obj;
+        
+    };
+$scope.updateFechacarga = function(obj){
+        console.log(obj)
+        console.log($scope.fechacarga)
+        $scope.fechacarga_u = obj;
+        
+    };
+$scope.updateFrentetrab = function(obj){
+        console.log(obj)
+        console.log($scope.frentetrab)
+        $scope.frentetrab_u = obj;
+        
+    };
+$scope.updateExplo = function(obj){
+        console.log(obj)
+        console.log($scope.selectedExplo)
+        $scope.selectedExplo_u = obj;
+
+    };
+
+$scope.saveDataGral = function(){
+    
+     localprojDB.put({
+                _id: $scope.voladuranum_u + new Date().toISOString(),
+                stracon: $scope.stracon_u,
+                voladuranum: $scope.voladuranum_u,
+                horaini: $scope.horaini_u,
+                tipotiro: $scope.tipotiro_u,
+                fechatiro: $scope.fechatiro_u,
+                fechacarga: $scope.fechacarga_u,
+                frentetrab: $scope.frentetrab_u,
+                explosivista: $scope.selectedExplo_u.doc.name,
+                explolic: $scope.selectedExplo_u.doc.lic,
+       
+                }).then(function(response) {
+            // handle response
+            }).catch(function (err) {
+            console.log(err);
+        });   
+  
+      localprojDB.sync(remoteprojDB).on('complete', function () {
+        // yay, we're in sync!
+        }).on('error', function (err) {
+        // boo, we hit an error!
+        });
+}
 }])
    
 .controller('agregarBarrenoCtrl', ['$scope', '$stateParams', 'Survey', '$ionicPopup', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller

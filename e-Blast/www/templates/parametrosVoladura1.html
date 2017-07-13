@@ -49,14 +49,30 @@
         <span class="input-label">Diametro</span>
         <input type="number" placeholder=" mts" ng-model="diametro" ng-change="updateDiametro(diametro)">
       </label>
+      <ion-toggle toggle-class="toggle-positive" id="tipodeprod-toggle5" ng-model="tipodecarga" 
+                ng-true-value="'Variable'" ng-false-value="'Fija'"
+            ng-change="tipoprodchange(tipodecarga)">Tipo de Carga {{tipodecarga}}</ion-toggle>
       <label class="item item-select" id="parametrosVoladura1-select13">
-        <span class="input-label">Tipo de Producto</span>
-        <select ng-options="tipo as tipo.tipo for tipo in tipodeprod_list" ng-model="tipoProd"></select>
+        <span class="input-label">Carga {{tipodecarga}}</span>
+        <select ng-options="tipo as tipo.tipo for tipo in tipodeprod_list" ng-model="tipoProd" ng-show="tipodecarga=='Fija'"></select>
+        <select ng-options="tipo as tipo.tipo for tipo in tipodeprod_list" ng-model="tipoProd" ng-show="tipodecarga=='Variable'"></select>
+        
       </label>
+      <div class="row">
+      <div class="col">
       <label class="item item-select" id="parametrosVoladura1-select25">
         <span class="input-label">{{tipoProd.tipo}}</span>
         <select ng-model="newProd" ng-options="producto as producto.prod for producto in listed_productos | filter:producto.tipoid=tipoProd.id"></select>
       </label>
+      </div>
+      <div class="col">
+        <label class="item item-input" id="editarVoladuraMapa-cantprod" ng-show="tipodecarga=='Variable'">
+        <span class="input-label">Cantidad</span>
+      <input type="number" placeholder=" "  ng-model="cantprod" ng-change="updateCant(cantprod)">
+        </label>
+      </div>
+      </div>
+      
       <div style="margin-right:-20px;">
      
         <button id="parametrosVoladura1-button24" ng-click="add(newProd)" style="left:-10px;border-radius:0px 0px 0px 0px;" 
