@@ -3,6 +3,7 @@
   "version": "1.1.1",
   "description": "e-Blast: An Ionic project",
   "dependencies": {
+    "angular-chart.js": "^1.1.1",
     "angular2-csv": "^0.2.3",
     "gulp": "^3.5.6",
     "gulp-concat": "^2.2.0",

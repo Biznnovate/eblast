@@ -63,7 +63,7 @@
       <div class="col">
       <label ng-show="showDiamunit!=''" class="item item-select" id="ajustarCSV-selectprofunit">
         <span class="input-label">Medida</span>
-        <select ng-options="nam as nam.nam for nam in unitTableProf" ng-model="unitdiametro" ng-change="selectUnitDia(unitdiametro)"></select>
+        <select ng-options="nam as nam.nam for nam in unitTableDia" ng-model="unitdiametro" ng-change="selectUnitDia(unitdiametro)"></select>
       </label>
       </div>
       </div>
@@ -90,6 +90,7 @@
           <div class="col">{{barreno.doc.Col2}}</div>
           <div class="col">{{barreno.doc.Col3}}</div>
           <div class="col">{{barreno.doc.Col4}}</div>
+          <div class="col">{{barreno.doc.Col5}}</div>
         </div>
       </ion-item>
     </ion-list>

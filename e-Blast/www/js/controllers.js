@@ -237,6 +237,7 @@ $scope.addCSV = function() {
         Col2: o[1],
         Col3: o[2],
         Col4: o[3],
+        Col5: o[4],
           }).then(function (response) {
   // handle response
     }).catch(function (err) {
@@ -614,6 +615,14 @@ $scope.column_type_list = [
 
 
 $scope.unitTableProf = [
+   {'id': 'mm', 'val': 1000, 'nam': 'Milímetros (mm)'} ,
+   {'id': 'cm', 'val': 100, 'nam': 'Centímetros (cm)'} ,
+   {'id': 'dm', 'val': 10, 'nam': 'Decímetros (dm)'} ,
+   {'id': 'mts', 'val': 1, 'nam': 'Metros (mts)'} ,
+   {'id': 'ft', 'val': 3.28084 , 'nam': 'Pies (ft)'} ,
+   {'id' : 'in', 'val': 39.3701, 'nam': 'Pulgadas (in)'},
+];
+$scope.unitTableDia = [
    {'id': 'mm', 'val': 1, 'nam': 'Milímetros (mm)'} ,
    {'id': 'cm', 'val': 0.1, 'nam': 'Centímetros (cm)'} ,
    {'id': 'dm', 'val': 0.01, 'nam': 'Decímetros (dm)'} ,
@@ -1047,7 +1056,7 @@ let tiporemoteDB = new PouchDB('https://biznnovate.cloudant.com/eblast-bartype')
             });
 
 $scope.tipodeprod_list = [
-        {'id': 'ini', 'tipo': 'Iniciadores' },
+        //{'id': 'ini', 'tipo': 'Iniciadores' },
         {'id': 'ce', 'tipo': 'Carga Empacada'},
         {'id': 'cg', 'tipo': 'Carga a Granel'},
     ];
@@ -1073,6 +1082,7 @@ $scope.showBarrForm = function (){
    $scope.DisableUpdateButton = true;
 
 
+
 }).catch(function (err) {
   console.log(err);
   // alert('no');
@@ -1082,9 +1092,38 @@ $scope.showBarrForm = function (){
     $scope.barrForm = 'Yes';
     $scope.DisableSaveButton = true;
 });
+ $scope.showTipoprodbarrAct = false;
 
 }
+$scope.tipoprodId = '';
+$scope.showTipoprodbarr = function (obj){
+    $scope.showTipoprodbarrAct = true;
+    $scope.tipoprodId = obj.id;
+  
+}
+$scope.showAmountInput = true;
+$scope.getTipoProd = function (obj){
+        console.log(obj);
+      $scope.newTipoProd = obj;
+       //$scope.showAmountInput = false;
+       //$scope.showAddbutton = false; 
+       $scope.showCargaForm = false; 
+}
 
+$scope.tipodecarga= 'Fija';
+$scope.getTipoIni = function (obj){
+        console.log(obj);
+      $scope.newTipoProd = obj;
+       //$scope.showAmountInput = false;
+       $scope.showAddbutton = false; 
+
+      //s alert($scope.showCargaForm)
+}   
+$scope.showCargaForm= true;     
+$scope.changeShowCarga = function(){
+    $scope.showCargaForm= false;
+    $scope.showAddbutton= true;
+}    
 $scope.showBarrFormUpdate = function (){
         $scope.barrForm = 'Yes';
         $scope.updateButton = 'Yes';
@@ -1092,13 +1131,21 @@ $scope.showBarrFormUpdate = function (){
         $scope.reloadButton = '';
         
 }
- $scope.tipodecarga_u = '';
-  $scope.tipodecarga = 'Fija';
+$scope.tipodecarga_u = '';
+$scope.tipodecarga = '';
     $scope.tipoprodchange = function(obj){
         console.log(obj)
         console.log($scope.tipodecarga)
    
     };
+
+
+    
+$scope.changeTipoCarga = function(obj){
+        console.log(obj)
+        console.log($scope.tipodecarga)
+        $scope.tipodecarga_u = obj;
+    };    
 $scope.updateTaco = function(obj){
         console.log(obj)
         console.log($scope.taco)
@@ -1109,11 +1156,22 @@ $scope.updateAire = function(obj){
         console.log($scope.aire)
         $scope.aire_u = obj;
     };
-$scope.cantprod_u = 1;    
+//$scope.cantprod = 1;
+$scope.cantprod_u = 1;
+$scope.cantprodgra_u = 1;  
+$scope.showAddbutton = true; 
+
 $scope.updateCant = function(obj){
         console.log(obj)
         console.log($scope.cantprod)
         $scope.cantprod_u = obj;
+   
+    };
+$scope.updateCantGra = function(obj){
+        console.log(obj)
+        console.log($scope.cantprodgra)
+        $scope.cantprodgra_u = obj;
+
     };
 $scope.updateBordo = function(obj){
         console.log(obj)
@@ -1125,11 +1183,19 @@ $scope.updateEspaciamiento = function(obj){
         console.log($scope.espaciamiento)
         $scope.espaciamiento_u = obj;
     };
+//$scope.diametro = 
+$scope.subperf =0.5;    
 $scope.updateDiametro = function(obj){
         console.log(obj)
         console.log($scope.diametro)
-        $scope.diametro_u = obj;
+        $scope.diametro_u = obj/1000;
     };
+$scope.updateSubperf = function(obj){
+        console.log(obj)
+        console.log($scope.subperf)
+        $scope.subperf_u = obj;
+    };
+
     
 //producto as producto.prod for producto in listed_productos | filter:producto.id=tipoProdv2.id
 
@@ -1166,6 +1232,16 @@ $scope.getPesoGra = function(){
     return total;
 
 }
+$scope.getDensidad = function(){
+    var total = 0;
+    for(var i = 0; i < $scope.prods.length; i++){
+     var product = $scope.prods[i];
+        total += (product.densidad);
+        $scope.DensidadTotal = total;
+    }
+    return total;
+
+}
 
 //suma total Generico
 $scope.getTotal = function(){
@@ -1197,16 +1273,17 @@ $scope.selectedParam = {
 
 $scope.newProdnam = '';
 
-$scope.newProd = {
+$scope.newProdold = {
 
                     
                     'id': $scope.selectedProd.id, 
                     'tipoid': $scope.selectedProd.tipoid,
                     'tipo': $scope.selectedProd.tipo, 
                     'prod': $scope.selectedProd.prod,
-                    'peso': $scope.selectedProd.peso,
+                    'peso': ($scope.selectedProd.peso/1)*$scope.cantprod_u,
                     'diametro':$scope.selectedProd.diametro,
-                    'largo': $scope.selectedProd.largo, 
+                    'largo': ($scope.selectedProd.largo/1)*$scope.cantprod_u,
+                    'densidad': ($scope.selectedProd.densidad)/1,
 
 }
 
@@ -1214,10 +1291,24 @@ $scope.newBarreno =[];
 //crea producto nuevo en lista
 
 
-$scope.add = function (newProd){
+$scope.add = function (obj){
+   
+    var newProd = {
+                    'id': obj.id, 
+                    'tipoid': obj.tipoid,
+                    'tipo': obj.tipo, 
+                    'prod': obj.prod,
+                    'peso': (obj.peso/1)*$scope.cantprod_u,
+                    'diametro':obj.diametro,
+                    'largo': (obj.largo/1)*$scope.cantprod_u,
+                    'densidad': (obj.densidad)/1, 
+                   
+                    
+    }
    // $scope.prods.nam.push('blahblah');
     $scope.prods.push(newProd);
-      
+    $scope.showAddbutton = true; 
+    $scope.showAmountInput = true; 
 }
 //$scope.newTipoBar = [];
 $scope.addTipoBar = function (newBarreno){
@@ -1235,8 +1326,8 @@ $scope.addTipoBar = function (newBarreno){
 //update Tipo de Barreno  
 
 $scope.updateType = function(){ 
-
-
+     var subperfo = $scope.subperf_u || $scope.subperf;
+     var tipodecarga = $scope.tipodecarga_u;  
      tipolocalDB.get($scope.newBarreno.nam).then(function(doc) {
                    
              //doc._id= $scope.newBarreno.nam;
@@ -1244,11 +1335,14 @@ $scope.updateType = function(){
              doc.carga= $scope.prods;
              doc.prof= $scope.LargoTotal;
              doc.peso= $scope.PesoTotal;
+             doc.densidad = $scope.DensidadTotal;
+             doc.tipodecarga = tipodecarga ;
              doc.taco = $scope.taco_u;
              doc.aire = $scope.aire_u;
              doc.bordo = $scope.bordo_u;
              doc.espaciamiento = $scope.espaciamiento_u;
              doc.diametro = $scope.diametro_u;
+             doc.subperf = subperfo;
                  return tipolocalDB.put(doc);
                 }).then(function() {
             return tipolocalDB.get($scope.newBarreno.nam);
@@ -1274,17 +1368,21 @@ $scope.updateType = function(){
 }
  //create tipo de barreno
 $scope.createType = function (){
-
+  var tipodecarga = $scope.tipodecarga_u;  
+  var subperfo = $scope.subperf_u || $scope.subperf;
        tipolocalDB.put({        
             _id: $scope.newBarreno.nam, 
             carga: $scope.prods,
             prof: $scope.LargoTotal,
             peso: $scope.PesoTotal,
+            densidad: $scope.DensidadTotal,
+            tipodecarga: tipodecarga,
             taco: $scope.taco_u,
             aire: $scope.aire_u,
             bordo: $scope.bordo_u,
             espaciamiento: $scope.espaciamiento_u,
-            diametro: $scope.diametro_u
+            diametro: $scope.diametro_u,
+            subperf: subperfo,
            
           }).then(function (response) {
   // handle response
@@ -1405,7 +1503,7 @@ $scope.produ = Productos.keys;
 
 }])
    
-.controller('editarVoladuraMapaCtrl', ['$scope', '$stateParams', 'Survey', '$window', '$state', '$filter', 'pouchDB', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+.controller('editarVoladuraMapaCtrl', ['$scope', '$stateParams', 'Survey', '$window', '$state', '$filter',  'pouchDB', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
 function ($scope, $stateParams, Survey, $window, $state, $filter, pouchDB) {
@@ -1517,11 +1615,17 @@ $scope.updateSelectedTipo = function(obj){
         $scope.aire = obj.doc.aire/1;
         $scope.bordo = obj.doc.bordo/1;
         $scope.espaciamiento = obj.doc.espaciamiento/1;
-       
+        $scope.subperf = obj.doc.subperf/1;
+        $scope.densidad = (obj.doc.densidad/1);
+        $scope.diametro = (obj.doc.diametro/1) || $scope.diametro;
+
         $scope.taco_u =  $scope.taco;
         $scope.aire_u = $scope.aire;
         $scope.bordo_u = $scope.bordo;
         $scope.espaciamiento_u = $scope.espaciamiento;
+        $scope.subperf_u = $scope.subperf;
+        $scope.densidad_u= $scope.densidad;
+        $scope.diametro_u = $scope.diametro
     };
 $scope.updateProfReal = function(obj){
         console.log(obj)
@@ -1554,6 +1658,11 @@ $scope.updateDiametro = function(obj){
         console.log($scope.diametro)
         $scope.diametro_u = obj;
     };
+$scope.updateSubperf = function(obj){
+        console.log(obj)
+        console.log($scope.subperf)
+        $scope.subperf_u = obj;
+    };    
 $scope.updateSelectedProdGra = function(obj){
         console.log(obj)
         console.log($scope.selectedProdGra)
@@ -1561,17 +1670,21 @@ $scope.updateSelectedProdGra = function(obj){
     };
 
 
-
+$scope.updateCargagra = function(obj){
+        console.log(obj)
+        console.log($scope.cargaAgranel)
+        $scope.cargaAgranel = obj;
+    };   
 
 $scope.calculos= function () {
     $scope.cargaSinAire = $scope.profreal_u - $scope.taco_u;
     $scope.cargaMenosAire = $scope.cargaSinAire - $scope.aire_u;
     $scope.cargaAgraneldisp =  $scope.cargaMenosAire - ($scope.selectedTipo_u.prof/100);
     $scope.volumenCil = $scope.cargaAgraneldisp * 1000 * 3.1416 * ($scope.diametro_u*$scope.diametro_u)/4;
-    $scope.cargaAgranel = (Math.round($scope.prodgra_u.densidad)) * ($scope.volumenCil/1000000);
-    $scope.volumenTotal = ($scope.profreal_u - 0.5) * $scope.bordo_u * $scope.espaciamiento_u;
-    $scope.pesoTotal = $scope.selectedTipo_u.peso + $scope.cargaAgranel;
-    $scope.factorDeCarga = $scope.pesoTotal/$scope.volumenTotal;
+    $scope.cargaAgranel = +((Math.round($scope.densidad)) * ($scope.volumenCil/1000000)).toFixed(2);
+    $scope.volumenTotal = ($scope.profreal_u - $scope.subperf_u) * $scope.bordo_u * $scope.espaciamiento_u;
+    $scope.pesoTotal = Math.round($scope.selectedTipo_u.peso + $scope.cargaAgranel);
+    $scope.factorDeCarga = +($scope.pesoTotal/$scope.volumenTotal).toFixed(2);
    // Carga a Grandel Disponible *1000*3.1416*(Diametro*Diametro)/4
 
 }
@@ -1773,7 +1886,50 @@ $scope.createBarr = function (){
     $scope.gotoMenu = function(){
         $state.go('menu.vistaDeProyecto');
     }
+     $scope.dataChart=[];
+     $scope.dataSeries=[]; 
 
+localDB.allDocs({
+         include_docs: true,
+         attachments: true
+         }).then(function (result) {
+         // handle result
+        $scope.Barrchar = result.rows ;
+          }).catch(function (err) {
+        console.log(err);
+    });
+$scope.dataChartBarrs = function(){
+    
+             $scope.colors = [
+            {
+              backgroundColor: "rgba(159,204,0, 0.2)",
+              pointBackgroundColor: "rgba(159,204,0, 1)",
+              pointHoverBackgroundColor: "rgba(159,204,0, 0.8)",
+              borderColor: "rgba(159,204,0, 1)",
+              pointBorderColor: '#fff',
+              pointHoverBorderColor: "rgba(159,204,0, 1)"
+            },"rgba(250,109,33,0.5)","#9a9a9a","rgb(233,177,69)"
+          ];  
+  var barrenosforchart = $scope.Barrchar  
+  angular.forEach( barrenosforchart, function(value, key){
+       
+        var data = {
+            'Barreno': value.doc.barr,
+            'x': value.doc.coordx,
+            'y' : value.doc.coordy,
+            'r' : 10
+            
+         }
+        var series = {
+            'Barreno': value.doc.barr
+            //'Status' : value.doc.status,
+        }
+  
+     $scope.dataChart.push(data);
+     $scope.dataSeries.push(series);      
+
+  })
+}
 
 
 
