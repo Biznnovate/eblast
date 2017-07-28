@@ -1637,7 +1637,7 @@ $scope.updateSelectedNewBarr = function(obj){
         console.log($scope.selectedBarreno)
       //alert($scope.selectedBarreno.doc)
         
-        $scope.selectedbarr_id = new Date().toISOString();
+        $scope.selectedbarr_id =  $scope.newBarrnam_u;
         $scope.selectedbarr = obj.doc;
         $scope.profreal = obj.doc.prof;
         $scope.profreal_u = $scope.profreal;
@@ -1649,24 +1649,106 @@ $scope.updateSelectedNewBarr = function(obj){
         $scope.coordy_u = $scope.coordy;
 
         $scope.message = "Guardar para Continuar";
-         var newbarr = {
-             'doc' : {
-                'barr' : 'New'+ $scope.selectedbarr_id,
-                'coordx': $scope.coordx,
-                'coordy': $scope.coordy,
-                'prof': $scope.profreal,
-                'diam': $scope.diametro,
-                '_id': $scope.selectedbarr_id,
-             }
+        
+       
+
+        localDB.put({   
+     
+            _id: $scope.selectedbarr_id, 
+            barr: 'N-' + $scope.selectedbarr_id ,
+            tipo: $scope.selectedTipo_u,
+            profreal: $scope.profreal_u,
+            coordx: $scope.coordx_u+1,
+            coordy: $scope.coordy_u+1,
+            taco: $scope.taco_u,
+            aire: $scope.aire_u,
+            bordo: $scope.bordo_u,
+            espaciamiento: $scope.espaciamiento_u,
+            diametro: $scope.diametro_u,
+            status : "Nuevo",
+            cargasinaire :  $scope.cargaSinAire,
+            cargamenosaire : $scope.cargaMenosAire,
+            cargaagraneldisp : $scope.cargaAgraneldisp,
+            volumencil : $scope.volumenCil,
+            cargaagranel : $scope.cargaAgranel,
+            volumentotal : $scope.volumenTotal,
+            pesototal : $scope.pesoTotal,
+            factordecarga : $scope.factorDeCarga
+           
+          }).then(function (response) {
+  // handle response
+   
+  console.log(err);
+    }); 
+
+
+
+     localDB.sync(remoteDB).on('complete', function () {
+        // yay, we're in sync!
+            }).on('error', function (err) {
+         // boo, we hit an error!
+            });
+
+    // $scope.showCoord = false;
+
+
+   $scope.searchedbarr = {
+            'doc': {
+                'barr': 'N-'+$scope.selectedbarr_id,
+            }
+        };
+     localDB.allDocs({
+         include_docs: true,
+         attachments: true
+         }).then(function (result) {
+         // handle result
+        $scope.Barrenos = result ;
+        $scope.Barrchar = result.rows ;
+          }).catch(function (err) {
+        console.log(err);
+    });
+
+  $scope.showBarrnam = false;
+  $scope.showCoord = true;
+var barrenosforchart = $scope.Barrchar  
+  angular.forEach( barrenosforchart  , function(value, key){
+       
+        var data = {
+            'Barreno': value.doc.barr,
+            'x': value.doc.coordx,
+            'y' : value.doc.coordy,
+            'r' : 10
+            
          }
-      $scope.selectedBarreno = newbarr;      
+
+  
+     $scope.dataChart.push(data);
+    
+
+  })
+
+    $scope.showmap = true;
+
+};
+
+$scope.colors = [
+            {
+              backgroundColor: "rgba(159,204,0, 0.2)",
+              pointBackgroundColor: "rgba(159,204,0, 1)",
+              pointHoverBackgroundColor: "rgba(159,204,0, 0.8)",
+              borderColor: "rgba(159,204,0, 1)",
+              pointBorderColor: '#fff',
+              pointHoverBorderColor: "rgba(159,204,0, 1)"
+            }
+          ];  
 
 
-};    
+
+
 $scope.selectnewBarr = function (obj) {
     console.log(obj)
     $scope.selectedBarreno = obj;
-    
+  
      
 }    
 $scope.updateSelectedTipo = function(obj){
@@ -1689,10 +1771,12 @@ $scope.updateSelectedTipo = function(obj){
         $scope.densidad_u= $scope.densidad;
         $scope.diametro_u = $scope.diametro
     };
-$scope.updateCoordx = function(obj){
+$scope.updateCoordx = function(obj,barr){
         console.log(obj)
         console.log($scope.coordx)
         $scope.coordx_u = obj;
+      
+     
     };
  $scope.updateCoordy = function(obj){
         console.log(obj)
@@ -1748,7 +1832,13 @@ $scope.updateCargagra = function(obj){
         console.log($scope.cargaAgranel)
         $scope.cargaAgranel = obj;
     };   
-
+$scope.updateBarrid = function(obj){
+        console.log(obj)
+        console.log($scope.newBarrnam)
+       
+         $scope.newBarrnam_u = obj;
+        $scope.message = 'Seleccione el Barreno más cercano para copiar parámetros'; 
+    };   
 $scope.calculos= function () {
     $scope.cargaSinAire = $scope.profreal_u - $scope.taco_u;
     $scope.cargaMenosAire = $scope.cargaSinAire - $scope.aire_u;
@@ -1764,94 +1854,7 @@ $scope.calculos= function () {
 $scope.barrDetailstoggle = function (){
     $scope.barrDetails = true;
 }
-$scope.Barrenosnames = $scope.Barrenos;
-$scope.srchchange = function () {
 
-        $scope.Barrenosnames = null;
-        var filtervalue = [];
-		var serachData=$scope.Barrenos.rows;
-		console.log(serachData);
-        for (var i = 0; i <serachData.length; i++) {
-
-            var fltvar = $filter('uppercase')($scope.searchBarr);
-            var jsval = $filter('uppercase')(serachData[i].barr);
-
-            if (jsval.indexOf(fltvar) >= 0) {
-                filtervalue.push(serachData[i]);
-            }
-        }
-       // console.log("last");
-        console.log(filtervalue);
-        $scope.Barrenosnames = filtervalue;
-        alert(filtervalue)
-    };
-
-$scope.searchBarrfunc = function (){
-    var item = $scope.searchBarr; 
-    localDB.find({
-            selector: {barr: item },
-            fields: ['_id'],
-           // sort: ['Col1']
-}).then(function (result) {
-  // handle result
-    $scope.tempresult = result;
-    alert(result.docs._id)
-   // var rows = $scope.tempCSVdiv.split('\n');
-   
-            // handle response
-            }).catch(function (err) {
-            console.log(err);
-        });   
-        
-       
-}
-$scope.oldupdateBarr = function (){
-
-    var id =  $scope.selectedbarr._id ;
-    alert (id);    
-    localDB.get(id).then(function(doc) {
-                   
-             //doc._id= $scope.newBarreno.nam;
-             doc.rev = doc._rev;
-             doc.tipo= $scope.selectedTipo_u;
-             doc.profreal= $scope.profreal_u;
-
-             doc.taco= $scope.taco_u;
-             doc.aire= $scope.aire_u;
-             doc.bordo= $scope.bordo_u;
-             doc.espaciamiento= $scope.espaciamiento_u;
-             doc.diametro= $scope.diametro_u;
-             doc.status= "Updated";
-             doc.cargasinaire =  $scope.cargaSinAire;
-             doc.cargamenosaire = $scope.cargaMenosAire;
-             doc.cargaagraneldisp = $scope.cargaAgraneldisp;
-             doc.volumencil = $scope.volumenCil;
-             doc.cargaagranel = $scope.cargaAgranel;
-             doc.volumentotal = $scope.volumenTotal;
-             doc.pesototal = $scope.pesoTotal;
-             doc.factordecarga = $scope.factorDeCarga;
-
-                 return localDB.put(doc);
-                }).then(function() {
-            return localDB.get(id);
-            // handle response
-     
-            }).catch(function (err) {
-            console.log(err);
-           });
-
-
-
-     localDB.sync(remoteDB).on('complete', function () {
-        // yay, we're in sync!
-            }).on('error', function (err) {
-         // boo, we hit an error!
-            });
-
-      $window.location.href = '/#/side-menu21/page12'      
-
-
-}
 //agrega valores al barreno
 $scope.updateBarr = function (){
 
@@ -1921,20 +1924,17 @@ $scope.updateBarr = function (){
      
 //create a new Barreno
 $scope.addNewBarr = function (){
-    $scope.showCoord = true;
-    $scope.addnewinst = {
-        'step1': 'Seleccionar el Barreno mas Cercano',
-        'step2': 'Ubicar Coordenadas Visualmente',
-        'step3': 'Seleccionar Tipo',
-        'step4': 'Guardar',
-    }
+   //$scope.showCoord = true;
+    $scope.showBarrnam = true;
+    $scope.message = '';
+    $scope.newBarrnam = new Date().toISOString();
 }
 
 $scope.createBarr = function (){
     localDB.put({   
      
             _id: $scope.selectedbarr_id, 
-            barr: 'newbarr' + $scope.selectedbarr_id ,
+            barr: 'N-' + $scope.selectedbarr_id ,
             tipo: $scope.selectedTipo_u,
             profreal: $scope.profreal_u,
             coordx: $scope.coordx_u+1,
@@ -1991,16 +1991,6 @@ $scope.hideMap = function(){
 }
 $scope.dataChartBarrs = function(){
     
-             $scope.colors = [
-            {
-              backgroundColor: "rgba(159,204,0, 0.2)",
-              pointBackgroundColor: "rgba(159,204,0, 1)",
-              pointHoverBackgroundColor: "rgba(159,204,0, 0.8)",
-              borderColor: "rgba(159,204,0, 1)",
-              pointBorderColor: '#fff',
-              pointHoverBorderColor: "rgba(159,204,0, 1)"
-            },"rgba(250,109,33,0.5)","#9a9a9a","rgb(233,177,69)"
-          ];  
   var barrenosforchart = $scope.Barrchar  
   angular.forEach( barrenosforchart, function(value, key){
        
@@ -2008,22 +1998,18 @@ $scope.dataChartBarrs = function(){
             'Barreno': value.doc.barr,
             'x': value.doc.coordx,
             'y' : value.doc.coordy,
-            'r' : 10
-            
+            'r' : 10  
          }
-        var series = {
-            'Barreno': value.doc.barr
-            //'Status' : value.doc.status,
-        }
+
   
      $scope.dataChart.push(data);
-     $scope.dataSeries.push(series);      
+    
 
   })
     $scope.showmap = true;
 }
 
-
+$scope.showselectbarrchar = false;
 
 
 }])
@@ -2036,10 +2022,232 @@ function ($scope, $stateParams) {
 
 }])
    
-.controller('tomaDeMuestraCtrl', ['$scope', '$stateParams', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+.controller('tomaDeMuestraCtrl', ['$scope', '$stateParams', 'pouchDB', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
-function ($scope, $stateParams) {
+function ($scope, $stateParams, pouchDB) {
+let localDB = new PouchDB('barrenos');
+let remoteDB = new PouchDB('https://biznnovate.cloudant.com/eblast-barrenos');    
+
+
+    localDB.sync(remoteDB).on('complete', function () {
+    // yay, we're in sync!
+    }).on('error', function (err) {
+  // boo, we hit an error!
+    });
+
+let localMDB = new PouchDB('muestras');
+let remoteMDB = new PouchDB('https://biznnovate.cloudant.com/eblast-muestras');    
+
+
+    localMDB.sync(remoteMDB).on('complete', function () {
+    // yay, we're in sync!
+    }).on('error', function (err) {
+  // boo, we hit an error!
+    });
+
+
+    localDB.allDocs({
+         include_docs: true,
+         attachments: true
+         }).then(function (result) {
+         // handle result
+        $scope.Barrenos = result ;
+        $scope.Barrchar = result.rows ;
+          }).catch(function (err) {
+        console.log(err);
+    });
+
+$scope.updateSelectedBarr = function(obj){
+        console.log(obj)
+        console.log($scope.selectedBarreno)
+        $scope.barr_u = obj.docs.barr;
+    };
+
+$scope.updateCamion = function(obj){
+        console.log(obj)
+        console.log($scope.camion)
+        $scope.camion_u = obj;
+    };
+$scope.updateHora = function(obj){
+        console.log(obj)
+        console.log($scope.hora)
+        $scope.hora_u = obj;
+    };
+$scope.updateR1 = function(obj){
+        console.log(obj)
+        console.log($scope.r1)
+        $scope.r1_u = obj;
+    };
+$scope.updateR2 = function(obj){
+        console.log(obj)
+        console.log($scope.r2)
+        $scope.r2_u = obj;
+    };
+$scope.updateRpm = function(obj){
+        console.log(obj)
+        console.log($scope.rpm)
+        $scope.rpm_u = obj;
+    };
+$scope.updateTemp = function(obj){
+        console.log(obj)
+        console.log($scope.temp)
+        $scope.temp_u = obj;
+    };  
+$scope.updateDens0 = function(obj){
+        console.log(obj)
+        console.log($scope.dens0)
+    $scope.dens0_u = obj;
+
+    };  
+$scope.updateDens5 = function(obj){
+        console.log(obj)
+        console.log($scope.dens5)
+    $scope.dens5_u = obj;
+
+
+    };  
+$scope.updateDens10 = function(obj){
+        console.log(obj)
+        console.log($scope.dens10)
+    $scope.dens10_u = obj;
+
+    };  
+$scope.updateDens15 = function(obj){
+        console.log(obj)
+        console.log($scope.dens15)
+    $scope.dens15_u = obj;
+
+    };  
+$scope.updateDens20 = function(obj){
+        console.log(obj)
+        console.log($scope.dens20)
+    $scope.dens20_u = obj;
+
+    };  
+$scope.updateDens25 = function(obj){
+        console.log(obj)
+        console.log($scope.dens25)
+    $scope.dens25_u = obj;
+
+    };  
+$scope.updateDens30 = function(obj){
+        console.log(obj)
+        console.log($scope.dens30)
+    $scope.dens30_u = obj;
+
+
+    };  
+$scope.updateDens35 = function(obj){
+        console.log(obj)
+        console.log($scope.dens35)
+    $scope.dens35_u = obj;
+
+    };  
+$scope.updateDens40 = function(obj){
+        console.log(obj)
+        console.log($scope.dens40)
+    $scope.dens40_u = obj;
+
+    };  
+$scope.updateDens45 = function(obj){
+        console.log(obj)
+        console.log($scope.dens45)
+    $scope.dens45_u = obj;
+
+    };  
+$scope.updateDens50 = function(obj){
+        console.log(obj)
+        console.log($scope.dens0)
+    $scope.dens50_u = obj;
+
+    };  
+$scope.updateDens55 = function(obj){
+        console.log(obj)
+        console.log($scope.dens55)
+    $scope.dens55_u = obj;
+  
+    };  
+$scope.updateDens60 = function(obj){
+        console.log(obj)
+        console.log($scope.dens60)
+    $scope.dens60_u = obj;
+
+    };  
+$scope.updateComent = function(obj){
+        console.log(obj)
+        console.log($scope.coment)
+    $scope.coment_u = obj;
+    };  
+
+
+
+
+        
+ 
+
+$scope.viewGraph = function () {
+    $scope.labels = [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60] ; 
+    //$scope.series = ['Tiempo'];
+    $scope.timeData = [
+
+      // [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60],
+       [$scope.dens0_u, $scope.dens5_u, $scope.dens10_u, $scope.dens15_u, $scope.dens20_u, 
+        $scope.dens25_u, $scope.dens30_u, $scope.dens35_u,$scope.dens40_u, $scope.dens45_u, 
+        $scope.dens50_u, $scope.dens55_u, $scope.dens60_u ,]
+       ]
+     $scope.showGraph = true;
+
+}
+
+    $scope.gotoMenu = function(){
+        $state.go('menu.vistaDeProyecto');
+    }
+
+$scope.newMuestra = function (){
+    localMDB.put({   
+     
+            _id: new Date().toISOString(), 
+            barr: $scope.barr_u ,
+            camion: $scope.camion_u,
+            hora: $scope.hora_u,
+            r1: $scope.r1_u,
+            r2: $scope.r2_u,
+            rpm: $scope.rpm_u,
+            temp: $scope.temp_u,
+            dens0: $scope.dens0_u,
+            dens5: $scope.dens5_u,
+            dens10: $scope.dens10_u,
+            dens15: $scope.dens15_u,
+            dens20: $scope.dens20_u,
+            dens25: $scope.dens25_u,
+            dens30: $scope.dens30_u,
+            dens35: $scope.dens35_u,
+            dens40: $scope.dens40_u,
+            dens45: $scope.dens45_u,
+            dens50: $scope.dens50_u,
+            dens55: $scope.dens55_u,
+            dens60: $scope.dens60_u,
+            coment: $scope.coment_u
+       
+          }).then(function (response) {
+  // handle response
+   
+  console.log(err);
+    }); 
+
+
+
+     localMDB.sync(remoteMDB).on('complete', function () {
+        // yay, we're in sync!
+            }).on('error', function (err) {
+         // boo, we hit an error!
+            });
+
+    // $scope.showCoord = false;
+  
+ 
+}
 
 
 }])
