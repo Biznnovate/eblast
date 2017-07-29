@@ -1710,6 +1710,16 @@ $scope.updateSelectedNewBarr = function(obj){
 
   $scope.showBarrnam = false;
   $scope.showCoord = true;
+  $scope.colors = [
+            {
+              backgroundColor: "rgba(159,204,0, 0.2)",
+              pointBackgroundColor: "rgba(159,204,0, 1)",
+              pointHoverBackgroundColor: "rgba(159,204,0, 0.8)",
+              borderColor: "rgba(159,204,0, 1)",
+              pointBorderColor: '#fff',
+              pointHoverBorderColor: "rgba(159,204,0, 1)"
+            }
+          ];  
 var barrenosforchart = $scope.Barrchar  
   angular.forEach( barrenosforchart  , function(value, key){
        
@@ -1731,16 +1741,7 @@ var barrenosforchart = $scope.Barrchar
 
 };
 
-$scope.colors = [
-            {
-              backgroundColor: "rgba(159,204,0, 0.2)",
-              pointBackgroundColor: "rgba(159,204,0, 1)",
-              pointHoverBackgroundColor: "rgba(159,204,0, 0.8)",
-              borderColor: "rgba(159,204,0, 1)",
-              pointBorderColor: '#fff',
-              pointHoverBorderColor: "rgba(159,204,0, 1)"
-            }
-          ];  
+
 
 
 
@@ -1990,7 +1991,16 @@ $scope.hideMap = function(){
     $scope.showmap = false;
 }
 $scope.dataChartBarrs = function(){
-    
+    $scope.colors = [
+            {
+              backgroundColor: "rgba(159,204,0, 0.2)",
+              pointBackgroundColor: "rgba(159,204,0, 1)",
+              pointHoverBackgroundColor: "rgba(159,204,0, 0.8)",
+              borderColor: "rgba(159,204,0, 1)",
+              pointBorderColor: '#fff',
+              pointHoverBorderColor: "rgba(159,204,0, 1)"
+            }
+          ];  
   var barrenosforchart = $scope.Barrchar  
   angular.forEach( barrenosforchart, function(value, key){
        

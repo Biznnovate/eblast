@@ -1,8 +1,8 @@
 <ion-view title="Editar - Voladura Mapa" id="page12">
   <ion-content padding="true" class="has-header">
-    <canvas ng-show="showmap==true" id="base" class="chart-bubble" chart-colors="colors" chart-labels="dataSeries.Barreno" chart-data="dataChart"
-   >
+    <canvas ng-show="showmap==true" id="base" class="chart-bubble" chart-colors="colors" chart-labels="" chart-data="dataChart">
     </canvas> 
+
    <button id="editarVoladuraMapa-button33" ng-show="showmap==true" ng-click="hideMap()"  class="button button-calm button-positive button-block icon-right ion-android-arrow-dropup-circle">Ocultar Mapa</button>
    <button id="editarVoladuraMapa-button33" ng-show="showmap==false" ng-click="dataChartBarrs()"  class="button button-calm button-positive button-block icon-right ion-android-arrow-dropdown-circle">Desplegar Mapa</button>
     <form id="editarVoladuraMapa-form11" class="list" ng-model="tempTiposBarr">
