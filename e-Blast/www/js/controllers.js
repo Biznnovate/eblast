@@ -464,6 +464,8 @@ col5Funct();
 
 
 $scope.cleanDB = function (){
+let tipolocalDB = new PouchDB('bartype');
+let tiporemoteDB = new PouchDB('https://biznnovate.cloudant.com/eblast-bartype');      
 let localDB2 = new pouchDB('barrenos');
 let remoteDB2 = new PouchDB('https://biznnovate.cloudant.com/eblast-barrenos');    
         $scope.showupload= false;
@@ -489,6 +491,26 @@ localDB.allDocs().then(function (result) {
                 }).catch(function (err) {
                 // error!
                 });
+tipolocalDB.allDocs().then(function (result) {
+                // Promise isn't supported by all browsers; you may want to use bluebird
+                return Promise.all(result.rows.map(function (row) {
+                return tipolocalDB.remove(row.id, row.value.rev);
+                }));
+                }).then(function () {
+                // done!
+                }).catch(function (err) {
+                // error!
+            });
+       tiporemoteDB.allDocs().then(function (result) {
+                // Promise isn't supported by all browsers; you may want to use bluebird
+                return Promise.all(result.rows.map(function (row) {
+                return tiporemoteDB.remove(row.id, row.value.rev);
+                }));
+                }).then(function () {
+                // done!
+                }).catch(function (err) {
+                // error!
+                });            
     localDB2.allDocs().then(function (result) {
                 // Promise isn't supported by all browsers; you may want to use bluebird
                 return Promise.all(result.rows.map(function (row) {
@@ -1136,11 +1158,13 @@ $scope.tipodecarga = '';
     $scope.tipoprodchange = function(obj){
         console.log(obj)
         console.log($scope.tipodecarga)
+        
    
     };
-
-
-    
+ $scope.taco = 0;
+ $scope.aire = 0;
+ $scope.bordo = 0;
+ $scope.espaciamiento = 0;
 $scope.changeTipoCarga = function(obj){
         console.log(obj)
         console.log($scope.tipodecarga)
@@ -1149,6 +1173,7 @@ $scope.changeTipoCarga = function(obj){
 $scope.updateTaco = function(obj){
         console.log(obj)
         console.log($scope.taco)
+
         $scope.taco_u = obj;
     };
 $scope.updateAire = function(obj){
@@ -1188,7 +1213,7 @@ $scope.subperf =0.5;
 $scope.updateDiametro = function(obj){
         console.log(obj)
         console.log($scope.diametro)
-        $scope.diametro_u = obj/1000;
+        $scope.diametro_u = obj;
     };
 $scope.updateSubperf = function(obj){
         console.log(obj)
@@ -1337,10 +1362,10 @@ $scope.updateType = function(){
              doc.peso= $scope.PesoTotal;
              doc.densidad = $scope.DensidadTotal;
              doc.tipodecarga = tipodecarga ;
-             doc.taco = $scope.taco_u;
-             doc.aire = $scope.aire_u;
-             doc.bordo = $scope.bordo_u;
-             doc.espaciamiento = $scope.espaciamiento_u;
+             doc.taco = $scope.taco_u || 0;
+             doc.aire = $scope.aire_u || 0;
+             doc.bordo = $scope.bordo_u || 0;
+             doc.espaciamiento = $scope.espaciamiento_u || 0;
              doc.diametro = $scope.diametro_u;
              doc.subperf = subperfo;
                  return tipolocalDB.put(doc);
@@ -1377,10 +1402,10 @@ $scope.createType = function (){
             peso: $scope.PesoTotal,
             densidad: $scope.DensidadTotal,
             tipodecarga: tipodecarga,
-            taco: $scope.taco_u,
-            aire: $scope.aire_u,
-            bordo: $scope.bordo_u,
-            espaciamiento: $scope.espaciamiento_u,
+            taco: $scope.taco_u || 0,
+            aire: $scope.aire_u || 0,
+            bordo: $scope.bordo_u || 0,
+            espaciamiento: $scope.espaciamiento_u || 0,
             diametro: $scope.diametro_u,
             subperf: subperfo,
            
@@ -1752,10 +1777,13 @@ $scope.selectnewBarr = function (obj) {
   
      
 }    
+$scope.tipodecarga = '';
 $scope.updateSelectedTipo = function(obj){
         console.log(obj)
         console.log($scope.selectedTipo)
         $scope.selectedTipo_u = obj.doc;
+        $scope.profcarga = obj.doc.prof/1;
+        $scope.peso = obj.doc.peso/1;
         $scope.taco = obj.doc.taco/1;
         $scope.aire = obj.doc.aire/1;
         $scope.bordo = obj.doc.bordo/1;
@@ -1763,14 +1791,18 @@ $scope.updateSelectedTipo = function(obj){
         $scope.subperf = obj.doc.subperf/1;
         $scope.densidad = (obj.doc.densidad/1);
         $scope.diametro = (obj.doc.diametro/1) || $scope.diametro;
+        $scope.tipodecarga = obj.doc.tipodecarga;
 
+        $scope.profcarga_u = $scope.profcarga;
+        $scope.peso_u = $scope.peso;
         $scope.taco_u =  $scope.taco;
         $scope.aire_u = $scope.aire;
         $scope.bordo_u = $scope.bordo;
         $scope.espaciamiento_u = $scope.espaciamiento;
         $scope.subperf_u = $scope.subperf;
         $scope.densidad_u= $scope.densidad;
-        $scope.diametro_u = $scope.diametro
+        $scope.diametro_u = $scope.diametro;
+        $scope.tipodecarga_u = $scope.tipodecarga;
     };
 $scope.updateCoordx = function(obj,barr){
         console.log(obj)
@@ -1790,6 +1822,22 @@ $scope.updateProfReal = function(obj){
         console.log($scope.profreal)
         $scope.profreal_u = obj;
     };
+$scope.updateLdecarga = function(obj){
+        console.log(obj)
+        console.log($scope.ldecarga)
+        $scope.ldecarga_u = obj;
+        $scope.profcarga_u = obj;
+    };
+$scope.updatePeso = function(obj){
+        console.log(obj)
+        console.log($scope.peso)
+        $scope.peso_u = obj;
+    };    
+$scope.updateProf = function(obj){
+        console.log(obj)
+        console.log($scope.profcarga)
+        $scope.profcarga_u = obj;
+    };       
 $scope.updateTaco = function(obj){
         console.log(obj)
         console.log($scope.taco)
@@ -1841,14 +1889,31 @@ $scope.updateBarrid = function(obj){
         $scope.message = 'Seleccione el Barreno más cercano para copiar parámetros'; 
     };   
 $scope.calculos= function () {
+    $scope.pesoxmetro = $scope.peso_u * (1000/$scope.profcarga_u);
     $scope.cargaSinAire = $scope.profreal_u - $scope.taco_u;
     $scope.cargaMenosAire = $scope.cargaSinAire - $scope.aire_u;
-    $scope.cargaAgraneldisp =  $scope.cargaMenosAire - ($scope.selectedTipo_u.prof/100);
-    $scope.volumenCil = $scope.cargaAgraneldisp * 1000 * 3.1416 * ($scope.diametro_u*$scope.diametro_u)/4;
-    $scope.cargaAgranel = +((Math.round($scope.densidad)) * ($scope.volumenCil/1000000)).toFixed(2);
+    $scope.cargaAgraneldisp =  $scope.cargaMenosAire - ($scope.profcarga_u);
+    $scope.volumenCil = $scope.cargaAgraneldisp * (1000 * 3.1416) * ($scope.diametro_u*$scope.diametro_u)/4;
+    $scope.cargaAgranel = +(((($scope.densidad)/1000) * ($scope.volumenCil))/1000).toFixed(2);
     $scope.volumenTotal = ($scope.profreal_u - $scope.subperf_u) * $scope.bordo_u * $scope.espaciamiento_u;
-    $scope.pesoTotal = Math.round($scope.selectedTipo_u.peso + $scope.cargaAgranel);
+    $scope.pesoTotal = Math.round($scope.peso_u + $scope.cargaAgranel);
     $scope.factorDeCarga = +($scope.pesoTotal/$scope.volumenTotal).toFixed(2);
+    var resultados = {
+        'peso': $scope.peso_u,
+        'profdecarga': $scope.profcarga_u,
+        'prof real': $scope.profreal_u,
+        'pesoxmetro' :     $scope.pesoxmetro,
+        'cargasinaire': $scope.cargaSinAire,
+        'cargamenosaire': $scope.cargaMenosAire ,
+        'cargadisponible': $scope.cargaAgraneldisp,
+        'volumen cilindrico': $scope.volumenCil, 
+        'carga a granel': $scope.cargaAgranel ,
+        'volumentotal': $scope.volumenTotal ,
+        'pesototal': $scope.pesoTotal ,
+        'factor de carga': $scope.factorDeCarga ,
+    }
+
+    console.log(resultados);
    // Carga a Grandel Disponible *1000*3.1416*(Diametro*Diametro)/4
 
 }

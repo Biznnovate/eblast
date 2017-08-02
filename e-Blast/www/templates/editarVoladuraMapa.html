@@ -83,11 +83,16 @@
           <select ng-options="tipo as tipo.id for tipo in tipobarr.rows | orderBy: 'id'" ng-model="selectedTipo" ng-change="updateSelectedTipo(selectedTipo)"></select>
         </label>
       </ion-list>
-      <ion-toggle toggle-class="toggle-positive" id="ajustarCSV-toggle5" ng-change="barrDetailstoggle()" ng-model="barrDetails">Ver Detalles</ion-toggle>
+      <ion-toggle toggle-class="toggle-positive" id="ajustarCSV-toggle5" ng-change="barrDetailstoggle()" ng-model="barrDetails">Ver Detalles de Carga {{tipodecarga}}</ion-toggle>
       <ion-item id="listatiposelec" ng-repeat="carga in selectedTipo.doc.carga track by $index" ng-model="selectedTipolist"> <strong>Producto:</strong> {{carga.prod}} <strong>Tipo: </strong>{{carga.tipo}}</ion-item>
       <label class="item item-input" id="editarVoladuraMapa-input25">
         <span class="input-label">Profundidad Real (mts)</span>
         <input type="number" placeholder="" ng-model="profreal" ng-change="updateProfReal(profreal)">
+      </label>
+      <label class="item item-input" id="editarVoladuraMapa-inputlongcarga" ng-show="tipodecarga=='Fija'">
+        <span class="input-label">Longitud de Carga (mts)</span>
+        <input type="number" placeholder="" ng-model="ldecarga" 
+              ng-change="updateLdecarga(ldecarga)" >
       </label>
       <label class="item item-input" id="editarVoladuraMapa-inputtaco">
         <span class="input-label">Taco (mts)</span>
