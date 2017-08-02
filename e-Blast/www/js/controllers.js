@@ -1819,7 +1819,8 @@ $scope.updateCoordx = function(obj,barr){
 
 $scope.updateProfReal = function(obj){
         console.log(obj)
-        console.log($scope.profreal)
+     //   console.log($scope.selectedBarreno.doc.prof)
+        $scope.profreal = obj;
         $scope.profreal_u = obj;
     };
 $scope.updateLdecarga = function(obj){
@@ -1966,6 +1967,19 @@ $scope.updateBarr = function (){
          // boo, we hit an error!
             });
 
+
+
+$scope.message = "El Barreno fue Actualizado.";
+$scope.showReloadButton = true;
+console.log($scope.message);
+
+
+}
+$scope.showReloadButton = false;
+
+$scope.reloadPage = function () {
+    $window.location.reload();
+    $scope.showReloadButton = false;
          localDB.allDocs({
          include_docs: true,
          attachments: true
@@ -1984,16 +1998,14 @@ $scope.updateBarr = function (){
           }).catch(function (err) {
         console.log(err);
     });
-     
-
-}
-     
+} 
 //create a new Barreno
 $scope.addNewBarr = function (){
    //$scope.showCoord = true;
     $scope.showBarrnam = true;
     $scope.message = '';
     $scope.newBarrnam = new Date().toISOString();
+    
 }
 
 $scope.createBarr = function (){

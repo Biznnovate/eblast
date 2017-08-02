@@ -2,10 +2,12 @@
   <ion-content padding="true" class="has-header">
     <canvas ng-show="showmap==true" id="base" class="chart-bubble" chart-colors="colors" chart-labels="" chart-data="dataChart">
     </canvas> 
-
+    
    <button id="editarVoladuraMapa-button33" ng-show="showmap==true" ng-click="hideMap()"  class="button button-calm button-positive button-block icon-right ion-android-arrow-dropup-circle">Ocultar Mapa</button>
    <button id="editarVoladuraMapa-button33" ng-show="showmap==false" ng-click="dataChartBarrs()"  class="button button-calm button-positive button-block icon-right ion-android-arrow-dropdown-circle">Desplegar Mapa</button>
-    <form id="editarVoladuraMapa-form11" class="list" ng-model="tempTiposBarr">
+   <strong>{{message}}</strong>
+      <button id="editarVoladuraMapa-button34" ng-show="showReloadButton==true" ng-click="reloadPage()" style="border-radius:50px 50px 50px 50px;" class="button button-positive button-block icon-right ios-arrow-dropright">Continuar</button> 
+   <form id="editarVoladuraMapa-form11" ng-show="showReloadButton==false" class="list" ng-model="tempTiposBarr">
       <div>
         <div class="row">
           <div class="col">
@@ -33,9 +35,10 @@
         </div>
         
       </div>
+      
+  
+      <div class="row" ng-show="showBarrnam">
      
-     <div class="row" ng-show="showBarrnam">
-      <strong>{{message}}</strong>
       <label class="item item-input" id="editarVoladuraMapa-input25">
         <span class="input-label">Nuevo ID de Barreno:  N-</span>
         <input type="text" placeholder="" ng-model="newBarrnam" ng-change="updateBarrid(newBarrnam)">
@@ -85,10 +88,12 @@
       </ion-list>
       <ion-toggle toggle-class="toggle-positive" id="ajustarCSV-toggle5" ng-change="barrDetailstoggle()" ng-model="barrDetails">Ver Detalles de Carga {{tipodecarga}}</ion-toggle>
       <ion-item id="listatiposelec" ng-repeat="carga in selectedTipo.doc.carga track by $index" ng-model="selectedTipolist"> <strong>Producto:</strong> {{carga.prod}} <strong>Tipo: </strong>{{carga.tipo}}</ion-item>
-      <label class="item item-input" id="editarVoladuraMapa-input25">
+
+        <label class="item item-input" id="editarVoladuraMapa-input25">
         <span class="input-label">Profundidad Real (mts)</span>
-        <input type="number" placeholder="" ng-model="profreal" ng-change="updateProfReal(profreal)">
+        <input type="number" placeholder="" ng-model="selectedBarreno.doc.prof" ng-change="updateProfReal(selectedBarreno.doc.prof)">
       </label>
+
       <label class="item item-input" id="editarVoladuraMapa-inputlongcarga" ng-show="tipodecarga=='Fija'">
         <span class="input-label">Longitud de Carga (mts)</span>
         <input type="number" placeholder="" ng-model="ldecarga" 
@@ -130,7 +135,7 @@
         <span class="input-label">Carga a Granel</span>
         <select ng-options="tipo as tipo.doc.prod for tipo in prodsGra.rows | orderBy: '_id'" ng-model="selectedProdGra" ng-change="updateSelectedProdGra(selectedProdGra)"></select>
        </label-->
-    </form>
+    
     <div id="editarVoladuraMapa-markdown9" class="show-list-numbers-and-dots"></div>
     <div id="editarVoladuraMapa-markdown10" class="show-list-numbers-and-dots">
      
@@ -151,5 +156,6 @@
     </div>
 
     <button id="editarVoladuraMapa-button34" ng-click="gotoMenu()" style="border-radius:50px 50px 50px 50px;" class="button button-positive button-block icon-right ios-arrow-dropright">Finalizar</button>
+    </form>
   </ion-content>
 </ion-view>
