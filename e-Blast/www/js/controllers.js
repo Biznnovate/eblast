@@ -2133,10 +2133,10 @@ function ($scope, $stateParams) {
 
 }])
    
-.controller('tomaDeMuestraCtrl', ['$scope', '$stateParams', 'pouchDB', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+.controller('tomaDeMuestraCtrl', ['$scope', '$stateParams','$window', 'pouchDB', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
-function ($scope, $stateParams, pouchDB) {
+function ($scope, $stateParams, $window, pouchDB) {
 let localDB = new PouchDB('barrenos');
 let remoteDB = new PouchDB('https://biznnovate.cloudant.com/eblast-barrenos');    
 
@@ -2171,8 +2171,10 @@ let remoteMDB = new PouchDB('https://biznnovate.cloudant.com/eblast-muestras');
 
 $scope.updateSelectedBarr = function(obj){
         console.log(obj)
-        console.log($scope.selectedBarreno)
-        $scope.barr_u = obj.docs.barr;
+       // console.log($scope.barr_u)
+       // console.log($scope.selectedBarreno)
+        $scope.barr_u = obj.doc.barr;
+        console.log($scope.barr_u)
     };
 
 $scope.updateCamion = function(obj){
@@ -2299,57 +2301,82 @@ $scope.updateComent = function(obj){
  
 
 $scope.viewGraph = function () {
-    $scope.labels = [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60] ; 
+   // $scope.labels = [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60] ; 
     //$scope.series = ['Tiempo'];
     
     
     $scope.densidades = [
 
       // [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60],
-       [$scope.dens0_u, $scope.dens5_u, $scope.dens10_u, $scope.dens15_u, $scope.dens20_u, 
-        $scope.dens25_u, $scope.dens30_u, $scope.dens35_u,$scope.dens40_u, $scope.dens45_u, 
-        $scope.dens50_u, $scope.dens55_u, $scope.dens60_u ,]
+       
+        {'dens' : $scope.dens0_u, 'seg': 0 },
+        {'dens' : $scope.dens5_u, 'seg': 5 },
+        {'dens' : $scope.dens10_u, 'seg': 10 },
+        {'dens' : $scope.dens15_u, 'seg': 15 },
+        {'dens' : $scope.dens20_u, 'seg': 20 },
+        {'dens' : $scope.dens25_u, 'seg': 25 },
+        {'dens' : $scope.dens30_u, 'seg': 30 },
+        {'dens' : $scope.dens35_u, 'seg': 35 },
+        {'dens' : $scope.dens40_u, 'seg': 40 },
+        {'dens' : $scope.dens45_u, 'seg': 45 },
+        {'dens' : $scope.dens50_u, 'seg': 50 },
+        {'dens' : $scope.dens55_u, 'seg': 55 },
+        {'dens' : $scope.dens60_u, 'seg': 60 },
+     
+
+    
        ]
      $scope.densidades_full = [];
+      $scope.tiemposdens = [];
       angular.forEach( $scope.densidades, function(value, key){
-        var val = value;
-     $scope.densidades_full.push(val);
+       // if(value.dens > 0)
+        var valdens = value.dens > 0 ? value.dens : null ;
+        var valseg = value.dens > 0 ?  value.seg : null;
+     $scope.densidades_full.push(valdens);
+     $scope.tiemposdens.push(valseg);
         
     });
-     $scope.timeData = $scope.densidades_full;  
+     $scope.timeData = $scope.densidades_full; 
+     $scope.labels = $scope.tiemposdens; 
      $scope.showGraph = true;
+     console.log($scope.densidades_full)
+     console.log($scope.tiemposdens)
 
 }
-
+    
     $scope.gotoMenu = function(){
         $state.go('menu.vistaDeProyecto');
     }
-
+$scope.reloadPage = function(){
+    $window.location.reload();
+     
+}
+  $scope.showGraph = false;
 $scope.newMuestra = function (){
     localMDB.put({   
      
             _id: new Date().toISOString(), 
-            barr: $scope.barr_u ,
-            camion: $scope.camion_u,
-            hora: $scope.hora_u,
-            r1: $scope.r1_u,
-            r2: $scope.r2_u,
-            rpm: $scope.rpm_u,
-            temp: $scope.temp_u,
-            dens0: $scope.dens0_u,
-            dens5: $scope.dens5_u,
-            dens10: $scope.dens10_u,
-            dens15: $scope.dens15_u,
-            dens20: $scope.dens20_u,
-            dens25: $scope.dens25_u,
-            dens30: $scope.dens30_u,
-            dens35: $scope.dens35_u,
-            dens40: $scope.dens40_u,
-            dens45: $scope.dens45_u,
-            dens50: $scope.dens50_u,
-            dens55: $scope.dens55_u,
-            dens60: $scope.dens60_u,
-            coment: $scope.coment_u
+            barr: $scope.barr_u,  
+            camion: $scope.camion_u ,
+            hora: $scope.hora_u ,
+            r1: $scope.r1_u ,
+            r2: $scope.r2_u ,
+            rpm: $scope.rpm_u ,
+            temp: $scope.temp_u ,
+            dens0: $scope.dens0_u ,
+            dens5: $scope.dens5_u ,
+            dens10: $scope.dens10_u ,
+            dens15: $scope.dens15_u ,
+            dens20: $scope.dens20_u ,
+            dens25: $scope.dens25_u ,
+            dens30: $scope.dens30_u ,
+            dens35: $scope.dens35_u ,
+            dens40: $scope.dens40_u ,
+            dens45: $scope.dens45_u ,
+            dens50: $scope.dens50_u ,
+            dens55: $scope.dens55_u ,
+            dens60: $scope.dens60_u ,
+            coment: $scope.coment_u,
        
           }).then(function (response) {
   // handle response
@@ -2366,7 +2393,7 @@ $scope.newMuestra = function (){
          // boo, we hit an error!
             });
 
-    // $scope.showCoord = false;
+    $scope.message = "Su Muestra se ha grabado con Exito!";
   
  
 }

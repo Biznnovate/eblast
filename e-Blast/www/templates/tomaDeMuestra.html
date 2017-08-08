@@ -106,8 +106,9 @@
                 <input type="number" placeholder="Dens g/cc"  ng-model="dens60" 
                 ng-change="updateDens60(dens60)">
           </label>
-<canvas id="bar" class="chart chart-line"
-  chart-data="timeData" chart-labels="labels" chart-series="">
+
+<canvas id="bar" class="chart chart-line" ng-show="showGraph"
+  chart-data="timeData" chart-labels="labels" chart-series="" chart-colors="red">
 </canvas>
     </form>
     <form id="tomaDeMuestra-form12" class="list">
@@ -115,13 +116,15 @@
         <span class="input-label">Comentarios</span><textarea placeholder="(Opcional)"ng-model="coments" 
                 ng-change="updateComents(coments)"></textarea></label>
     </form>
+    <strong>{{message}}</strong>
 
     <div id="editarVoladuraMapa-button-bar5" class="button-bar" ng-hide="showBarrnam">
       <a ui-sref="menu.editarVoladuraCaptaciN()" id="editarVoladuraMapa-button25" style="border-radius:50px 50px 50px 50px;" class="button button-positive button-block icon-center ion-edit"></a>
-      <button id="editarVoladuraMapa-button31" ng-click="newMuestra()" style="border-radius:50px 50px 50px 50px;" class="button button-positive button-block icon-center ion-android-add-circle"></button>
+      <button id="editarVoladuraMapa-button31" ng-click="reloadPage()" style="border-radius:50px 50px 50px 50px;" class="button button-positive button-block icon-center ion-android-add-circle"></button>
       <button id="editarVoladuraMapa-button32" ng-click="viewGraph()" style="border-radius:50px 50px 50px 50px;" class="button button-positive button-block icon-center ion-stats-bars"></button>
-      <button id="editarVoladuraMapa-button33" ui-sref="menu.vistaDeProyecto()" style="border-radius:50px 50px 50px 50px;" class="button button-positive button-block icon-center ion-android-checkmark-circle"></button>
+      <button id="editarVoladuraMapa-button33" ng-click="newMuestra()" style="border-radius:50px 50px 50px 50px;" class="button button-positive button-block icon-center ion-android-checkmark-circle"></button>
     </div> 
+    <button id="editarVoladuraMapa-button33" ui-sref="menu.vistaDeProyecto()" style="border-radius:50px 50px 50px 50px;" class="button button-positive button-block">Finalizar</button>
   
   
   
