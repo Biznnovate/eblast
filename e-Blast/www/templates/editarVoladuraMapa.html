@@ -35,32 +35,32 @@
         </div>
         
       </div>
-      
+   </form>
   
       <div class="row" ng-show="showBarrnam">
-     
+    
       <label class="item item-input" id="editarVoladuraMapa-input25">
         <span class="input-label">Nuevo ID de Barreno:  N-</span>
         <input type="text" placeholder="" ng-model="newBarrnam" ng-change="updateBarrid(newBarrnam)">
       </label>
      </div>
-     <ul>
+     <strong>{{message2}}</strong>
+  
 
 
-       <li>
+
+
       <label class="item item-input" id="editarVoladuraMapa-search4">
         <i class="icon ion-search placeholder-icon"></i>
         <input type="text" placeholder="Buscar barreno por ID" ng-model = "searchedbarr.doc.barr">
       </label>
-       </li>
-       <li>   
+
       
         <label class="item item-select" id="editarVoladuraMapa-select19">
           <span class="input-label">ID de Barreno</span>
           <select ng-options="barreno as barreno.doc.barr for barreno in Barrenos.rows | orderBy: 'doc.barr/1' | filter : searchedbarr " ng-model="selectedBarreno" ng-change="updateSelectedBarr(selectedBarreno)"></select>
         </label>
-       </li>
-     </ul>
+
       <label class="item item-select" id="editarVoladuraMapa-select19" ng-show = "showselectbarrchar">
               <select ng-options="barreno as barreno.Barreno for barreno in Barrchar | filter : searchedbarr " ng-model="selectedBarrchar" ></select>
         </label>
@@ -71,7 +71,7 @@
         <div class="col">
           <label class="item item-input" id="editarVoladuraMapa-inputcoordx">
             <span class="input-label">X</span>
-            <input type="number" placeholder="" ng-model="coordx" ng-change="updateCoordx(coordx,selectedBarrchar)">
+            <input type="number" placeholder="" ng-model="coordx" *step="0.01"*  ng-change="updateCoordx(coordx,selectedBarrchar)">
           </label>
         </div>
         <div class="col">
@@ -81,6 +81,7 @@
           </label>
         </div>
       </div>
+      <form id="editarVoladuraMapa-form11" ng-show="showAddNewBarr" class="list" ng-model="tempTiposBarr">
         <label class="item item-select" id="editarVoladuraMapa-select14">
           <span class="input-label">Valores Predeterminados</span>
           <select ng-options="tipo as tipo.id for tipo in tipobarr.rows | orderBy: 'id'" ng-model="selectedTipo" ng-change="updateSelectedTipo(selectedTipo)"></select>
@@ -145,11 +146,9 @@
 
 
     </div>
-    <div id="editarVoladuraMapa-button-bar6" class="button-bar" ng-show = "showBarrnam">
-      <button id="editarVoladuraMapa-button31" ng-click="updateSelectedNewBarr(selectedBarreno)" style="border-radius:50px 50px 50px 50px;" class="button button-positive button-block icon-left ion-android-checkmark-circle">Agregar Barreno</button>
-    </div>
+   
     <div id="editarVoladuraMapa-button-bar5" class="button-bar" ng-hide="showBarrnam">
-      <a ui-sref="menu.editarVoladuraCaptaciN()" id="editarVoladuraMapa-button25" style="border-radius:50px 50px 50px 50px;" class="button button-positive button-block icon-center ion-edit"></a>
+      <button id="editarVoladuraMapa-button34" ng-click="editBarr()" id="editarVoladuraMapa-button25" style="border-radius:50px 50px 50px 50px;" class="button button-positive button-block icon-center ion-edit"></button>
       <button id="editarVoladuraMapa-button31" ng-click="addNewBarr()" style="border-radius:50px 50px 50px 50px;" class="button button-positive button-block icon-center ion-android-add-circle"></button>
       <button id="editarVoladuraMapa-button32" ng-click="calculos()" style="border-radius:50px 50px 50px 50px;" class="button button-positive button-block icon-center ion-calculator"></button>
       <button id="editarVoladuraMapa-button33" ng-click="updateBarr()" style="border-radius:50px 50px 50px 50px;" class="button button-positive button-block icon-center ion-android-checkmark-circle"></button>
@@ -157,5 +156,8 @@
 
     <button id="editarVoladuraMapa-button34" ng-click="gotoMenu()" style="border-radius:50px 50px 50px 50px;" class="button button-positive button-block icon-right ios-arrow-dropright">Finalizar</button>
     </form>
+   <div id="editarVoladuraMapa-button-bar6" class="button-bar" ng-show = "showBarrnam">
+      <button id="editarVoladuraMapa-button31" ng-click="updateSelectedNewBarr(selectedBarreno,newBarrnam)" style="border-radius:50px 50px 50px 50px;" class="button button-positive button-block icon-left ion-android-checkmark-circle">Agregar Barreno</button>
+    </div>
   </ion-content>
 </ion-view>

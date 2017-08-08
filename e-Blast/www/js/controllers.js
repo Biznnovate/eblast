@@ -1657,34 +1657,46 @@ $scope.updateSelectedBarr2 = function(obj){
 
        
 };
-$scope.updateSelectedNewBarr = function(obj){
+$scope.updateSelectedNewBarr = function(obj,nam){
         console.log(obj)
         console.log($scope.selectedBarreno)
       //alert($scope.selectedBarreno.doc)
         
-        $scope.selectedbarr_id =  $scope.newBarrnam_u;
+        $scope.selectedbarr_id =  $scope.newBarrnam;
         $scope.selectedbarr = obj.doc;
         $scope.profreal = obj.doc.prof;
         $scope.profreal_u = $scope.profreal;
         $scope.diametro = obj.doc.diam;
         $scope.diametro_u = $scope.diametro;
-        $scope.coordx = (obj.doc.coordx/1)+1;
-        $scope.coordy = (obj.doc.coordy/1)+1;
+        $scope.coordx = (obj.doc.coordx/1)+0.1;
+        $scope.coordy = (obj.doc.coordy/1)+0.1;
         $scope.coordx_u = $scope.coordx;
         $scope.coordy_u = $scope.coordy;
 
         $scope.message = "Guardar para Continuar";
         
-       
+       var dataBarr =  {
+                barr : nam,
+                selectedbarr_id : $scope.newBarrnam,
+                selectedbarr : obj.doc,
+                profreal : obj.doc.prof,
+                profreal_u : $scope.profreal,
+                diametro : obj.doc.diam,
+                diametro_u : $scope.diametro,
+                coordx : (obj.doc.coordx/1)+0.1,
+                coordy : (obj.doc.coordy/1)+0.1,
+                coordx_u : $scope.coordx,
+                coordy_u : $scope.coordy,
+       }
 
         localDB.put({   
      
-            _id: $scope.selectedbarr_id, 
-            barr: 'N-' + $scope.selectedbarr_id ,
+            _id: 'N-' + dataBarr.barr, 
+            barr: 'N-' + dataBarr.barr ,
             tipo: $scope.selectedTipo_u,
             profreal: $scope.profreal_u,
-            coordx: $scope.coordx_u+1,
-            coordy: $scope.coordy_u+1,
+            coordx: $scope.coordx_u,
+            coordy: $scope.coordy_u,
             taco: $scope.taco_u,
             aire: $scope.aire_u,
             bordo: $scope.bordo_u,
@@ -1763,6 +1775,7 @@ var barrenosforchart = $scope.Barrchar
   })
 
     $scope.showmap = true;
+    $scope.showAddNewBarr= true;
 
 };
 
@@ -1808,6 +1821,8 @@ $scope.updateCoordx = function(obj,barr){
         console.log(obj)
         console.log($scope.coordx)
         $scope.coordx_u = obj;
+        $scope.coordx = obj;
+       dataChartBarrs (); 
       
      
     };
@@ -1886,7 +1901,7 @@ $scope.updateBarrid = function(obj){
         console.log(obj)
         console.log($scope.newBarrnam)
        
-         $scope.newBarrnam_u = obj;
+         $scope.newBarrnam = obj;
         $scope.message = 'Seleccione el Barreno más cercano para copiar parámetros'; 
     };   
 $scope.calculos= function () {
@@ -1999,12 +2014,17 @@ $scope.reloadPage = function () {
         console.log(err);
     });
 } 
+$scope.message2 = '';
+$scope.showAddNewBarr= true;
 //create a new Barreno
 $scope.addNewBarr = function (){
    //$scope.showCoord = true;
+   $scope.showAddNewBarr= false;
     $scope.showBarrnam = true;
     $scope.message = '';
+    $scope.message2 = 'Confirme el Nombre y los Datos del Barreno. Seleccione las caracteristicas del barreno mas cercano y el tipo y presione Agregar Barreno.';
     $scope.newBarrnam = new Date().toISOString();
+    console.log($scope.message);
     
 }
 
@@ -2015,8 +2035,8 @@ $scope.createBarr = function (){
             barr: 'N-' + $scope.selectedbarr_id ,
             tipo: $scope.selectedTipo_u,
             profreal: $scope.profreal_u,
-            coordx: $scope.coordx_u+1,
-            coordy: $scope.coordy_u+1,
+            coordx: $scope.coordx_u,
+            coordy: $scope.coordy_u,
             taco: $scope.taco_u,
             aire: $scope.aire_u,
             bordo: $scope.bordo_u,
@@ -2097,7 +2117,11 @@ $scope.dataChartBarrs = function(){
 }
 
 $scope.showselectbarrchar = false;
-
+$scope.editBarr = function() {
+    $scope.message = 'Edite los valores del Barreno';
+    $scope.barrDetails = true;
+    $scope.showCoord = true;
+}
 
 }])
    
@@ -2270,19 +2294,29 @@ $scope.updateComent = function(obj){
 
 
 
-        
+
+       
  
 
 $scope.viewGraph = function () {
     $scope.labels = [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60] ; 
     //$scope.series = ['Tiempo'];
-    $scope.timeData = [
+    
+    
+    $scope.densidades = [
 
       // [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60],
        [$scope.dens0_u, $scope.dens5_u, $scope.dens10_u, $scope.dens15_u, $scope.dens20_u, 
         $scope.dens25_u, $scope.dens30_u, $scope.dens35_u,$scope.dens40_u, $scope.dens45_u, 
         $scope.dens50_u, $scope.dens55_u, $scope.dens60_u ,]
        ]
+     $scope.densidades_full = [];
+      angular.forEach( $scope.densidades, function(value, key){
+        var val = value;
+     $scope.densidades_full.push(val);
+        
+    });
+     $scope.timeData = $scope.densidades_full;  
      $scope.showGraph = true;
 
 }
