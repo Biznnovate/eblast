@@ -2393,12 +2393,195 @@ $scope.newMuestra = function (){
          // boo, we hit an error!
             });
 
-    $scope.message = "Su Muestra se ha grabado con Exito!";
+    $scope.message = "Su Muestra se ha grabada con Exito!";
   
  
 }
 
 
+}])
+
+.controller('tomaDeSismografosCtrl', ['$scope', '$stateParams','$window', 'pouchDB', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+// You can include any angular dependencies as parameters for this function
+// TIP: Access Route Parameters for your page via $stateParams.parameterName
+function ($scope, $stateParams, $window, pouchDB) {
+
+
+let localSDB = new PouchDB('sismografo');
+let remoteSDB = new PouchDB('https://biznnovate.cloudant.com/eblast-sismografo');    
+
+
+    localSDB.sync(remoteSDB).on('complete', function () {
+    // yay, we're in sync!
+    }).on('error', function (err) {
+  // boo, we hit an error!
+    });
+
+//declara db de Explosivistas
+
+let localexpDB = new pouchDB('explo');
+let remoteexpDB = new PouchDB('https://biznnovate.cloudant.com/eblast-explo'); 
+      localexpDB.sync(remoteexpDB).on('complete', function () {
+        // yay, we're in sync!
+        }).on('error', function (err) {
+        // boo, we hit an error!
+    });
+
+$scope.Sismografos = [];
+    localSDB.allDocs({
+         include_docs: true,
+         attachments: true
+         }).then(function (result) {
+         // handle result
+        $scope.Sismografos = result ;
+        $scope.Sisrow = result.rows ;
+          }).catch(function (err) {
+        console.log(err);
+    });
+//llama datos de DB de Explosivistas
+localexpDB.allDocs({
+         include_docs: true,
+         attachments: true
+         }).then(function (result) {
+         // handle result
+        $scope.explolist = result ;
+          }).catch(function (err) {
+        console.log(err);
+    });
+$scope.updateSis= function(obj){
+    console.log(obj)
+    $scope.sis = obj;
+    $scope.sis_u = obj;
+};
+$scope.updateSelectedSis = function(obj){
+        console.log(obj)
+        $scope.sis = obj.doc.sis;
+        $scope.sis_u = obj.doc.sis;
+        console.log($scope.sis_u)
+    };
+		
+		
+		
+$scope.updateInst = function(obj){
+        console.log(obj)
+        console.log($scope.inst)
+        $scope.inst_u = obj;
+    };
+$scope.updateSens = function(obj){
+        console.log(obj)
+        console.log($scope.sens)
+        $scope.sens_u = obj;
+    };
+$scope.updateHora = function(obj){
+        console.log(obj)
+        console.log($scope.hora)
+        $scope.hora_u = obj;
+    };
+$scope.caldate = new Date();
+$scope.updateCaldate = function(obj){
+        console.log(obj)
+        console.log($scope.caldate)
+        $scope.caldate_u = obj;
+    };
+$scope.lecdate = new Date();
+$scope.updateLecdate = function(obj){
+        console.log(obj)
+        console.log($scope.lecdate)
+        $scope.lecdate_u = obj;
+    };
+$scope.updateEstruc = function(obj){
+        console.log(obj)
+        console.log($scope.estruc)
+        $scope.estruc_u = obj;
+    };
+$scope.updateDist = function(obj){
+        console.log(obj)
+        console.log($scope.dist)
+        $scope.dist_u = obj;
+    };
+$scope.updateRadial = function(obj){
+        console.log(obj)
+        console.log($scope.radial)
+        $scope.radial_u = obj;
+    };
+$scope.updateVert = function(obj){
+        console.log(obj)
+        console.log($scope.vert)
+        $scope.vert_u = obj;
+    };
+$scope.updateTrans = function(obj){
+        console.log(obj)
+        console.log($scope.trans)
+        $scope.trans_u = obj;
+    };
+$scope.updateAcust = function(obj){
+        console.log(obj)
+        console.log($scope.acust)
+        $scope.acust_u = obj;
+    };
+$scope.updateExplo = function(obj){
+        console.log(obj)
+        console.log($scope.selectedExplo)
+        $scope.selectedExplo_u = obj;
+        $scope.selectedExploName = obj.doc.name;
+        $scope.selectedExploLic = obj.doc.lic;
+
+    };
+
+$scope.gotoMenu = function(){
+        $state.go('menu.vistaDeProyecto');
+    }
+$scope.reloadPage = function(){
+    $window.location.reload();
+     
+}
+  $scope.showSis = false;
+$scope.newSismografo = function (){
+    localSDB.put({   
+     
+            _id: new Date().toISOString(), 
+            sis: $scope.sis_u,  
+            inst: $scope.inst_u ,
+            caldate: $scope.caldate_u,
+            lecdate: $scope.lecdate_u,
+            hora: $scope.hora_u ,
+            estruc: $scope.estruc_u ,
+            dist: $scope.dist_u ,
+            radial: $scope.radial_u ,
+            vert: $scope.vert_u ,
+            trans: $scope.trans_u ,
+            acust: $scope.acust_u ,
+            explosivista: $scope.selectedExploName ,
+            lic: $scope.selectedExploLic ,
+
+       
+          }).then(function (response) {
+  // handle response
+   
+  console.log(err);
+  
+    }); 
+
+
+
+     localSDB.sync(remoteSDB).on('complete', function () {
+        // yay, we're in sync!
+            }).on('error', function (err) {
+         // boo, we hit an error!
+            });
+
+    $scope.message = "Su Sismografo se ha grabado con Exito!";
+  
+ 
+}
+$scope.viewSis = function (){
+    $scope.showSis = true;
+    
+}
+$scope.hideSis = function (){
+    $scope.showSis = false;
+    
+}
 }])
    
 .controller('generarReporteProductosCtrl', ['$scope', '$stateParams', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller

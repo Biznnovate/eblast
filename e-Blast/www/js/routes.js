@@ -210,6 +210,15 @@ angular.module('app.routes', [])
       }
     }
   })
+  .state('menu.tomaDeSismografos', {
+    url: '/page22',
+    views: {
+      'side-menu21': {
+        templateUrl: 'templates/tomaDeSismografos.html',
+        controller: 'tomaDeSismografosCtrl'
+      }
+    }
+  })
 
 $urlRouterProvider.otherwise('/side-menu21/page1')
 
