@@ -5,7 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('app', ['ionic','pouchdb','chart.js', 'ngcsv','ngSanitize', 'ngCsv', 'app.controllers', 'app.routes', 'app.directives','app.services','barrenos','productos','iniciadores','productosgranel','ionic.native',])
+angular.module('app', ['ionic','pouchdb','chart.js', 'ngcsv', 'ngSanitize', 'ngCsv',  'app.controllers', 'app.routes', 'app.directives','app.services','barrenos','productos','iniciadores','productosgranel','ionic.native',])
 
 .config(function($ionicConfigProvider, $sceDelegateProvider){
 

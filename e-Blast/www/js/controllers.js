@@ -56,6 +56,51 @@ localprojDB.allDocs({
         console.log(err);
     });
 
+//llama Sismografos
+let localSDB = new PouchDB('sismografo');
+let remoteSDB = new PouchDB('https://biznnovate.cloudant.com/eblast-sismografo');    
+
+
+    localSDB.sync(remoteSDB).on('complete', function () {
+    // yay, we're in sync!
+    }).on('error', function (err) {
+  // boo, we hit an error!
+    });
+$scope.Sismografos = [];
+    localSDB.allDocs({
+         include_docs: true,
+         attachments: true
+         }).then(function (result) {
+         // handle result
+        $scope.Sismografos = result ;
+        $scope.Sisrow = result.rows ;
+          }).catch(function (err) {
+        console.log(err);
+    });
+
+//llama muestras
+
+let localMDB = new PouchDB('muestras');
+let remoteMDB = new PouchDB('https://biznnovate.cloudant.com/eblast-muestras');    
+
+
+    localMDB.sync(remoteMDB).on('complete', function () {
+    // yay, we're in sync!
+    }).on('error', function (err) {
+  // boo, we hit an error!
+    });
+$scope.Muestras = [];
+    localMDB.allDocs({
+         include_docs: true,
+         attachments: true
+         }).then(function (result) {
+         // handle result
+        $scope.Muestras = result ;
+        $scope.Muesrow = result.rows ;
+          }).catch(function (err) {
+        console.log(err);
+    });
+
 $scope.butGen=true;
 $scope.butExp=false;
 $scope.dataExport = []
@@ -112,8 +157,67 @@ $scope.frontExport = []
     $scope.butExp=true;
     $scope.dataName = 'Reporte ' + Date();
     $scope.infoName = 'Front '+ Date();
- };
+    $scope.muestName = 'Muestras ' + Date();
+    $scope.sisName = 'Sismografo '+ Date();
+    createSismografos();
+    createMuestras();
 
+};
+$scope.createMuestras = function(){
+    angular.forEach( $scope.Muestras.rows, function(value, key){
+         var dataMues = {
+            'muestra': value.doc._id, 
+            'barr' : value.doc.barr,
+            'camion': value.doc.camion,
+            'hora': value.doc.hora,
+            'r1': value.doc.r1,
+            'r2': value.doc.r2,
+            'rpm': value.doc.rpm,
+            'temp': value.doc.temp,
+            'dens0': value.doc.dens0,
+            'dens5': value.doc.dens5,
+            'dens10': value.doc.dens10,
+            'dens15': value.doc.dens15,
+            'dens20': value.doc.dens20,
+            'dens25': value.doc.dens25,
+            'dens30': value.doc.dens30,
+            'dens35': value.doc.dens35,
+            'dens40': value.doc.dens40,
+            'dens45': value.doc.dens45,
+            'dens50': value.doc.dens50,
+            'dens55': value.doc.dens55,
+            'dens60': value.doc.dens60,
+            'coment': value.doc.coment,
+
+         }
+     $scope.muestrasExport.push(dataMues);
+        
+    });
+}
+$scope.createSismografos = function(){
+    angular.forEach( $scope.Sismografos.rows, function(value, key){
+         var dataSis = {
+            'id': value.doc._id, 
+            'sis' : value.doc.sis,
+            'inst': value.doc.inst,
+            'caldate': value.doc.caldate,
+            'lecdate': value.doc.lecdate,
+            'hora': value.doc.hora,
+            'estruc': value.doc.estruc,
+            'dist': value.doc.dist,
+            'radial': value.doc.radial,
+            'vert': value.doc.vert,
+            'trans': value.doc.trans,
+            'acust': value.doc.acust,
+            'explosivista': value.doc.explosivista,
+            'lic': value.doc.lic,
+     
+
+         }
+     $scope.sisExport.push(dataSis);
+        
+    });
+}
 $scope.createDataExp = function(){
     angular.forEach( $scope.Barrenos.rows, function(value, key){
         var dataExp = {
@@ -662,7 +766,7 @@ $scope.columninfo = [];
 
 
  $scope.valrows = [];
-
+ $scope.showIniciar = true;
 
 $scope.createWDB = function(){
 
@@ -698,7 +802,9 @@ $scope.createWDB = function(){
                             console.log(err);
                         });
                         $scope.showBarrSelect = 'yes';
-                    
+                        $scope.message = 'Paso 1: Seleccione la Columna que contiene el ID del Barreno';
+                       $scope.disSBarr = false;
+                       $scope.showIniciar = false;
 }
 
 
@@ -759,7 +865,9 @@ $scope.selectBarreno= function(obj){
                     }).on('error', function (err) {
                     // boo, we hit an error!
                 });
-         $scope.showCoordxSelect = 'yes';         
+         $scope.showCoordxSelect = 'yes';    
+         $scope.disSBarr = true;  
+         $scope.message = 'Paso 2: Seleccione la Columna que contiene la Coordenada X';   
         };
 
 $scope.selectCoordx= function(obj){
@@ -807,7 +915,8 @@ $scope.selectCoordx= function(obj){
                     }).on('error', function (err) {
                     // boo, we hit an error!
                 });
-    $scope.showCoordySelect = 'yes';            
+    $scope.showCoordySelect = 'yes'; 
+    $scope.disCx = true;            
     };
 
 $scope.selectCoordy= function(obj){
@@ -856,6 +965,7 @@ $scope.selectCoordy= function(obj){
                     // boo, we hit an error!
                 });
     $scope.showProf = 'yes'; 
+    $scope.disCy = true;     
     };
 
 $scope.selectProf= function(obj){
@@ -920,6 +1030,7 @@ $scope.selectUnitProf= function(obj){
                     // boo, we hit an error!
                 });
     $scope.showDiam = 'yes';
+    $scope.disP = true;     
     };
 
 $scope.selectUnitDia= function(obj){
@@ -971,9 +1082,13 @@ $scope.selectUnitDia= function(obj){
                     // boo, we hit an error!
                 });
     $scope.continueOpt = false;
+    $scope.disD = true;     
     };
 $scope.tittleToggle = '';
-
+$scope.reloadPage = function(){
+    $window.location.reload();
+     
+}
 
 
 

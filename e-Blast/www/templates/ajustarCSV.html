@@ -1,7 +1,7 @@
 <ion-view title="Ajustar CSV" id="page6">
   <ion-content padding="true" class="has-header">
     <div class="list card" id="ajustarCSV-card21">
-      <form id="ajustarCSV-form4" class="list">
+      <!--form id="ajustarCSV-form4" class="list">
         <label class="item item-select" id="ajustarCSV-select1">
           <span class="input-label">Seleccione Primera Columna</span>
           <select ng-options="nam as nam.nam for nam in column_type" ng-model="column_type"></select>
@@ -14,24 +14,29 @@
             <option>3</option>
             <option>4</option>
           </select>
-        </label>
-        <!--ion-toggle toggle-class="toggle-positive" id="ajustarCSV-toggle5" ng-model="titleToggle">Contiene Titulos?</ion-toggle-->
-       </form>
+        </label-->
+        <!--ion-toggle toggle-class="toggle-positive" id="ajustarCSV-toggle5" ng-model="titleToggle">Contiene Titulos?</ion-toggle>
+       </form-->
+
     </div>
          <a id="ajustarCSV-button63"  style="border-radius:50px 50px 50px 50px;" 
-      class="button button-positive button-block icon-right ion-checkmark-circled" ng-click="createWDB()" >Iniciar</a>
-    <form id="ajustarCSV-form18" class="list" ng-show="titleToggle == True" ng-hide="titleToggle==false">
+      class="button button-positive button-block icon-right ion-checkmark-circled" ng-show="showIniciar" ng-click="createWDB()" >Iniciar</a>
+     <div class="row">
+        <center><strong>{{message}}</strong>
+        </center>
+     </div>
+      <form id="ajustarCSV-form18" class="list" ng-show="titleToggle == True" ng-hide="titleToggle==false">
       <label ng-show="showBarrSelect!=''" class="item item-select" id="ajustarCSV-select23">
         <span class="input-label">Barreno</span>
-        <select ng-options="nam as nam.nam for nam in column_type_list" ng-model="barrcol" ng-change="selectBarreno(barrcol)"></select>
+        <select ng-options="nam as nam.nam for nam in column_type_list" ng-model="barrcol" ng-disabled="disSBarr" ng-change="selectBarreno(barrcol)"></select>
       </label>
       <label ng-show="showCoordxSelect!=''" class="item item-select" id="ajustarCSV-select28">
         <span class="input-label">Coordenada X</span>
-        <select ng-options="nam as nam.nam for nam in column_type_list" ng-model="coordx" ng-change="selectCoordx(coordx)"></select>
+        <select ng-options="nam as nam.nam for nam in column_type_list" ng-model="coordx" ng-disabled="disCx" ng-change="selectCoordx(coordx)"></select>
       </label>
       <label ng-show="showCoordySelect!=''"  class="item item-select" id="ajustarCSV-select29">
         <span class="input-label">Coordenada Y</span>
-        <select ng-options="nam as nam.nam for nam in column_type_list" ng-model="coordy" ng-change="selectCoordy(coordy)"></select>
+        <select ng-options="nam as nam.nam for nam in column_type_list" ng-model="coordy" ng-disabled="disCy" ng-change="selectCoordy(coordy)"></select>
       </label>
       <div ng-show="showProf!=''" class="row">
       <h4>Profundidad</h4>
@@ -40,13 +45,13 @@
       <div class="col">
       <label ng-show="showProf!=''" class="item item-select" id="ajustarCSV-select30">
         <span class="input-label">Profundidad</span>
-        <select ng-options="nam as nam.nam for nam in column_type_list" ng-model="prof" ng-change="selectProf(prof)"></select>
+        <select ng-options="nam as nam.nam for nam in column_type_list" ng-model="prof" ng-disabled="disP" ng-change="selectProf(prof)"></select>
       </label>
       </div>
       <div class="col">
       <label ng-show="showProfunit!=''" class="item item-select" id="ajustarCSV-selectprofunit">
         <span class="input-label">Medida</span>
-        <select ng-options="nam as nam.nam for nam in unitTableProf" ng-model="unitprof" ng-change="selectUnitProf(unitprof)"></select>
+        <select ng-options="nam as nam.nam for nam in unitTableProf" ng-model="unitprof" ng-disabled="disP" ng-change="selectUnitProf(unitprof)"></select>
       </label>
       </div>
       </div>
@@ -57,25 +62,27 @@
       <div class="col">
             <label ng-show="showDiam!=''" class="item item-select" id="ajustarCSV-select31">
         <span class="input-label">Diámetro</span>
-        <select ng-options="nam as nam.nam for nam in column_type_list" ng-model="diametro" ng-change="selectDia(diametro)"></select>
+        <select ng-options="nam as nam.nam for nam in column_type_list" ng-model="diametro" ng-disabled="disD" ng-change="selectDia(diametro)"></select>
       </label>
       </div>
       <div class="col">
       <label ng-show="showDiamunit!=''" class="item item-select" id="ajustarCSV-selectprofunit">
         <span class="input-label">Medida</span>
-        <select ng-options="nam as nam.nam for nam in unitTableDia" ng-model="unitdiametro" ng-change="selectUnitDia(unitdiametro)"></select>
+        <select ng-options="nam as nam.nam for nam in unitTableDia" ng-model="unitdiametro" ng-disabled="disD" ng-change="selectUnitDia(unitdiametro)"></select>
       </label>
       </div>
       </div>
 
     </form>
     <!--button id="ajustarCSV-button10" ng-click="columnType()" class="button button-positive button-block button-clear icon ion-checkmark-circled"></button-->
-    <div id="ajustarCSV-button-bar4" class="button-bar">
-      <a ui-sref="menu.subirProyecto()" id="ajustarCSV-button62" style="border-radius:50px 50px 50px 50px;" 
-      class="button button-positive button-block icon-left ion-android-arrow-dropleft-circle">Atras</a>
-       <a ui-sref="menu.parametrosVoladura1()" id="ajustarCSV-button63" ng-disabled="continueOpt" style="border-radius:50px 50px 50px 50px;" 
-      class="button button-positive button-block icon-right ion-android-arrow-dropright-circle" >Continuar</a>
-    </div>
+    <div id="ajustarCSV-button-bar5" class="button-bar">
+        
+        <button id="editarVoladuraMapa-button32" ng-click="reloadPage()"  
+        style="border-radius:50px 50px 50px 50px;" class="button button-positive button-block icon-left ion-android-arrow-dropleft-circle">Corregir</button>
+        <button id="editarVoladuraMapa-button33" ui-sref="menu.parametrosVoladura1()"   ng-disabled="continueOpt" 
+        style="border-radius:50px 50px 50px 50px;" class="button button-positive button-block icon-right ion-android-checkmark-circle">Continuar</button>
+      </div> 
+
     
     <div class="row">
       <p>Cantidad Total de Barrenos: {{Barrenos.total_rows}}</p>
