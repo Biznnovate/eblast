@@ -38,30 +38,31 @@
     <button id="generarReporteProductos-button44" class="button button-positive button-block icon-right ion-android-add-circle">Agregar Producto</button>
     <div>
       <div class="row">
-        <div class="col">
+        <div class="col" width="40%">
           <strong>Produtos</strong>
         </div>
-        <div class="col">
+        <div class="col" width="20%">
           <strong>Entrega</strong>
         </div>
-        <div class="col">
+        <div class="col" width="20%">
           <strong>Devolución</strong>
         </div>
-        <div class="col">
+        <div class="col" width="20%">
           <strong>Consumo</strong>
         </div>
       </div>
       <div class="row">
         <strong>Componentes Emulsión a granel</strong>
       </div>
-
+      
       <div class="row">
-        <div class="col">Hydromite 70 - Emulsíon Gasificada</div>
-        <div class="col">5</div>
-        <div class="col">0</div>
-        <div class="col">5</div>
+        <div class="col" >{{prod_1.prod}}</div>
+        <div class="col" ><input type="number" placeholder="0" ng-model="prod_1.del" ng-change="updateProd1del(prod_1.del)"></div>
+        <div class="col" ><input type="number" placeholder="0" ng-model="prod_1.dev" ng-change="updateProd1del(prod_1.dev)"></div>
+        <div class="col">{{prod_1.del - prod_1.dev}}</div>
       </div>
       <div class="row">
+
         <strong>Emulsión empacada</strong>
       </div>
       <div class="row">

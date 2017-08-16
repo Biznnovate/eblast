@@ -2699,10 +2699,327 @@ $scope.hideSis = function (){
 }
 }])
    
-.controller('generarReporteProductosCtrl', ['$scope', '$stateParams', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+.controller('generarReporteProductosCtrl', ['$scope', '$stateParams', 'pouchDB', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
 // You can include any angular dependencies as parameters for this function
 // TIP: Access Route Parameters for your page via $stateParams.parameterName
-function ($scope, $stateParams) {
+function ($scope, $stateParams, pouchDB) {
+
+    $scope.prod_1 = 
+        {
+            'id': 'prod_1' ,
+            'tipo': 'Componentes / Emulsión a granel',	
+            'prod': 'Hydromite 70 - Emulsión Gasificada',	
+            'del': 0,
+            'dev': 0,
+            'used':0,
+        }	
+    $scope.prod_2 = 
+        {
+        'id': 'prod_2' ,
+        'tipo': 'Componentes / Emulsión a granel',	
+        'prod': 'Hydromite 100 - Emulsión Gasificada',	
+        'del': 0,
+        'dev': 0,
+        'used':0,
+    }
+    $scope.prod_3 = 
+    {
+        'id': 'prod_3' ,
+        'tipo': 'Emulsión Empacada',	
+        'prod': 'Hydromite 3 (63x400mm)',	
+        'del': 0,
+        'dev': 0,
+        'used':0,
+    }	
+
+    $scope.prod_4 = 
+    {
+        'id': 'prod_4' ,
+        'tipo': 'Emulsión Empacada',	
+        'prod': 'Hydromite 3 (75x800mm)',	
+        'del': 0,
+        'dev': 0,
+        'used':0,
+    }	
+    $scope.prod_5 = 
+    {
+        'id': 'prod_5' ,
+        'tipo': 'Emulsión Empacada',	
+        'prod': 'Emulex 1 (25x400)',	
+        'del': 0,
+        'dev': 0,
+        'used':0,
+    }	
+    $scope.prod_6 = 
+    {
+    'id': 'prod_6' ,
+    'tipo': 'Emulsión Empacada',	
+    'prod': 'Emulex 1 (25x200)',	
+    'del': 0,
+    'dev': 0,
+    'used':0,
+    }	
+    $scope.prod_7 = 
+    {
+    'id': 'prod_7' ,
+    'tipo': 'Emulsión Empacada',	
+    'prod': 'Emulex 1 (32x400)',	
+    'del': 0,
+    'dev': 0,
+    'used':0,
+    }	
+    $scope.prod_8 = 
+    {
+    'id': 'prod_8' ,
+    'tipo': 'Booster (Iniciador)',	
+    'prod': 'Booster HDP-1/2 lb',	
+    'del': 0,
+    'dev': 0,
+    'used':0,
+    }
+    $scope.prod_9 = 
+    {
+    'id': 'prod_9' ,
+    'tipo': 'Booster (Iniciador)',	
+    'prod': 'Booster HDP-1 lb',	
+    'del': 0,
+    'dev': 0,
+    'used':0,
+    }
+    $scope.prod_10 = 
+    {
+    'id': 'prod_10' ,
+    'tipo': 'Booster (Iniciador)',	
+    'prod': 'Booster HDP-3 lb',	
+    'del': 0,
+    'dev': 0,
+    'used':0,
+    }
+    $scope.prod_11 = 
+    {
+    'id': 'prod_11' ,
+    'tipo': 'Booster (Iniciador)',	
+    'prod': 'Emulex 50x400',	
+    'del': 0,
+    'dev': 0,
+    'used':0,
+    }
+    $scope.prod_12 = 
+    {
+        'id': 'prod_12' ,
+        'tipo': 'Detonadores Duales',	
+        'prod': "SSDD 30'(9m 25/500 ms)",	
+        'del': 0,
+        'dev': 0,
+        'used':0,
+    }
+    $scope.prod_13 = 
+    {
+        'id': 'prod_13' ,
+        'tipo': 'Detonadores Duales',	
+        'prod': "SSDD 40' (12m 25/500 ms)",	
+        'del': 0,
+        'dev': 0,
+        'used':0,
+    }
+    $scope.prod_14 = 
+    {
+        'id': 'prod_14' ,
+        'tipo': 'Detonadores Duales',	
+        'prod': "SSDD 60' (18m 25/500 ms)",	
+        'del': 0,
+        'dev': 0,
+        'used':0,
+    }
+    $scope.prod_15 = 
+    {
+        'id': 'prod_15' ,
+        'tipo': 'Detonadores Duales',	
+        'prod': "SSDD 80' (24m 25/500 ms)",	
+        'del': 0,
+        'dev': 0,
+        'used':0,
+        }
+     $scope.prod_16 = 
+        {
+            'id': 'prod_16' ,
+            'tipo': 'Conectores de Superficie',	
+            'prod': "QRC 30' 17 ms",	
+            'del': 0,
+            'dev': 0,
+            'used':0,
+        } 
+    $scope.prod_17 = 
+        {
+            'id': 'prod_17' ,
+            'tipo': 'Conectores de Superficie',	
+            'prod': "QRC 30' 42 ms",	
+            'del': 0,
+            'dev': 0,
+            'used':0,
+        } 
+    $scope.prod_18 = 
+        {
+            'id': 'prod_18' ,
+            'tipo': 'Conectores de Superficie',	
+            'prod': "QRC 30' 67 ms",	
+            'del': 0,
+            'dev': 0,
+            'used':0,
+        } 
+    $scope.prod_19 = 
+        {
+            'id': 'prod_19' ,
+            'tipo': 'Conectores de Superficie',	
+            'prod': "QRC 40' 17 ms",	
+            'del': 0,
+            'dev': 0,
+            'used':0,
+            } 
+    $scope.prod_20 = 
+            {
+                'id': 'prod_20' ,
+                'tipo': 'Conectores de Superficie',	
+                'prod': "QRC 40' 42 ms",	
+                'del': 0,
+                'dev': 0,
+                'used':0,
+            } 
+    $scope.prod_21 = 
+            {
+                'id': 'prod_21' ,
+                'tipo': 'Conectores de Superficie',	
+                'prod': "QRC 40' 67 ms",	
+                'del': 0,
+                'dev': 0,
+                'used':0,
+            } 
+    $scope.prod_22 = 
+            {
+                'id': 'prod_22' ,
+                'tipo': 'Conectores de Superficie',	
+                'prod': "QRC 20' 17 ms",	
+                'del': 0,
+                'dev': 0,
+                'used':0,
+            } 
+    $scope.prod_23 = 
+            {
+                'id': 'prod_23' ,
+                'tipo': 'Conectores de Superficie',	
+                'prod': "QRC 20' 42 ms",	
+                'del': 0,
+                'dev': 0,
+                'used':0,
+                } 
+    $scope.prod_24 = 
+                {
+                    'id': 'prod_24' ,
+                    'tipo': 'Conectores de Superficie',	
+                    'prod': "QRC 40' 25 ms",	
+                    'del': 0,
+                    'dev': 0,
+                    'used':0,
+                } 
+    $scope.prod_25 = 
+                {
+                    'id': 'prod_25' ,
+                    'tipo': 'Líneas de inicio',	
+                    'prod': "STD 1500",	
+                    'del': 0,
+                    'dev': 0,
+                    'used':0,
+                } 
+    $scope.prod_26 = 
+                {
+                    'id': 'prod_26' ,
+                    'tipo': 'Líneas de inicio',	
+                    'prod': "STD 2500",	
+                    'del': 0,
+                    'dev': 0,
+                    'used':0,
+                } 
+    $scope.prod_27 = 
+                {
+                    'id': 'prod_27' ,
+                    'tipo': 'Líneas de inicio',	
+                    'prod': "STD 2500 Quick Start",	
+                    'del': 0,
+                    'dev': 0,
+                    'used':0,
+                    } 
+    $scope.prod_28 = 
+                    {
+                        'id': 'prod_28' ,
+                        'tipo': 'Líneas de inicio',	
+                        'prod': "STD 1000",	
+                        'del': 0,
+                        'dev': 0,
+                        'used':0,
+                    } 
+    $scope.prod_29 = 
+                    {
+                        'id': 'prod_29' ,
+                        'tipo': 'Cordón detonante',	
+                        'prod': "5P",	
+                        'del': 0,
+                        'dev': 0,
+                        'used':0,
+                    } 
+    $scope.prod_30 = 
+                    {
+                        'id': 'prod_30' ,
+                        'tipo': 'Cordón detonante',	
+                        'prod': "10 PE",	
+                        'del': 0,
+                        'dev': 0,
+                        'used':0,
+                    } 
+    $scope.prod_31 = 
+                    {
+                        'id': 'prod_31' ,
+                        'tipo': 'Cordón detonante',	
+                        'prod': "80P",	
+                        'del': 0,
+                        'dev': 0,
+                        'used':0,
+                        } 
+    $scope.prod_32 = 
+                        {
+                            'id': 'prod_32' ,
+                            'tipo': 'Cordón detonante',	
+                            'prod': "40P",	
+                            'del': 0,
+                            'dev': 0,
+                            'used':0,
+                        } 
+    $scope.prod_33 = 
+                        {
+                            'id': 'prod_33' ,
+                            'tipo': 'Detonadores eléctricos y electrónicos',	
+                            'prod': "Det. Electrónico Electro Star 24'",	
+                            'del': 0,
+                            'dev': 0,
+                            'used':0,
+                        } 
+    $scope.prod_34 = 
+                        {
+                            'id': 'prod_34' ,
+                            'tipo': 'Detonadores eléctricos y electrónicos',	
+                            'prod': "Det Eléctrico Rock Stars 0 ms 16ft #0",	
+                            'del': 0,
+                            'dev': 0,
+                            'used':0,
+                        } 
+    $scope.prod_35 = 
+                        {
+                            'id': 'prod_35' ,
+                            'tipo': 'Otros',	
+                            'prod': "Buswire 1250 ft",	
+                            'del': 0,
+                            'dev': 0,
+                            'used':0,
+                            } 
 
 
 }])
