@@ -5,7 +5,8 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('app', ['ionic','pouchdb','chart.js', 'ngcsv', 'ngSanitize', 'ngCsv',  'app.controllers', 'app.routes', 'app.directives','app.services','barrenos','productos','iniciadores','productosgranel','ionic.native',])
+angular.module('app', ['ionic','pouchdb','chart.js', 'xeditable', 'ngcsv', 'ngSanitize', 'ngCsv', 'ngCsvImport', 'app.controllers', 'app.routes', 
+'app.directives','app.services','barrenos','productos','iniciadores','htmlToPdfSave', 'productosgranel','ionic.native',])
 
 .config(function($ionicConfigProvider, $sceDelegateProvider){
 
@@ -108,4 +109,28 @@ angular.module('app', ['ionic','pouchdb','chart.js', 'ngcsv', 'ngSanitize', 'ngC
 	        });
     	}
   	}
-	});
+  })
+  .run(function(editableOptions) {
+    editableOptions.theme = 'bs3'; // bootstrap3 theme. Can be also 'bs2', 'default'
+  })
+  //.directive('hrefInappbrowser', function() {
+  .directive('fileread', function () {
+    return {
+        scope: {
+            fileread: "="
+        },
+        link: function (scope, element, attributes) {
+            element.bind("change", function (changeEvent) {
+                var reader = new FileReader();
+                reader.onload = function (loadEvent) {
+                    scope.$apply(function () {
+                        scope.fileread = loadEvent.target.result;
+                    });
+                }
+                reader.readAsDataURL(changeEvent.target.files[0]);
+            });
+        }
+    }
+});
+  
+  

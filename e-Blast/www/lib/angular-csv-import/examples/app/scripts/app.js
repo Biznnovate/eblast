@@ -13,8 +13,7 @@ angular
     'ngResource',
     'ngRoute',
     'ngCsvImport',
-    'hljs',
-    'ngMaterial'
+    'hljs'
   ])
   .config(function ($routeProvider) {
     $routeProvider

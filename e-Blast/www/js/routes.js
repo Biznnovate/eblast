@@ -70,6 +70,10 @@ angular.module('app.routes', [])
 
   .state('menu.ajustarCSV', {
     url: '/page6',
+    params: {
+      id: "",
+      status: ""		
+    },
     views: {
       'side-menu21': {
         templateUrl: 'templates/ajustarCSV.html',
@@ -101,7 +105,12 @@ angular.module('app.routes', [])
   })
 
   .state('menu.parametrosVoladura1', {
-    url: '/page8',
+    url: '/page8/',
+    params: {
+      id: "",
+      status: "",
+      proj:""		
+  },
     views: {
       'side-menu21': {
         templateUrl: 'templates/parametrosVoladura1.html',
@@ -109,11 +118,14 @@ angular.module('app.routes', [])
       }
     }
   })
+  
 
   .state('menu.editarVoladuraMapa', {
     url: '/page12',
 	params: {
-		id: ""		
+    id: "",
+    status: "",
+    proj:""		
 },
     views: {
       'side-menu21': {
@@ -191,7 +203,8 @@ angular.module('app.routes', [])
     url: '/page20',
 	params: {
 		id: "",
-		status: ""		
+    status: "",
+    proj: "",		
 },
     views: {
       'side-menu21': {
@@ -219,8 +232,38 @@ angular.module('app.routes', [])
       }
     }
   })
+  .state('menu.vistaPreviaMuestra', {
+    url: '/page23',
+    views: {
+      'side-menu21': {
+        templateUrl: 'templates/vistaPreviaMuestra.html',
+        controller: 'vistaPreviaMuestraCtrl'
+      }
+    }
+  })
+  .state('menu.vistaPreviaGrl', {
+    url: '/page24',
+    views: {
+      'side-menu21': {
+        templateUrl: 'templates/vistaPreviaGrl.html',
+        controller: 'vistaPreviaGrlCtrl'
+      }
+    }
+  })
+  .state('menu.reporteCarga1', {
+    url: '/page25',
+    views: {
+      'side-menu21': {
+        templateUrl: 'templates/reporteCarga1.html',
+        controller: 'reporteCarga1Ctrl'
+      }
+    }
+  })
+  
 
 $urlRouterProvider.otherwise('/side-menu21/page1')
+
+
 
 
 });
