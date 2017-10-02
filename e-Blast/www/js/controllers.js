@@ -1664,8 +1664,10 @@ angular.module('app.controllers', [])
             'status': $stateParams.status,
             'proj': $stateParams.proj,
         }
+
         $scope.projID = $scope.editBarreno.proj || '';
-        $scope.tipoID = $scope.editBarreno.id;
+        $scope.tipoID = $scope.editBarreno.id || '';
+        let tempDB = new pouchDB('temp');
         let localprojDB = new pouchDB('projects');
         let remoteprojDB = new PouchDB('https://biznnovate.cloudant.com/eblast-proj', { skipSetup: true });
         remoteprojDB.login('biznnovate', '5t24XN-Am@8dqF:R').then(function(batman) {
@@ -1721,7 +1723,7 @@ angular.module('app.controllers', [])
 
 
         //muestra los datos a capturar
-        $scope.barrForm = '';
+        $scope.barrForm = false;
         $scope.reloadButton = '';
         $scope.updateButton = '';
         $scope.createButton = '';
@@ -1757,14 +1759,18 @@ angular.module('app.controllers', [])
         }
         $scope.updateBarrenoNam = function(obj) {
             $scope.tipoBarrNam_u = obj;
+            $scope.tipoBarrNam = $scope.tipoBarrNam_u || $scope.editBarreno.id;
         }
         $scope.tipoBarrNam = $scope.tipoBarrNam_u || $scope.editBarreno.id;
+
         $scope.showBarrForm = function() {
+            let tempDB = new pouchDB('temp');
             $scope.tipoBarrNam = $scope.tipoBarrNam_u || $scope.editBarreno.id;
             var id = $scope.projID;
             console.log('Projid en shobarrform' + id)
             localprojDB.get(id).then(function(doc) {
-                $scope.projTipos = doc.tipos;
+                $scope.projTipos = doc.tipos || [];
+                $scope.tipos = doc.tipos || [];
                 console.log('projtiposthing' + doc.tipos)
                 var selectedID = $scope.tipoBarrNam;
                 var rows = $scope.projTipos;
@@ -1776,7 +1782,41 @@ angular.module('app.controllers', [])
                 console.log(err);
             });
 
+            tempDB.allDocs().then(function(result) {
+                // Promise isn't supported by all browsers; you may want to use bluebird
+                return Promise.all(result.rows.map(function(row) {
+                    return tempDB.remove(row.id, row.value.rev);
+                }));
+            }).then(function() {
+                // done!
+            }).catch(function(err) {
+                // error!
+            });
+            var tipos = $scope.tipos;
+            console.log('Creando Temp de Tipos para trabajar')
+            angular.forEach(tipos, function(value) {
+                tempDB.put({
+                    id: tipos.id,
+                    carga: tipos.carga,
+                    prof: tipos.prof,
+                    peso: tipos.peso,
+                    densidad: tipos.densidad,
+                    tipodecarga: tipos.tipodecarga,
+                    taco: tipos.taco,
+                    aire: tipos.aire,
+                    bordo: tipos.bordo,
+                    espaciamiento: tipos.espaciamiento,
+                    diametro: tipos.diametro,
+                    subperf: tipos.subperf,
 
+                }).then(function(response) {
+                    // handle response
+
+                    console.log(err);
+                });
+            });
+
+            $scope.barrForm = true;
 
 
 
@@ -1945,9 +1985,42 @@ angular.module('app.controllers', [])
             //producto as producto.prod for producto in listed_productos | filter:producto.id=tipoProdv2.id
 
         $scope.editTipo = function(obj) {
-            $scope.tipoID = obj.id
+            $scope.tipoEditando = {};
+            $scope.tipoID = obj.id || '';
+            $scope.editBarreno.status = 'Edit'
+            $scope.showBarrForm();
+            var tipo = obj.id;
             console.log('Tipo seleccionado para editar:' + obj.id)
+            tempDB.get(tipo).then(function(doc) {
+                $scope.tipoEditando = doc;
 
+            })
+
+            $scope.selectedTipo_u = $scope.tipoEditando;
+            $scope.profcarga = $scope.tipoEditando.prof || 0;
+            $scope.peso = $scope.tipoEditando.peso || 0;
+            $scope.taco = $scope.tipoEditando.taco || 0;
+            $scope.aire = $scope.tipoEditando.aire || 0;
+            $scope.bordo = $scope.tipoEditando.bordo || 0;
+            $scope.espaciamiento = $scope.tipoEditando.espaciamiento || 0;
+            $scope.subperf = $scope.tipoEditando.subperf || 0;
+            $scope.densidad = ($scope.tipoEditando.densidad || 0);
+            $scope.diametro = ($scope.tipoEditando.diametro || 0);
+            $scope.tipodecarga = $scope.tipoEditando.tipodecarga || '';
+            $scope.carga = $scope.tipoEditando.carga || {};
+
+            $scope.profcarga_u = $scope.profcarga;
+            $scope.peso_u = $scope.peso;
+            $scope.taco_u = $scope.taco;
+            $scope.aire_u = $scope.aire;
+            $scope.bordo_u = $scope.bordo;
+            $scope.espaciamiento_u = $scope.espaciamiento;
+            $scope.subperf_u = $scope.subperf;
+            $scope.densidad_u = $scope.densidad;
+            $scope.diametro_u = $scope.diametro;
+            $scope.tipodecarga_u = $scope.tipodecarga;
+            $scope.carga_u = $scope.carga;
+            $scope.tacofinal = $scope.taco;
         }
         $scope.reloadListUsers = function() {
             User.listUsers().then(function(response) {
@@ -1955,7 +2028,7 @@ angular.module('app.controllers', [])
             });
         }
         $scope.insertTipoBarrenos = function() {
-            // let tempDB = new pouchDB('temp');
+            let tempDB = new pouchDB('temp');
             var subperfo = $scope.subperf_u || $scope.subperf;
             var tipodecarga = $scope.tipodecarga_u;
             var tipo = $scope.tipoBarrNam_u || $scope.editBarreno.id;
@@ -2002,6 +2075,7 @@ angular.module('app.controllers', [])
             $state.go('menu.parametrosVoladura1', { 'proj': $scope.projID });
         }
         $scope.updateTipoBarrenos = function() {
+
             let tempDB = new pouchDB('temp');
 
             var tipos = $scope.tipos;
@@ -2009,47 +2083,13 @@ angular.module('app.controllers', [])
             var tipodecarga = $scope.tipodecarga_u;
             var tipo = $scope.tipoBarrNam_u || $scope.tipoID;
             var id = $scope.projID;
-            angular.forEach(prods, function(value) {
-                tempDB.put({
-                    id: tipos.id,
-                    carga: tipos.carga,
-                    prof: tipos.prof,
-                    peso: tipos.peso,
-                    densidad: tipos.densidad,
-                    tipodecarga: tipos.tipodecarga,
-                    taco: tipos.taco,
-                    aire: tipos.aire,
-                    bordo: tipos.bordo,
-                    espaciamiento: tipos.espaciamiento,
-                    diametro: tipos.diametro,
-                    subperf: tipos.subperf,
 
-                }).then(function(response) {
-                    // handle response
+            console.log('Actualizando Tipo ' + tipo)
 
-                    console.log(err);
-                });
-            });
-
-            var newTipo = {
-                id: tipo,
-                carga: $scope.prods,
-                prof: $scope.LargoTotal,
-                peso: $scope.PesoTotal,
-                densidad: $scope.DensidadTotal,
-                tipodecarga: tipodecarga,
-                taco: $scope.taco_u || 0,
-                aire: $scope.aire_u || 0,
-                bordo: $scope.bordo_u || 0,
-                espaciamiento: $scope.espaciamiento_u || 0,
-                diametro: $scope.diametro_u,
-                subperf: subperfo,
-            }
-            $scope.projTipos.push(newTipo);
             tempDB.get(tipo).then(function(doc) {
                 return tempDB.put({
                     id: tipo,
-                    rev: doc.id,
+                    rev: doc._rev,
                     carga: $scope.prods || doc.carga,
                     prof: $scope.LargoTotal || doc.prof,
                     peso: $scope.PesoTotal || doc.peso,
@@ -2064,31 +2104,47 @@ angular.module('app.controllers', [])
                 }).catch(function(err) {
                     console.log(err);
                 });
+
             });
-            localprojDB.get(id).then(function(doc) {
-                return localprojDB.put({
-                    _id: id,
-                    _rev: doc._rev,
-                    proj: doc.proj,
-                    date: doc.date,
-                    barrenos: doc.barrenos,
-                    tipos: $scope.projTipos,
+
+            tempDB.allDocs({
+                include_docs: true,
+                attachments: true
+            }).then(function(result) {
+                // handle result
+                $scope.projTipos = result.docs;
+                console.log('se bajaron los tipos actualizados')
+
+            }).then(function() {
+                console.log('Actualizando Proyecto ' + id)
+                localprojDB.get(id).then(function(doc) {
+                    return localprojDB.put({
+                        _id: id,
+                        _rev: doc._rev,
+                        proj: doc.proj,
+                        date: doc.date,
+                        barrenos: doc.barrenos,
+                        tipos: $scope.projTipos,
 
 
-                }).catch(function(err) {
-                    console.log(err);
+                    }).catch(function(err) {
+                        console.log(err);
+                    });
                 });
+
             });
 
 
 
+
+            console.log('Se actualizo el Tipo ' + tipo)
             localprojDB.sync(remoteprojDB).on('complete', function() {
                 // yay, we're in sync!
             }).on('error', function(err) {
                 // boo, we hit an error!
             });
 
-            $state.go('menu.parametrosVoladura1', { 'proj': $scope.projID });
+            // $state.go('menu.parametrosVoladura1', { 'proj': $scope.projID });
         }
         $scope.UpdateTipoBarrenosOld = function() {
             var subperfo = $scope.subperf_u || $scope.subperf;
@@ -2393,7 +2449,7 @@ angular.module('app.controllers', [])
         $scope.saveTipoLocal = function(item) {
             // $scope.TipoLocal = $window.localStorage['tipobarr'] || [];
             $scope.TipoLocal.push(item);
-            $scope.barrForm = '';
+            $scope.barrForm = false;
             $scope.prods = [];
             //$scope.TipoLocal = $scope.TipoLocala;
             // $scope.TipoLocalLoad  = '';
