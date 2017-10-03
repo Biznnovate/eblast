@@ -1762,11 +1762,24 @@ angular.module('app.controllers', [])
             $scope.tipoBarrNam = $scope.tipoBarrNam_u || $scope.editBarreno.id;
         }
         $scope.tipoBarrNam = $scope.tipoBarrNam_u || $scope.editBarreno.id;
-
+        $scope.cleanTempDB = function() {
+            tempDB.allDocs().then(function(result) {
+                // Promise isn't supported by all browsers; you may want to use bluebird
+                return Promise.all(result.rows.map(function(row) {
+                    return tempDB.remove(row.id, row.value.rev);
+                }));
+            }).then(function() {
+                // done! 
+                console.log('tempDB cleaned')
+            }).catch(function(err) {
+                // error!
+            });
+        }
         $scope.showBarrForm = function() {
             let tempDB = new pouchDB('temp');
             $scope.tipoBarrNam = $scope.tipoBarrNam_u || $scope.editBarreno.id;
             var id = $scope.projID;
+
             console.log('Projid en shobarrform' + id)
             localprojDB.get(id).then(function(doc) {
                 $scope.projTipos = doc.tipos || [];
@@ -1781,21 +1794,15 @@ angular.module('app.controllers', [])
             }).catch(function(err) {
                 console.log(err);
             });
+            $scope.cleanTempDB();
 
-            tempDB.allDocs().then(function(result) {
-                // Promise isn't supported by all browsers; you may want to use bluebird
-                return Promise.all(result.rows.map(function(row) {
-                    return tempDB.remove(row.id, row.value.rev);
-                }));
-            }).then(function() {
-                // done!
-            }).catch(function(err) {
-                // error!
-            });
+
+
             var tipos = $scope.tipos;
-            console.log('Creando Temp de Tipos para trabajar')
-            angular.forEach(tipos, function(value) {
+            console.log('Creando Temp de Tipos para trabajar ' + tipos)
+            angular.forEach($scope.tipos, function(tipos) {
                 tempDB.put({
+                    _id: tipos.id,
                     id: tipos.id,
                     carga: tipos.carga,
                     prof: tipos.prof,
@@ -1812,12 +1819,18 @@ angular.module('app.controllers', [])
                 }).then(function(response) {
                     // handle response
 
-                    console.log(err);
+                    console.log('Put de Tempdb en Showbarrform ' + response);
                 });
             });
-
-            $scope.barrForm = true;
-
+            tempDB.allDocs({
+                include_docs: true,
+                attachments: true
+            }).then(function(result) {
+                // handle result
+                $scope.projTipostest = result.rows;
+                console.log('se bajaron los tipos actualizados' + result)
+                $scope.barrForm = true;
+            });
 
 
         }
@@ -2033,6 +2046,7 @@ angular.module('app.controllers', [])
             var tipodecarga = $scope.tipodecarga_u;
             var tipo = $scope.tipoBarrNam_u || $scope.editBarreno.id;
             var id = $scope.projID;
+
             var newTipo = {
                 id: tipo,
                 carga: $scope.prods,
@@ -2046,7 +2060,7 @@ angular.module('app.controllers', [])
                 espaciamiento: $scope.espaciamiento_u || 0,
                 diametro: $scope.diametro_u,
                 subperf: subperfo,
-            }
+            };
             $scope.projTipos.push(newTipo);
 
             localprojDB.get(id).then(function(doc) {
@@ -2083,54 +2097,89 @@ angular.module('app.controllers', [])
             var tipodecarga = $scope.tipodecarga_u;
             var tipo = $scope.tipoBarrNam_u || $scope.tipoID;
             var id = $scope.projID;
+            $scope.tiposUpdate = [];
+            $scope.projTiposUpdate = [];
 
             console.log('Actualizando Tipo ' + tipo)
 
             tempDB.get(tipo).then(function(doc) {
                 return tempDB.put({
+
+                    _id: tipo,
+                    _rev: doc._rev,
                     id: tipo,
-                    rev: doc._rev,
-                    carga: $scope.prods || doc.carga,
-                    prof: $scope.LargoTotal || doc.prof,
-                    peso: $scope.PesoTotal || doc.peso,
-                    densidad: $scope.DensidadTotal || doc.densidad,
-                    tipodecarga: tipodecarga || doc.tipodecarga,
-                    taco: $scope.taco_u || doc.taco,
-                    aire: $scope.aire_u || doc.aire,
-                    bordo: $scope.bordo_u || doc.bordo,
-                    espaciamiento: $scope.espaciamiento_u || doc.espaciamiento,
-                    diametro: $scope.diametro_u || doc.diametro,
-                    subperf: subperfo || doc.subperf,
+                    carga: $scope.prods || [],
+                    prof: $scope.LargoTotal || 0,
+                    peso: $scope.PesoTotal || 0,
+                    densidad: $scope.DensidadTotal || 0,
+                    tipodecarga: tipodecarga || 0,
+                    taco: $scope.taco_u || 0,
+                    aire: $scope.aire_u || 0,
+                    bordo: $scope.bordo_u || 0,
+                    espaciamiento: $scope.espaciamiento_u || 0,
+                    diametro: $scope.diametro_u || 0,
+                    subperf: subperfo || 0,
                 }).catch(function(err) {
                     console.log(err);
                 });
 
-            });
-
-            tempDB.allDocs({
-                include_docs: true,
-                attachments: true
-            }).then(function(result) {
-                // handle result
-                $scope.projTipos = result.docs;
-                console.log('se bajaron los tipos actualizados')
-
             }).then(function() {
-                console.log('Actualizando Proyecto ' + id)
-                localprojDB.get(id).then(function(doc) {
-                    return localprojDB.put({
-                        _id: id,
-                        _rev: doc._rev,
-                        proj: doc.proj,
-                        date: doc.date,
-                        barrenos: doc.barrenos,
-                        tipos: $scope.projTipos,
+                tempDB.allDocs({
+                    include_docs: true,
+                    attachments: true
+                }).then(function(result) {
+                    // handle result
+                    $scope.tiposUpdate = result.rows;
+                    console.log('se bajaron los tipos actualizados' + result)
 
+                }).then(function() {
 
-                    }).catch(function(err) {
-                        console.log(err);
+                    angular.forEach($scope.tiposUpdate, function(tipos) {
+                        var newTipo = {
+                            id: tipos.doc.id,
+                            carga: tipos.doc.carga,
+                            prof: tipos.doc.prof,
+                            peso: tipos.doc.peso,
+                            densidad: tipos.doc.densidad,
+                            tipodecarga: tipos.doc.tipodecarga,
+                            taco: tipos.doc.taco,
+                            aire: tipos.doc.aire,
+                            bordo: tipos.doc.bordo,
+                            espaciamiento: tipos.doc.espaciamiento,
+                            diametro: tipos.doc.diametro,
+                            subperf: tipos.doc.subperf,
+
+                        }
+                        $scope.projTiposUpdate.push(newTipo);
                     });
-                });
+
+
+
+
+
+
+                }).then(function() {
+                    console.log('Actualizando Proyecto ' + id)
+                    localprojDB.get(id).then(function(doc) {
+                        return localprojDB.put({
+                            _id: id,
+                            _rev: doc._rev,
+                            proj: doc.proj,
+                            date: doc.date,
+                            barrenos: doc.barrenos,
+                            tipos: $scope.projTiposUpdate,
+
+
+
+                        }).then(function(response) {
+                            // handle response
+
+                            console.log('subio la bd  ' + response);
+                        }).catch(function(err) {
+                            console.log(err);
+                        });
+                    });
+                })
 
             });
 
