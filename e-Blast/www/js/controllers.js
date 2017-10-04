@@ -2571,8 +2571,8 @@ angular.module('app.controllers', [])
         $scope.prodFilter = function(id) {
             return id === $scope.data.producto;
         };
-        $scope.gotoVerTipos = function() {
-            $state.go('menu.tiposDeBarreno', { 'proj': $scope.projID });
+        $scope.gotoPage = function() {
+            $state.go('menu.editarVoladuraMapa', { 'proj': $scope.projID });
         }
 
     }
@@ -2614,6 +2614,7 @@ angular.module('app.controllers', [])
         }).then(function(result) {
             // handle result
             $scope.projInfo = result;
+
 
         }).catch(function(err) {
             console.log(err);
@@ -2747,10 +2748,10 @@ angular.module('app.controllers', [])
         //count barrenos
         $scope.countUpdatedBarras = function() {
 
-            var rows = $scope.Barrenos.rows;
+            var rows = $scope.Barrenos;
             var count = 0;
             angular.forEach(rows, function(barreno) {
-                count += barreno.doc.status == 'Updated' ? 1 : 0;
+                count += barreno.status == 'Updated' ? 1 : 0;
             });
             return count;
 
@@ -2762,14 +2763,14 @@ angular.module('app.controllers', [])
             console.log(obj)
             console.log($scope.selectedBarreno)
                 //alert($scope.selectedBarreno.doc)
-            $scope.selectedbarr_id = obj.doc._id;
-            $scope.selectedbarr = obj.doc;
-            $scope.profreal = obj.doc.prof;
+            $scope.selectedbarr_id = obj.id;
+            $scope.selectedbarr = obj;
+            $scope.profreal = obj.prof;
             $scope.profreal_u = $scope.profreal;
-            $scope.diametro = obj.doc.diam;
+            $scope.diametro = obj.diam;
             $scope.diametro_u = $scope.diametro;
-            $scope.coordx = obj.doc.coordx / 1;
-            $scope.coordy = obj.doc.coordy / 1;
+            $scope.coordx = obj.coordx / 1;
+            $scope.coordy = obj.coordy / 1;
             $scope.coordx_u = $scope.coordx;
             $scope.coordy_u = $scope.coordy;
             //count barrenos
@@ -2799,13 +2800,13 @@ angular.module('app.controllers', [])
                 //alert($scope.selectedBarreno.doc)
 
             $scope.selectedbarr_id = $scope.newBarrnam;
-            $scope.selectedbarr = obj.doc;
-            $scope.profreal = obj.doc.prof;
+            $scope.selectedbarr = obj;
+            $scope.profreal = obj.prof;
             $scope.profreal_u = $scope.profreal;
-            $scope.diametro = obj.doc.diam;
+            $scope.diametro = obj.diam;
             $scope.diametro_u = $scope.diametro;
-            $scope.coordx = (obj.doc.coordx / 1) + 0.1;
-            $scope.coordy = (obj.doc.coordy / 1) + 0.1;
+            $scope.coordx = (obj.coordx / 1) + 0.1;
+            $scope.coordy = (obj.coordy / 1) + 0.1;
             $scope.coordx_u = $scope.coordx;
             $scope.coordy_u = $scope.coordy;
 
@@ -2814,13 +2815,13 @@ angular.module('app.controllers', [])
             var dataBarr = {
                 barr: nam,
                 selectedbarr_id: $scope.newBarrnam,
-                selectedbarr: obj.doc,
-                profreal: obj.doc.prof,
+                selectedbarr: obj,
+                profreal: obj.prof,
                 profreal_u: $scope.profreal,
-                diametro: obj.doc.diam,
+                diametro: obj.diam,
                 diametro_u: $scope.diametro,
-                coordx: (obj.doc.coordx / 1) + 0.1,
-                coordy: (obj.doc.coordy / 1) + 0.1,
+                coordx: (obj.coordx / 1) + 0.1,
+                coordy: (obj.coordy / 1) + 0.1,
                 coordx_u: $scope.coordx,
                 coordy_u: $scope.coordy,
             }
@@ -2891,13 +2892,13 @@ angular.module('app.controllers', [])
                 pointBorderColor: '#fff',
                 pointHoverBorderColor: "rgba(159,204,0, 1)"
             }];
-            var barrenosforchart = $scope.Barrchar
+            var barrenosforchart = $scope.Barrenos
             angular.forEach(barrenosforchart, function(value, key) {
 
                 var data = {
-                    'Barreno': value.doc.barr,
-                    'x': value.doc.coordx,
-                    'y': value.doc.coordy,
+                    'Barreno': value.barr,
+                    'x': value.coordx,
+                    'y': value.coordy,
                     'r': 10
 
                 }

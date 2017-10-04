@@ -1,9 +1,6 @@
 <ion-view title="Crear Tipo de Barreno" id="page8">
     <ion-content padding="true" class="has-header">
-        <strong>projTipos</strong>{{projTipos}}
-        <strong>Tipos</strong>{{tipos}}
-        <strong>TiposUpdate</strong>{{tiposUpdate}}
-        <strong>projTiposupdate</strong>{{projTiposUpdate}}
+
 
         <!--ion-item id="parametrosVoladura1-list-itemupd11" ng-repeat="tipo in projTipos | filter: tipo._id=tipoBarrNam_u" ng-model="projTipos">{{tipo._id}}</ion-item-->
         <table class="table table-bordered table-hover table-condensed" ng-show="projID!=''">
@@ -22,23 +19,26 @@
           <select ng-options="proj as proj.doc._id for proj in projInfo.rows | orderBy: 'doc.proj'  "
            ng-model="selectedproj" ng-change="selectProj(selectedproj)"></select>
         </label>
-        <button ng-click="" ng-hide="projID==''" id="parametrosVoladura1-vertiposbar" style="border-radius:25px 25px 25px 25px;" class="button button-positive button-block icon-left ion-android-list">Barrenos</button>
-        <form id="parametrosVoladura1-vertipobarrenos"></form>
-        <table class="table table-bordered table-hover table-condensed" ng-show="projID!=''&&$scope.tipoID!=''">
-            <tr>
-                <th><strong>Tipo de Barreno</strong></th>
-                <th><strong>Peso Total de Explosivo</strong></th>
-                <th><strong>Largo Total</strong></th>
+        <button ng-click="showTiposTable=true" ng-hide="projID=='' || showTiposTable==true " id="parametrosVoladura1-vertiposbar" style="border-radius:25px 25px 25px 25px;" class="button button-positive button-block icon-left ion-android-list">
+        Barrenos Creados</button>
+        <button ng-click="showTiposTable=false" ng-show="showTiposTable" id="parametrosVoladura1-vertiposbar" style="border-radius:25px 25px 25px 25px;" class="button button-positive button-block icon-left ion-android-list">
+        Ocultar Barrenos</button>
+        <form id="parametrosVoladura1-vertipobarrenos" ng-show="showTiposTable">
+            <table class="table table-bordered table-hover table-condensed" ng-show="projID!=''&&$scope.tipoID!=''">
+                <tr>
+                    <th><strong>Tipo de Barreno</strong></th>
+                    <th><strong>Peso Total de Explosivo</strong></th>
+                    <th><strong>Largo Total</strong></th>
 
-            </tr>
-            <tr ng-repeat="prod in tipos">
+                </tr>
+                <tr ng-repeat="prod in tipos">
 
-                <td>{{prod.id}}</td>
-                <td>{{prod.peso}}</td>
-                <td>{{prod.prof}}</td>
-                <td><button ng-click="editTipo(prod)" class="button button-positive button-full button-clear icon ion-edit"></button></td>
-            </tr>
-        </table>
+                    <td>{{prod.id}}</td>
+                    <td>{{prod.peso}}</td>
+                    <td>{{prod.prof}}</td>
+                    <td><button ng-click="editTipo(prod)" class="button button-positive button-full button-clear icon ion-edit"></button></td>
+                </tr>
+            </table>
         </form>
 
         <form id="parametrosVoladura1-form15" class="list" ng-show="tipoID==''">
@@ -69,7 +69,7 @@
                 <ion-item id="parametrosVoladura1-list-itemupd11" ng-repeat="tipo in tipoBarrdb.carga track by $index" ng-model="readType">Producto:{{tipo.prod}} Tipo: {{tipo.tipo}}</ion-item>
                 <div id="parametrosVoladura1-markdown6" class="show-list-numbers-and-dots"></div>
             </div>
-            <button id="parametrosVoladura1-button53" ng-click="showBarrFormUpdate()" style="border-radius:25px 25px 25px 25px;" class="button button-positive button-block icon-right ion-android-add-circle">Actualizar</button>
+            <!--button id="parametrosVoladura1-button53" ng-click="showBarrFormUpdate()" style="border-radius:25px 25px 25px 25px;" class="button button-positive button-block icon-right ion-android-add-circle">Actualizar</button-->
 
         </form>
         <form id="parametrosVoladura1-form6" class="list" ng-show="barrForm">
