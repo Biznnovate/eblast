@@ -73,11 +73,11 @@
 
             <label class="item item-select" id="editarVoladuraMapa-select19">
           <span class="input-label">ID de Barreno</span>
-          <select ng-options="barreno as barreno.doc.barr for barreno in Barrenos | orderBy: 'barr/1' | filter : searchedbarr " ng-model="selectedBarreno" ng-change="updateSelectedBarr(selectedBarreno)"></select>
+          <select ng-options="barreno as barreno.barr for barreno in Barrenos | orderBy: 'barr/1' | filter : searchedbarr " ng-model="selectedBarreno" ng-change="updateSelectedBarr(selectedBarreno)"></select>
         </label>
 
             <label class="item item-select" id="editarVoladuraMapa-select19" ng-show="showselectbarrchar">
-              <select ng-options="barreno as barreno.doc.barr for barreno in Barrenos | filter : searchedbarr " ng-model="selectedBarrchar" ></select>
+              <select ng-options="barreno as barreno.barr for barreno in Barrenos | filter : searchedbarr " ng-model="selectedBarrchar" ></select>
         </label>
 
             <p>{{names}}</p>

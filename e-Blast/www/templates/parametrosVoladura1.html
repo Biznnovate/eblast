@@ -1,7 +1,6 @@
 <ion-view title="Crear Tipo de Barreno" id="page8">
     <ion-content padding="true" class="has-header">
 
-
         <!--ion-item id="parametrosVoladura1-list-itemupd11" ng-repeat="tipo in projTipos | filter: tipo._id=tipoBarrNam_u" ng-model="projTipos">{{tipo._id}}</ion-item-->
         <table class="table table-bordered table-hover table-condensed" ng-show="projID!=''">
             <tr>
@@ -20,7 +19,7 @@
            ng-model="selectedproj" ng-change="selectProj(selectedproj)"></select>
         </label>
         <button ng-click="showTiposTable=true" ng-hide="projID=='' || showTiposTable==true " id="parametrosVoladura1-vertiposbar" style="border-radius:25px 25px 25px 25px;" class="button button-positive button-block icon-left ion-android-list">
-        Barrenos Creados</button>
+        Barrenos Creados ( {{projTipos.length}} ) </button>
         <button ng-click="showTiposTable=false" ng-show="showTiposTable" id="parametrosVoladura1-vertiposbar" style="border-radius:25px 25px 25px 25px;" class="button button-positive button-block icon-left ion-android-list">
         Ocultar Barrenos</button>
         <form id="parametrosVoladura1-vertipobarrenos" ng-show="showTiposTable">
@@ -31,7 +30,7 @@
                     <th><strong>Largo Total</strong></th>
 
                 </tr>
-                <tr ng-repeat="prod in tipos">
+                <tr ng-repeat="prod in tipos track by $index">
 
                     <td>{{prod.id}}</td>
                     <td>{{prod.peso}}</td>
@@ -167,34 +166,35 @@
                 </div>
             </form>
 
+            <form id="showprodsinparametrovol" class="list" ng-model="prods">
+                <table class="table table-bordered table-hover table-condensed" ng-show="barrForm">
+                    <tr>
+                        <th>Largo Total</th>
+                        <th>Peso Total</th>
+                        <th>Densidad Total</th>
+                    </tr>
+                    <tr>
+                        <td>{{getLargoTotal()}}</td>
+                        <td>{{getPesoGra()}}</td>
+                        <td>{{getDensidad()}}</td>
+                    </tr>
+                </table>
 
-            <table class="table table-bordered table-hover table-condensed" ng-show="barrForm">
-                <tr>
-                    <th>Largo Total</th>
-                    <th>Peso Total</th>
-                    <th>Densidad Total</th>
-                </tr>
-                <tr>
-                    <td>{{getLargoTotal()}}</td>
-                    <td>{{getPesoGra()}}</td>
-                    <td>{{getDensidad()}}</td>
-                </tr>
-            </table>
+                <table class="table table-bordered table-hover table-condensed" ng-show="barrForm">
+                    <tr>
+                        <th>Producto</th>
+                        <th>Tipo</th>
+                        <th>Cantidad</th>
+                    </tr>
+                    <tr ng-repeat="prod in prods track by $index">
+                        <td>{{prod.prod}}</td>
+                        <td>{{prod.tipo}}</td>
+                        <td>{{prod.cantidad + prod.cantidad_ini + prod.cantidad_gra}}</td>
+                        <td><button ng-click="deleteProd($index)" class="button button-positive button-full button-clear icon ion-android-remove-circle"></button></td>
+                    </tr>
+                </table>
 
-            <table class="table table-bordered table-hover table-condensed" ng-show="barrForm">
-                <tr>
-                    <th>Producto</th>
-                    <th>Tipo</th>
-                    <th>Cantidad</th>
-                </tr>
-                <tr ng-repeat="prod in prods track by $index">
-                    <td>{{prod.prod}}</td>
-                    <td>{{prod.tipo}}</td>
-                    <td>{{prod.cantidad + prod.cantidad_ini + prod.cantidad_gra}}</td>
-                </tr>
-            </table>
-
-
+            </form>
 
         </form>
 
