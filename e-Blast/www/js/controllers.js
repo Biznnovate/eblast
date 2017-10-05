@@ -1519,17 +1519,35 @@ angular.module('app.controllers', [])
             $window.location.reload();
 
         }
+
+
         $scope.insertBarrenos = function() {
             localDB.allDocs({
                 include_docs: true,
                 attachments: true
             }).then(function(result) {
-                console.log(result.rows)
+                console.log('Se creo las columnas' + result.rows)
                 $scope.barrRows = result.rows;
-            }).catch(function(err) {
-                console.log(err);
             }).then(function() {
+                $scope.barrenosToInsert = [];
+                angular.forEach($scope.barrRows, function(value) {
+                    var barreno = {
+                        barr: value.doc.barr,
+                        coordx: value.doc.coordx,
+                        coordy: value.doc.coordy,
+                        prof: value.doc.prof,
+                        diam: value.doc.diam,
+                    }
+                    $scope.barrenosToInsert.push(barreno);
+
+                });
+                console.log('For Each de Barrenos ' + $scope.barrenosToInsert.length)
+
+
+            }).then(function() {
+
                 var id = $scope.projID;
+                console.log('se creo el proyecto ' + id);
 
                 localprojDB.get(id).then(function(doc) {
                     return localprojDB.put({
@@ -1537,12 +1555,15 @@ angular.module('app.controllers', [])
                         _rev: doc._rev,
                         proj: doc.proj,
                         date: doc.date,
-                        barrenos: $scope.barrRows.doc,
-
+                        barrenos: $scope.barrenosToInsert,
                     });
+
+
                 }).catch(function(err) {
                     console.log(err);
+
                 });
+
             });
 
 
@@ -1720,7 +1741,7 @@ angular.module('app.controllers', [])
             { 'id': 'ce', 'tipo': 'Carga Empacada' },
             { 'id': 'cg', 'tipo': 'Carga a Granel' },
         ];
-
+        $scope.onlyNumbers = /^(0*[1-9][0-9]*([\.\,][0-9]+)?|0+[\.\,][0-9]*[1-9][0-9]*)$/;
 
         //muestra los datos a capturar
         $scope.barrForm = false;
@@ -2082,11 +2103,12 @@ angular.module('app.controllers', [])
 
             localprojDB.sync(remoteprojDB).on('complete', function() {
                 // yay, we're in sync!
+                $state.go('menu.parametrosVoladura1', { 'proj': $scope.projID, 'status': new Date().toISOString() });
             }).on('error', function(err) {
                 // boo, we hit an error!
             });
 
-            $state.go('menu.parametrosVoladura1', { 'proj': $scope.projID });
+
         }
         $scope.updateTipoBarrenos = function() {
 
@@ -2193,7 +2215,7 @@ angular.module('app.controllers', [])
                 // boo, we hit an error!
             });
 
-            // $state.go('menu.parametrosVoladura1', { 'proj': $scope.projID });
+            $state.go('menu.parametrosVoladura1', { 'proj': $scope.projID, 'status': new Date().toISOString() });
         }
         $scope.UpdateTipoBarrenosOld = function() {
             var subperfo = $scope.subperf_u || $scope.subperf;
@@ -2491,7 +2513,7 @@ angular.module('app.controllers', [])
         }
 
         $scope.reloadPage = function() {
-            $window.location.reload();
+            $state.go('menu.ajustarCSVCtrl', { 'proj': $scope.projID });
 
         }
 
