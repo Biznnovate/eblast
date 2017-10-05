@@ -2719,7 +2719,7 @@ angular.module('app.controllers', [])
             console.log(obj)
             console.log($scope.selectedBarreno)
                 //alert($scope.selectedBarreno.doc)
-            $scope.selectedbarr_id = obj.id;
+                // $scope.selectedbarr_id = obj.id;
             $scope.selectedbarr = obj;
             $scope.profreal = obj.prof;
             $scope.profreal_u = $scope.profreal;
@@ -2755,7 +2755,7 @@ angular.module('app.controllers', [])
             console.log($scope.selectedBarreno)
                 //alert($scope.selectedBarreno.doc)
 
-            $scope.selectedbarr_id = $scope.newBarrnam;
+            //$scope.selectedbarr_id = $scope.newBarrnam;
             $scope.selectedbarr = obj;
             $scope.profreal = obj.prof;
             $scope.profreal_u = $scope.profreal;
@@ -2766,54 +2766,57 @@ angular.module('app.controllers', [])
             $scope.coordx_u = $scope.coordx;
             $scope.coordy_u = $scope.coordy;
 
-            $scope.message = "Guardar para Continuar";
-
-            var dataBarr = {
-                barr: nam,
-                selectedbarr_id: $scope.newBarrnam,
-                selectedbarr: obj,
-                profreal: obj.prof,
-                profreal_u: $scope.profreal,
-                diametro: obj.diam,
-                diametro_u: $scope.diametro,
-                coordx: (obj.coordx / 1) + 0.1,
-                coordy: (obj.coordy / 1) + 0.1,
-                coordx_u: $scope.coordx,
-                coordy_u: $scope.coordy,
+            //$scope.message = "Guardar para Continuar";
+            var newDataBarr = {
+                //'id': $scope.selectedbarr.id,
+                'barr': nam,
+                'prof': obj.prof || 0,
+                'diam': obj.diam || 0,
+                'tipo': $scope.selectedTipo_u,
+                'profreal': $scope.profreal_u,
+                'coordx': $scope.coordx_u,
+                'coordy': $scope.coordy_u,
+                'taco': $scope.taco_u,
+                'aire': $scope.aire_u,
+                'bordo': $scope.bordo_u,
+                'espaciamiento': $scope.espaciamiento_u,
+                'diametro': $scope.diametro_u,
+                'densidad': $scope.densidad_u,
+                'status': "Updated",
+                'cargasinaire ': $scope.cargaSinAire,
+                'cargamenosaire ': $scope.cargaMenosAire,
+                'cargaagraneldisp ': $scope.cargaAgraneldisp,
+                'volumencil ': $scope.volumenCil,
+                'cargaagranel ': $scope.cargaAgranel,
+                'volumentotal ': $scope.volumenTotal,
+                'pesototal ': $scope.pesoFinal,
+                'factordecarga ': $scope.factorDeCarga,
+                'cargas ': $scope.cargas,
+                'iniciadores ': $scope.iniciadores,
+                'tacofinal ': $scope.tacofinal,
             }
+            $scope.Barrenos.push(newDataBarr);
+            console.log(newDataBarr)
+            localprojDB.get(id).then(function(doc) {
 
-            localDB.put({
-
-                _id: 'N-' + dataBarr.barr,
-                barr: 'N-' + dataBarr.barr,
-                tipo: $scope.selectedTipo_u,
-                profreal: $scope.profreal_u,
-                coordx: $scope.coordx_u,
-                coordy: $scope.coordy_u,
-                taco: $scope.taco_u,
-                aire: $scope.aire_u,
-                bordo: $scope.bordo_u,
-                espaciamiento: $scope.espaciamiento_u,
-                diametro: $scope.diametro_u,
-                status: "Nuevo",
-                cargasinaire: $scope.cargaSinAire,
-                cargamenosaire: $scope.cargaMenosAire,
-                cargaagraneldisp: $scope.cargaAgraneldisp,
-                volumencil: $scope.volumenCil,
-                cargaagranel: $scope.cargaAgranel,
-                volumentotal: $scope.volumenTotal,
-                pesototal: $scope.pesoTotal,
-                factordecarga: $scope.factorDeCarga
-
-            }).then(function(response) {
+                return localprojDB.put({
+                    _id: id,
+                    _rev: doc._rev,
+                    proj: doc.proj,
+                    date: doc.date,
+                    barrenos: $scope.Barrenos,
+                    tipos: doc.tipos,
+                });
+            }).then(function() {
+                return localprojDB.get(id);
                 // handle response
 
+            }).catch(function(err) {
                 console.log(err);
             });
 
 
-
-            localDB.sync(remoteDB).on('complete', function() {
+            localprojDB.sync(remoteprojDB).on('complete', function() {
                 // yay, we're in sync!
             }).on('error', function(err) {
                 // boo, we hit an error!
@@ -2821,52 +2824,7 @@ angular.module('app.controllers', [])
 
             // $scope.showCoord = false;
 
-
-            $scope.searchedbarr = {
-                'doc': {
-                    'barr': 'N-' + $scope.selectedbarr_id,
-                }
-            };
-            localDB.allDocs({
-                include_docs: true,
-                attachments: true
-            }).then(function(result) {
-                // handle result
-                $scope.Barrenos = result;
-                $scope.Barrchar = result.rows;
-            }).catch(function(err) {
-                console.log(err);
-            });
-
-            $scope.showBarrnam = false;
-            $scope.showCoord = true;
-            $scope.colors = [{
-                backgroundColor: "rgba(159,204,0, 0.2)",
-                pointBackgroundColor: "rgba(159,204,0, 1)",
-                pointHoverBackgroundColor: "rgba(159,204,0, 0.8)",
-                borderColor: "rgba(159,204,0, 1)",
-                pointBorderColor: '#fff',
-                pointHoverBorderColor: "rgba(159,204,0, 1)"
-            }];
-            var barrenosforchart = $scope.Barrenos
-            angular.forEach(barrenosforchart, function(value, key) {
-
-                var data = {
-                    'Barreno': value.barr,
-                    'x': value.coordx,
-                    'y': value.coordy,
-                    'r': 10
-
-                }
-
-
-                $scope.dataChart.push(data);
-
-
-            })
-
-            $scope.showmap = true;
-            $scope.showAddNewBarr = true;
+            $scope.dataChartBarrs()
 
         };
 
@@ -3245,7 +3203,7 @@ angular.module('app.controllers', [])
 
 
             var id = $scope.projID;
-            var selectedID = $scope.selectedbarr.id;
+            var selectedID = $scope.selectedbarr.barr;
             var rows = $scope.Barrenos;
 
             //var index = $scope.Barrenos.barr.indexOf(selectedID)
@@ -3259,7 +3217,7 @@ angular.module('app.controllers', [])
                 }
             }
             var newDataBarr = {
-                'id': $scope.selectedbarr.id,
+                //'id': $scope.selectedbarr.id,
                 'barr': $scope.selectedbarr.barr,
                 'prof': $scope.selectedbarr.prof,
                 'diam': $scope.selectedbarr.diam,
@@ -3320,7 +3278,7 @@ angular.module('app.controllers', [])
             $scope.message = "El Barreno fue Actualizado.";
             $scope.showReloadButton = true;
             console.log($scope.message);
-            $state.go('menu.editarVoladuraMapa', { 'proj': $scope.projID, 'id': '', 'status': '' });
+            $state.go('menu.editarVoladuraMapa', { 'proj': $scope.projID, 'status': new Date().toISOString() });
 
 
         }
@@ -3425,7 +3383,7 @@ angular.module('app.controllers', [])
         $scope.hideMap = function() {
             $scope.showmap = false;
         }
-        $scope.dataChartBarrs = function() {
+        $scope.dataChartBarrs1 = function() {
             $scope.colors = [{
                 backgroundColor: "rgba(159,204,0, 0.2)",
                 pointBackgroundColor: "rgba(159,204,0, 1)",
@@ -3434,13 +3392,13 @@ angular.module('app.controllers', [])
                 pointBorderColor: '#fff',
                 pointHoverBorderColor: "rgba(159,204,0, 1)"
             }];
-            var barrenosforchart = $scope.Barrchar
+            var barrenosforchart = $scope.Barrenos
             angular.forEach(barrenosforchart, function(value, key) {
 
                 var data = {
-                    'Barreno': value.doc.barr,
-                    'x': value.doc.coordx,
-                    'y': value.doc.coordy,
+                    'Barreno': value.barr,
+                    'x': value.coordx,
+                    'y': value.coordy,
                     'r': 10
                 }
 
@@ -3449,6 +3407,40 @@ angular.module('app.controllers', [])
 
 
             })
+            $scope.showmap = true;
+        }
+        $scope.dataChartBarrs = function(obj) {
+
+            var barrenosforchart = $scope.Barrenos;
+            var radio = obj || 5;
+            $scope.dataChart = [];
+            angular.forEach(barrenosforchart, function(value, key) {
+
+                var data = {
+                    //'Barreno': value.barr,
+                    'x': value.coordx,
+                    'y': value.coordy,
+                    'r': radio
+                }
+
+
+                $scope.dataChart.push(data);
+
+
+            })
+            $scope.ctx = document.getElementById("mapaBarrenos");
+
+            $scope.mapaBarrenos = new Chart($scope.ctx, {
+                type: 'bubble',
+                data: {
+                    datasets: [{
+                        label: 'Info de Barreno',
+                        data: $scope.dataChart,
+
+                    }]
+                },
+
+            });
             $scope.showmap = true;
         }
 
@@ -4044,6 +4036,13 @@ angular.module('app.controllers', [])
     // You can include any angular dependencies as parameters for this function
     // TIP: Access Route Parameters for your page via $stateParams.parameterName
     function($scope, $stateParams, $state, pouchDB, Excel, $timeout) {
+        $scope.projparam = {
+            'id': $stateParams.id,
+            'status': $stateParams.status,
+            'proj': $stateParams.proj,
+        }
+        $scope.projID = $scope.projparam.proj || '';
+        var proj = $scope.projparam.proj;
 
         let localprodDB = new pouchDB('productos');
         let remoteprodDB = new PouchDB('https://biznnovate.cloudant.com/eblast-prods', { skipSetup: true });
@@ -4056,8 +4055,29 @@ angular.module('app.controllers', [])
         }).on('error', function(err) {
             // boo, we hit an error!
         });
+        let localprojDB = new pouchDB('projects');
+        let remoteprojDB = new PouchDB('https://biznnovate.cloudant.com/eblast-proj', { skipSetup: true });
+        remoteprojDB.login('biznnovate', '5t24XN-Am@8dqF:R').then(function(batman) {
+            console.log("I'm Batman.");
+            return remoteprojDB.getSession();
+        });
+        localprojDB.allDocs({
+            include_docs: true,
+            attachments: true
+        }).then(function(result) {
+            // handle result
+            $scope.projInfo = result;
+        }).catch(function(err) {
+            console.log(err);
+        });
 
-        $scope.prodlist = [{
+        $scope.selectProj = function(obj) {
+            console.log(obj)
+            $scope.selectedProj_u = obj;
+            $scope.projID = obj.doc._id;
+        }
+
+        $scope.prodlist_format = [{
                 'id': 'prod_1',
                 'tipo': 'Componentes / Emulsión a granel',
                 'prod': 'Hydromite 70 - Emulsión Gasificada',
@@ -4342,6 +4362,20 @@ angular.module('app.controllers', [])
             }
 
         ]
+        if ($scope.projID != '') {
+            localprojDB.get(proj).then(function(doc) {
+                $scope.proj = doc;
+                $scope.prod_list = doc.productos || $scope.prodlist_format;
+                $scope.Barrenos = doc.barrenos;
+                $scope.tipos = doc.tipos;
+                console.log(doc.tipos)
+            }).catch(function(err) {
+                console.log(err);
+            });
+        } else {
+            $scope.prod_list = $scope.prodlist_format;
+            $scope.message = "Seleccione un Proyecto para Continuar";
+        }
 
         $scope.createProductos = function() {
             let localprodDB = new pouchDB('productos');
@@ -4378,15 +4412,7 @@ angular.module('app.controllers', [])
                 // boo, we hit an error!
             });
         }
-        localprodDB.allDocs({
-            include_docs: true,
-            attachments: true
-        }).then(function(result) {
-            // handle result
-            $scope.prod_list = result;
-        }).catch(function(err) {
-            console.log(err);
-        });
+
 
         $scope.updateProductos = function() {
             let localprodDB = new pouchDB('productos');
