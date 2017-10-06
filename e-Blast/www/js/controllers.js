@@ -2981,7 +2981,6 @@ angular.module('app.controllers', [])
             $scope.newBarrnam = obj;
             $scope.message = 'Seleccione el Barreno más cercano para copiar parámetros';
         };
-<<<<<<< HEAD
         $scope.calcVarGra = function() {
             var calcCargasVar = function() {
 
@@ -3476,8 +3475,6 @@ angular.module('app.controllers', [])
                 ' Fc ' + Fc
             );
         }
-=======
->>>>>>> c52eac66ae0476e2500786fca6ea0bef5e2f2a40
         $scope.calculos = function() {
             var calcCargasEmp = function() {
 
@@ -3512,11 +3509,8 @@ angular.module('app.controllers', [])
                 return val;
                 $scope.cargasVal = val;
 
-<<<<<<< HEAD
 
 
-=======
->>>>>>> c52eac66ae0476e2500786fca6ea0bef5e2f2a40
             }
 
 
@@ -4577,10 +4571,7 @@ angular.module('app.controllers', [])
             console.log(obj)
             $scope.selectedProj_u = obj;
             $scope.projID = obj.doc._id;
-<<<<<<< HEAD
             $scope.prod_list = obj.doc.productos || $scope.prodlist_format;
-=======
->>>>>>> c52eac66ae0476e2500786fca6ea0bef5e2f2a40
         }
 
         $scope.prodlist_format = [{
@@ -4607,7 +4598,6 @@ angular.module('app.controllers', [])
                 'dev': 0,
                 'used': 0,
             }
-<<<<<<< HEAD
 
             ,
             {
@@ -4938,347 +4928,11 @@ angular.module('app.controllers', [])
 
             }).catch(function(err) {
                 console.log(err);
-=======
-
-            ,
-            {
-                'id': 'prod_4',
-                'tipo': 'Emulsión Empacada',
-                'prod': 'Hydromite 3 (75x800mm)',
-                'del': 0,
-                'dev': 0,
-                'used': 0,
-            },
-            {
-                'id': 'prod_5',
-                'tipo': 'Emulsión Empacada',
-                'prod': 'Emulex 1 (25x400)',
-                'del': 0,
-                'dev': 0,
-                'used': 0,
-            },
-            {
-                'id': 'prod_6',
-                'tipo': 'Emulsión Empacada',
-                'prod': 'Emulex 1 (25x200)',
-                'del': 0,
-                'dev': 0,
-                'used': 0,
-            },
-            {
-                'id': 'prod_7',
-                'tipo': 'Emulsión Empacada',
-                'prod': 'Emulex 1 (32x400)',
-                'del': 0,
-                'dev': 0,
-                'used': 0,
-            },
-            {
-                'id': 'prod_8',
-                'tipo': 'Booster (Iniciador)',
-                'prod': 'Booster HDP-1/2 lb',
-                'del': 0,
-                'dev': 0,
-                'used': 0,
-            },
-            {
-                'id': 'prod_9',
-                'tipo': 'Booster (Iniciador)',
-                'prod': 'Booster HDP-1 lb',
-                'del': 0,
-                'dev': 0,
-                'used': 0,
-            },
-            {
-                'id': 'prod_10',
-                'tipo': 'Booster (Iniciador)',
-                'prod': 'Booster HDP-3 lb',
-                'del': 0,
-                'dev': 0,
-                'used': 0,
-            },
-            {
-                'id': 'prod_11',
-                'tipo': 'Booster (Iniciador)',
-                'prod': 'Emulex 50x400',
-                'del': 0,
-                'dev': 0,
-                'used': 0,
-            },
-            {
-                'id': 'prod_12',
-                'tipo': 'Detonadores Duales',
-                'prod': "SSDD 30'(9m 25/500 ms)",
-                'del': 0,
-                'dev': 0,
-                'used': 0,
-            },
-            {
-                'id': 'prod_13',
-                'tipo': 'Detonadores Duales',
-                'prod': "SSDD 40' (12m 25/500 ms)",
-                'del': 0,
-                'dev': 0,
-                'used': 0,
-            },
-            {
-                'id': 'prod_14',
-                'tipo': 'Detonadores Duales',
-                'prod': "SSDD 60' (18m 25/500 ms)",
-                'del': 0,
-                'dev': 0,
-                'used': 0,
-            },
-            {
-                'id': 'prod_15',
-                'tipo': 'Detonadores Duales',
-                'prod': "SSDD 80' (24m 25/500 ms)",
-                'del': 0,
-                'dev': 0,
-                'used': 0,
-            },
-            {
-                'id': 'prod_16',
-                'tipo': 'Conectores de Superficie',
-                'prod': "QRC 30' 17 ms",
-                'del': 0,
-                'dev': 0,
-                'used': 0,
-            },
-            {
-                'id': 'prod_17',
-                'tipo': 'Conectores de Superficie',
-                'prod': "QRC 30' 42 ms",
-                'del': 0,
-                'dev': 0,
-                'used': 0,
-            },
-            {
-                'id': 'prod_18',
-                'tipo': 'Conectores de Superficie',
-                'prod': "QRC 30' 67 ms",
-                'del': 0,
-                'dev': 0,
-                'used': 0,
-            },
-            {
-                'id': 'prod_19',
-                'tipo': 'Conectores de Superficie',
-                'prod': "QRC 40' 17 ms",
-                'del': 0,
-                'dev': 0,
-                'used': 0,
-            },
-            {
-                'id': 'prod_20',
-                'tipo': 'Conectores de Superficie',
-                'prod': "QRC 40' 42 ms",
-                'del': 0,
-                'dev': 0,
-                'used': 0,
-            },
-            {
-                'id': 'prod_21',
-                'tipo': 'Conectores de Superficie',
-                'prod': "QRC 40' 67 ms",
-                'del': 0,
-                'dev': 0,
-                'used': 0,
-            },
-            {
-                'id': 'prod_22',
-                'tipo': 'Conectores de Superficie',
-                'prod': "QRC 20' 17 ms",
-                'del': 0,
-                'dev': 0,
-                'used': 0,
-            },
-            {
-                'id': 'prod_23',
-                'tipo': 'Conectores de Superficie',
-                'prod': "QRC 20' 42 ms",
-                'del': 0,
-                'dev': 0,
-                'used': 0,
-            },
-            {
-                'id': 'prod_24',
-                'tipo': 'Conectores de Superficie',
-                'prod': "QRC 40' 25 ms",
-                'del': 0,
-                'dev': 0,
-                'used': 0,
-            },
-            {
-                'id': 'prod_25',
-                'tipo': 'Líneas de inicio',
-                'prod': "STD 1500",
-                'del': 0,
-                'dev': 0,
-                'used': 0,
-            },
-            {
-                'id': 'prod_26',
-                'tipo': 'Líneas de inicio',
-                'prod': "STD 2500",
-                'del': 0,
-                'dev': 0,
-                'used': 0,
-            },
-            {
-                'id': 'prod_27',
-                'tipo': 'Líneas de inicio',
-                'prod': "STD 2500 Quick Start",
-                'del': 0,
-                'dev': 0,
-                'used': 0,
-            },
-            {
-                'id': 'prod_28',
-                'tipo': 'Líneas de inicio',
-                'prod': "STD 1000",
-                'del': 0,
-                'dev': 0,
-                'used': 0,
-            },
-            {
-                'id': 'prod_29',
-                'tipo': 'Cordón detonante',
-                'prod': "5P",
-                'del': 0,
-                'dev': 0,
-                'used': 0,
-            },
-            {
-                'id': 'prod_30',
-                'tipo': 'Cordón detonante',
-                'prod': "10 PE",
-                'del': 0,
-                'dev': 0,
-                'used': 0,
-            },
-            {
-                'id': 'prod_31',
-                'tipo': 'Cordón detonante',
-                'prod': "80P",
-                'del': 0,
-                'dev': 0,
-                'used': 0,
-            },
-            {
-                'id': 'prod_32',
-                'tipo': 'Cordón detonante',
-                'prod': "40P",
-                'del': 0,
-                'dev': 0,
-                'used': 0,
-            },
-            {
-                'id': 'prod_33',
-                'tipo': 'Detonadores eléctricos y electrónicos',
-                'prod': "Det. Electrónico Electro Star 24'",
-                'del': 0,
-                'dev': 0,
-                'used': 0,
-            },
-            {
-                'id': 'prod_34',
-                'tipo': 'Detonadores eléctricos y electrónicos',
-                'prod': "Det Eléctrico Rock Stars 0 ms 16ft #0",
-                'del': 0,
-                'dev': 0,
-                'used': 0,
-            },
-
-            {
-                'id': 'prod_35',
-                'tipo': 'Otros',
-                'prod': "Buswire 1250 ft",
-                'del': 0,
-                'dev': 0,
-                'used': 0,
-            }
-
-        ]
-        if ($scope.projID != '') {
-            localprojDB.get(proj).then(function(doc) {
-                $scope.proj = doc;
-                $scope.prod_list = doc.productos || $scope.prodlist_format;
-                $scope.Barrenos = doc.barrenos;
-                $scope.tipos = doc.tipos;
-                console.log(doc.tipos)
-            }).catch(function(err) {
-                console.log(err);
-            });
-        } else {
-            $scope.prod_list = $scope.prodlist_format;
-            $scope.message = "Seleccione un Proyecto para Continuar";
-        }
-
-        $scope.createProductos = function() {
-            let localprodDB = new pouchDB('productos');
-            let remoteprodDB = new PouchDB('https://biznnovate.cloudant.com/eblast-prods', { skipSetup: true });
-            remoteprodDB.login('biznnovate', '5t24XN-Am@8dqF:R').then(function(batman) {
-                console.log("I'm Batman.");
-                return remoteprodDB.getSession();
-            });
-            localprodDB.sync(remoteprodDB).on('complete', function() {
-                // yay, we're in sync!
-            }).on('error', function(err) {
-                // boo, we hit an error!
-            });
-            angular.forEach($scope.prod_list, function(value, key) {
-
-                localprodDB.post({
-
-                    _id: value.id,
-                    tipo: value.tipo,
-                    prod: value.prod,
-                    del: value.del,
-                    dev: value.dev,
-                    used: value.del - value.dev,
-
-                }).then(function(response) {
-                    // handle response
-                }).catch(function(err) {
-                    console.log(err);
-                });
-            });
-            localprodDB.sync(remoteprodDB).on('complete', function() {
-                // yay, we're in sync!
-            }).on('error', function(err) {
-                // boo, we hit an error!
-            });
-        }
-
-
-        $scope.updateProductos = function() {
-            let localprodDB = new pouchDB('productos');
-            let remoteprodDB = new PouchDB('https://biznnovate.cloudant.com/eblast-prods', { skipSetup: true });
-            remoteprodDB.login('biznnovate', '5t24XN-Am@8dqF:R').then(function(batman) {
-                console.log("I'm Batman.");
-                return remoteprodDB.getSession();
-            });
-            localprodDB.sync(remoteprodDB).on('complete', function() {
-                // yay, we're in sync!
-            }).on('error', function(err) {
-                // boo, we hit an error!
-            });
-            angular.forEach($scope.prod_list.rows, function(value, key) {
-                var id = value.doc._id;
-                console.log(id)
-                localprodDB.get(id).then(function(doc) {
-
-                    doc.del = value.doc.del;
-                    doc.dev = value.doc.dev;
-                    doc.used = value.doc.del - value.doc.dev;
->>>>>>> c52eac66ae0476e2500786fca6ea0bef5e2f2a40
 
             });
             console.log('se subio el proyecto ' + id);
         }
 
-<<<<<<< HEAD
         $scope.updateProductos1 = function() {
             let localprodDB = new pouchDB('productos');
             let remoteprodDB = new PouchDB('https://biznnovate.cloudant.com/eblast-prods', { skipSetup: true });
@@ -5301,8 +4955,6 @@ angular.module('app.controllers', [])
                     doc.used = value.doc.del - value.doc.dev;
 
 
-=======
->>>>>>> c52eac66ae0476e2500786fca6ea0bef5e2f2a40
                     return localprodDB.put(doc);
                 }).then(function() {
                     return localprodDB.get(id);
