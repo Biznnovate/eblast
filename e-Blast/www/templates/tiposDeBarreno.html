@@ -7,6 +7,7 @@
   </ion-nav-buttons>
   <ion-content padding="true" class="has-header">
     <button id="tiposDeBarreno-button11" ui-sref="menu.parametrosVoladura1({})" class="button button-positive button-block">Atras</button>
+
     <div class="row">
           <div class="col"><strong>Tipo de Barreno</strong></div>
           <div class="col"><strong>Peso Total de Explosivo</strong></div>
@@ -15,11 +16,12 @@
         </div>
  
     <ion-list id="tiposDeBarreno-list9">
-      <ion-item id="tiposDeBarreno-list-item21" ng-repeat="tipo in prods.rows track by $index" ng-model="tipoBarr">
+      <ion-item id="tiposDeBarreno-list-item21" ng-repeat="prod in prods" track by $index" ng-model="prods"">
         <div class="row">
-          <div class="col">{{tipo.doc._id}}</div>
-          <div class="col">{{tipo.doc.peso}}</div>
-          <div class="col">{{tipo.doc.prof}}</div>
+          <div class="col">{{prod._id}}</div>
+          <div class="col">{{prod.peso}}</div>
+          <div class="col">{{prod.prof}}</div>
+          <div class="col"> <button ng-click="selectBarrenoclk(prod._id)" class="button button-positive button-full button-clear icon ion-edit"></button></div>
         
         </div>
         <!--span class="item-note">{{tipo.carga}}</span-->
