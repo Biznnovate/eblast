@@ -10,6 +10,7 @@
         </table>
 
         <canvas ng-show="showmap" id="mapaBarrenos"></canvas>
+
         <table class="table table-bordered table-hover table-condensed" ng-show="showmap">
             <tr>
                 <td><button style="border-radius:26px 26px 26px 26px;" class="button button-positive button-block" ng-click="dataChartBarrs(10)">Grande
@@ -81,19 +82,38 @@
 
 
             <label class="item item-input" id="editarVoladuraMapa-search4">
+
         <i class="icon ion-search placeholder-icon"></i>
-        <input type="text" placeholder="Buscar barreno por ID" ng-model = "searchedbarr.doc.barr">
+        <input type="text" placeholder="Buscar barreno por ID" ng-model = "searchedbarr.barr">
       </label>
+            <table class="table table-bordered table-hover table-condensed">
+                <tr>
+                    <td ng-show="includeUpdate"> <label class="item item-select" id="editarVoladuraMapa-select19">
+                        <span class="input-label">ID de Barreno</span>
+                        <select ng-options="barreno as barreno.barr for barreno in Barrenos | orderBy: 'barr/1' | filter : searchedbarr  " ng-model="selectedBarreno" ng-change="updateSelectedBarr(selectedBarreno)"></select>
+                            </label>
+
+                        <label class="item item-select" id="editarVoladuraMapa-select19" ng-show="showselectbarrchar">
+                                    <select ng-options="barreno as barreno.barr for barreno in Barrenos | filter : searchedbarr " ng-model="selectedBarrchar" ></select>
+                            </label>
+                    </td>
+                    <td ng-hide="includeUpdate"> <label class="item item-select" id="editarVoladuraMapa-select19">
+                            <span class="input-label">ID de Barreno</span>
+                            <select ng-options="barreno as barreno.barr for barreno in Barrenos | orderBy: 'barr/1' | filter : searchedbarr " ng-model="selectedBarreno" ng-change="updateSelectedBarr(selectedBarreno)"></select>
+                          </label>
+
+                        <label class="item item-select" id="editarVoladuraMapa-select19" ng-show="showselectbarrchar">
+                                <select ng-options="barreno as barreno.barr for barreno in Barrenos | filter : searchedbarr " ng-model="selectedBarrchar" ></select>
+                          </label>
+                    </td>
+                    <td>
+                        <ion-toggle ng-model="includeUpdate">Incluir Trabajados</ion-toggle>
+                    </td>
+                </tr>
+
+            </table>
 
 
-            <label class="item item-select" id="editarVoladuraMapa-select19">
-          <span class="input-label">ID de Barreno</span>
-          <select ng-options="barreno as barreno.barr for barreno in Barrenos | orderBy: 'barr/1' | filter : searchedbarr " ng-model="selectedBarreno" ng-change="updateSelectedBarr(selectedBarreno)"></select>
-        </label>
-
-            <label class="item item-select" id="editarVoladuraMapa-select19" ng-show="showselectbarrchar">
-              <select ng-options="barreno as barreno.barr for barreno in Barrenos | filter : searchedbarr " ng-model="selectedBarrchar" ></select>
-        </label>
 
             <p>{{names}}</p>
             <span class="input-label"> <h4> {{selectedbarr.status}}</h4></span>
@@ -220,11 +240,18 @@
 
         </form>
         {{cargasVal}}
+        <form id="editarVoladuraMapa-form11" ng-show="showProfDis">
+            <label class="item" id="editarVoladuraMapa-input25">
+                        <span class="input-label">Profundidad Diseño (mts)</span>
+                        <input type="number" placeholder="" ng-model="profDis" ng-disabled="showProfDis">
+                </label>
+        </form>
+
         <form id="editarVoladuraMapa-form11" ng-show="showAddNewBarr" class="list" ng-model="tempTiposBarr">
 
             <label class="item item-input" id="editarVoladuraMapa-input25">
         <span class="input-label">Profundidad Real (mts)</span>
-        <input type="number" placeholder="" ng-model="selectedBarreno.doc.prof" ng-change="updateProfReal(selectedBarreno.doc.prof)">
+        <input type="number" placeholder="" ng-model="selectedBarreno.prof" ng-change="updateProfReal(selectedBarreno.prof)">
       </label>
 
             <!--label class="item item-input" id="editarVoladuraMapa-inputlongcarga" ng-show="tipodecarga=='Fija'">
@@ -285,7 +312,7 @@
             <div id="editarVoladuraMapa-button-bar5" class="button-bar" ng-hide="showBarrnam">
                 <!--button id="editarVoladuraMapa-button34" ng-click="editBarr()" id="editarVoladuraMapa-button25" style="border-radius:50px 50px 50px 50px;" class="button button-positive button-block icon-center ion-edit"></button-->
                 <button id="editarVoladuraMapa-button31" ng-click="addNewBarr()" style="border-radius:50px 50px 50px 50px;" class="button button-positive button-block icon-center ion-android-add-circle"></button>
-                <button id="editarVoladuraMapa-button32" ng-click="calcFijEmp()" style="border-radius:50px 50px 50px 50px;" class="button button-positive button-block icon-center ion-calculator"></button>
+                <button id="editarVoladuraMapa-button32" ng-click="calc()" ng-show="enableCalc" style="border-radius:50px 50px 50px 50px;" class="button button-positive button-block icon-center ion-calculator"></button>
                 <!--button id="editarVoladuraMapa-button32" ng-show="tipodecarga=='Fija'" ng-click="calculos()" style="border-radius:50px 50px 50px 50px;" class="button button-positive button-block icon-center ion-calculator"></button>
                 <button id="editarVoladuraMapa-button32" ng-show="tipodecarga=='Variable'" ng-click="calculosVar()" style="border-radius:50px 50px 50px 50px;" class="button button-positive button-block icon-center ion-calculator"></button-->
                 <button id="editarVoladuraMapa-button33" ng-click="updateBarr()" style="border-radius:50px 50px 50px 50px;" class="button button-positive button-block icon-center ion-android-checkmark-circle"></button>

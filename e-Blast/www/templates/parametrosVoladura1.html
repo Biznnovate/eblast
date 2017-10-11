@@ -30,12 +30,13 @@
                     <th><strong>Largo Total</strong></th>
 
                 </tr>
-                <tr ng-repeat="prod in tipos track by $index">
+                <tr ng-repeat="prod in projTipos track by $index" on-drag-left="showEditTipo=false" on-double-tap="showEditTipo=true">
 
                     <td>{{prod.id}}</td>
                     <td>{{prod.peso}}</td>
                     <td>{{prod.prof}}</td>
-                    <td><button ng-click="editTipo(prod)" class="button button-positive button-full button-clear icon ion-edit"></button></td>
+                    <td ng-show="showEditTipo"><button ng-click="editTipo(prod)" class="button button-positive button-full button-clear icon ion-edit"></button></td>
+                    <td ng-show="showEditTipo"><button ng-click="deleteTipo($index)" class="button button-positive button-full button-clear icon ion-android-remove-circle"></button></td>
                 </tr>
             </table>
         </form>
@@ -71,8 +72,10 @@
             <!--button id="parametrosVoladura1-button53" ng-click="showBarrFormUpdate()" style="border-radius:25px 25px 25px 25px;" class="button button-positive button-block icon-right ion-android-add-circle">Actualizar</button-->
 
         </form>
+        {{precorte}}
         <form id="parametrosVoladura1-form6" class="list" ng-show="barrForm">
-            <ion-toggle toggle-class="toggle-positive" id="parametrosVoladura1-toggle10">Precorte?</ion-toggle>
+            <ion-toggle toggle-class="toggle-positive" id="parametrosVoladura1-toggle10" ng-true-value="Precorte" ng-false-value="" ng-model="precorte">Precorte?</ion-toggle>
+
             <label class="item item-input" id="editarVoladuraMapa-inputtaco">
         <span class="input-label">Taco</span>
         <input type="number" placeholder=" mts" ng-model="taco" ng-change="updateTaco(taco)">
@@ -186,11 +189,11 @@
                         <th>Tipo</th>
                         <th>Cantidad</th>
                     </tr>
-                    <tr ng-repeat="prod in prods track by $index">
+                    <tr ng-repeat="prod in prods track by $index" on-drag-left="showEditProd=false" on-double-tap="showEditProd=true">
                         <td>{{prod.prod}}</td>
                         <td>{{prod.tipo}}</td>
                         <td>{{prod.cantidad + prod.cantidad_ini + prod.cantidad_gra}}</td>
-                        <td><button ng-click="deleteProd($index)" class="button button-positive button-full button-clear icon ion-android-remove-circle"></button></td>
+                        <td ng-show="showEditProd"><button ng-click="deleteProd($index)" class="button button-positive button-full button-clear icon ion-android-remove-circle"></button></td>
                     </tr>
                 </table>
 

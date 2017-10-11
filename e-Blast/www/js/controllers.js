@@ -1836,6 +1836,7 @@ angular.module('app.controllers', [])
                     espaciamiento: tipos.espaciamiento,
                     diametro: tipos.diametro,
                     subperf: tipos.subperf,
+                    tipoexplo: tipos.tipoexplo,
 
                 }).then(function(response) {
                     // handle response
@@ -1866,9 +1867,11 @@ angular.module('app.controllers', [])
         $scope.getTipoProd = function(obj) {
             console.log(obj);
             $scope.newTipoProd = obj;
+
             //$scope.showAmountInput = false;
             //$scope.showAddbutton = false; 
             $scope.showCargaForm = false;
+            $scope.tipoExplo = obj.tipoid;
         }
 
         $scope.tipodecarga = 'Fija';
@@ -2042,6 +2045,8 @@ angular.module('app.controllers', [])
             $scope.tipodecarga = $scope.tipoEditando.tipodecarga;
             $scope.carga = $scope.tipoEditando.carga;
             $scope.prods = $scope.tipoEditando.carga;
+            $scope.tipoExplo = $scope.tipoEditando.tipoExplo;
+            $scope.precorte = $scope.tipoEditando.precorte;
 
             $scope.profcarga_u = $scope.profcarga;
             $scope.peso_u = $scope.peso;
@@ -2081,6 +2086,8 @@ angular.module('app.controllers', [])
                 espaciamiento: $scope.espaciamiento_u || 0,
                 diametro: $scope.diametro_u,
                 subperf: subperfo,
+                tipoexplo: $scope.tipoExplo || '',
+                precorte: $scope.precorte || '',
             };
             $scope.projTipos.push(newTipo);
 
@@ -2110,7 +2117,31 @@ angular.module('app.controllers', [])
 
 
         }
+        $scope.deleteTipo = function(index) {
+            var id = $scope.projID;
+            $scope.projTipos.splice(index, 1);
+            // $scope.removeChoice(obj.prod, prods);
+            // $scope.prods = prods;
+            console.log('Tipo deleted');
+            //$scope.$apply();
 
+
+
+            localprojDB.get(id).then(function(doc) {
+                return localprojDB.put({
+                    _id: id,
+                    _rev: doc._rev,
+                    proj: doc.proj,
+                    date: doc.date,
+                    barrenos: doc.barrenos,
+                    tipos: $scope.projTipos,
+
+
+                }).catch(function(err) {
+                    console.log(err);
+                });
+            });
+        }
         $scope.deleteProd = function(index) {
 
             $scope.prods.splice(index, 1);
@@ -2135,6 +2166,7 @@ angular.module('app.controllers', [])
                 qty: 0
             });
         };
+
 
         $scope.updateTipoBarrenos = function() {
 
@@ -2164,6 +2196,8 @@ angular.module('app.controllers', [])
                 espaciamiento: $scope.espaciamiento_u,
                 diametro: $scope.diametro_u,
                 subperf: subperfo,
+                tipoexplo: $scope.tipoExplo,
+                precorte: $scope.precorte,
             }
             $scope.projTipos.push(newTipo);
 
@@ -2715,12 +2749,15 @@ angular.module('app.controllers', [])
         }
 
 
+
+
         $scope.updateSelectedBarr = function(obj) {
             console.log(obj)
             console.log($scope.selectedBarreno)
                 //alert($scope.selectedBarreno.doc)
                 // $scope.selectedbarr_id = obj.id;
             $scope.selectedbarr = obj;
+            $scope.profDis = obj.prof;
             $scope.profreal = obj.prof;
             $scope.profreal_u = $scope.profreal;
             $scope.diametro = obj.diam;
@@ -2770,7 +2807,7 @@ angular.module('app.controllers', [])
             var newDataBarr = {
                 //'id': $scope.selectedbarr.id,
                 'barr': nam,
-                'prof': obj.prof || 0,
+                'prof': $scope.profDis || 0,
                 'diam': obj.diam || 0,
                 'tipo': $scope.selectedTipo_u,
                 'profreal': $scope.profreal_u,
@@ -2839,6 +2876,7 @@ angular.module('app.controllers', [])
 
 
         }
+        $scope.enableCalc = false;
         $scope.carga_u = [];
         $scope.tipodecarga = '';
         $scope.updateSelectedTipo = function(obj) {
@@ -2856,6 +2894,8 @@ angular.module('app.controllers', [])
             $scope.diametro = (obj.diametro / 1) || $scope.diametro;
             $scope.tipodecarga = obj.tipodecarga;
             $scope.carga = obj.carga;
+            $scope.tipoExplo = obj.tipoexplo;
+            $scope.precorte = obj.precorte;
 
             $scope.profcarga_u = $scope.profcarga;
             $scope.peso_u = $scope.peso;
@@ -2869,8 +2909,43 @@ angular.module('app.controllers', [])
             $scope.tipodecarga_u = $scope.tipodecarga;
             $scope.carga_u = $scope.carga;
             $scope.tacofinal = $scope.taco;
-        };
 
+            if ($scope.tipodecarga_u == 'Variable') {
+
+                if ($scope.tipoExplo == 'ce') {
+
+                    $scope.calc = function() {
+                        $scope.calcVarEmp();
+                        console.log('Se calculo Carga Variable con Explosivo Empacado ')
+                    }
+                } else if ($scope.tipoExplo == 'cg') {
+
+                    $scope.calc = function() {
+                        $scope.calcVarGra();
+                        console.log('Se calculo Carga Variable con Explosivo a Granel ')
+                    }
+                } else {
+                    $scope.tempTipoExplo = 'N/A'
+                }
+
+            } else if ($scope.tipodecarga_u == 'Fija') {
+                if ($scope.tipoExplo == 'ce') {
+                    $scope.calc = function() {
+                        $scope.calcFijEmp();
+                        console.log('Se calculo Carga Fija con Explosivo Empacado ')
+                    }
+                } else if ($scope.tipoExplo == 'cg') {
+                    $scope.calc = function() {
+                        $scope.calcFijGra();
+                        console.log('Se calculo Carga Fija con Explosivo a Granel ')
+                    }
+                } else {
+                    $scope.tempTipoExplo = 'N/A'
+                }
+            }
+            $scope.enableCalc = true;
+
+        }
 
 
         //suma total Peso granel
@@ -2908,12 +2983,15 @@ angular.module('app.controllers', [])
             console.log($scope.coordy)
             $scope.coordy_u = obj;
         };
-
+        $scope.showProfDis = false;
         $scope.updateProfReal = function(obj) {
             console.log(obj)
-                //   console.log($scope.selectedBarreno.doc.prof)
             $scope.profreal = obj;
             $scope.profreal_u = obj;
+
+            $scope.showProfDis = true;
+
+
         };
         $scope.updateLdecarga = function(obj) {
             console.log(obj)
@@ -2981,6 +3059,9 @@ angular.module('app.controllers', [])
             $scope.newBarrnam = obj;
             $scope.message = 'Seleccione el Barreno más cercano para copiar parámetros';
         };
+
+
+        //Calculos de Barrenos
         $scope.calcVarGra = function() {
             var calcCargasVar = function() {
 
@@ -3715,7 +3796,7 @@ angular.module('app.controllers', [])
             var newDataBarr = {
                 //'id': $scope.selectedbarr.id,
                 'barr': $scope.selectedbarr.barr,
-                'prof': $scope.selectedbarr.prof,
+                'prof': $scope.profDis,
                 'diam': $scope.selectedbarr.diam,
                 'tipo': $scope.selectedTipo_u,
                 'profreal': $scope.profreal_u,
