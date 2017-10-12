@@ -44,11 +44,7 @@
                         </td>
                     </tr>
                     <tr ng-repeat="prod in prod_list | filter:prod.tipo='Componentes / Emulsión a granel' ">
-<<<<<<< HEAD
                         <td>{{prod.prod}}</td>
-=======
-                        <td>{{prod.doc.prod}}</td>
->>>>>>> c52eac66ae0476e2500786fca6ea0bef5e2f2a40
                         <td> <span editable-text="prod.del">{{prod.del}}</span></td>
                         <td> <span editable-text="prod.dev">{{prod.dev}}</span></td>
                         <td> <span>{{prod.del - prod.dev}}</span></td>
@@ -58,152 +54,88 @@
                             <strong>Emulsión Empacada</strong>
                         </td>
                     </tr>
-<<<<<<< HEAD
                     <tr ng-repeat="prod in prod_list | filter:prod.tipo='Emulsión Empacada' ">
                         <td>{{prod.prod}}</td>
                         <td> <span editable-text="prod.del">{{prod.del}}</span></td>
                         <td> <span editable-text="prod.dev">{{prod.dev}}</span></td>
                         <td> <span>{{prod.del - prod.dev}}</span></td>
-=======
-                    <tr ng-repeat="prod in prod_list.rows | filter:prod.doc.tipo='Emulsión Empacada' ">
-                        <td>{{prod.doc.prod}}</td>
-                        <td> <span editable-text="prod.doc.del">{{prod.doc.del}}</span></td>
-                        <td> <span editable-text="prod.doc.dev">{{prod.doc.dev}}</span></td>
-                        <td> <span>{{prod.doc.del - prod.doc.dev}}</span></td>
->>>>>>> c52eac66ae0476e2500786fca6ea0bef5e2f2a40
                     </tr>
                     <tr style="font-weight: bold">
                         <td style="width:100%">
                             <strong>Booster (Iniciador)</strong>
                         </td>
                     </tr>
-<<<<<<< HEAD
                     <tr ng-repeat="prod in prod_list | filter:prod.tipo='Booster (Iniciador)' ">
                         <td>{{prod.prod}}</td>
                         <td> <span editable-text="prod.del">{{prod.del}}</span></td>
                         <td> <span editable-text="prod.dev">{{prod.dev}}</span></td>
                         <td> <span>{{prod.del - prod.dev}}</span></td>
-=======
-                    <tr ng-repeat="prod in prod_list.rows | filter:prod.doc.tipo='Booster (Iniciador)' ">
-                        <td>{{prod.doc.prod}}</td>
-                        <td> <span editable-text="prod.doc.del">{{prod.doc.del}}</span></td>
-                        <td> <span editable-text="prod.doc.dev">{{prod.doc.dev}}</span></td>
-                        <td> <span>{{prod.doc.del - prod.doc.dev}}</span></td>
->>>>>>> c52eac66ae0476e2500786fca6ea0bef5e2f2a40
                     </tr>
                     <tr style="font-weight: bold">
                         <td style="width:100%">
                             <strong>Detonadores Duales</strong>
                         </td>
                     </tr>
-<<<<<<< HEAD
                     <tr ng-repeat="prod in prod_list | filter:prod.tipo='Detonadores Duales' ">
                         <td>{{prod.prod}}</td>
                         <td> <span editable-text="prod.del">{{prod.del}}</span></td>
                         <td> <span editable-text="prod.dev">{{prod.dev}}</span></td>
                         <td> <span>{{prod.del - prod.dev}}</span></td>
-=======
-                    <tr ng-repeat="prod in prod_list.rows | filter:prod.doc.tipo='Detonadores Duales' ">
-                        <td>{{prod.doc.prod}}</td>
-                        <td> <span editable-text="prod.doc.del">{{prod.doc.del}}</span></td>
-                        <td> <span editable-text="prod.doc.dev">{{prod.doc.dev}}</span></td>
-                        <td> <span>{{prod.doc.del - prod.doc.dev}}</span></td>
->>>>>>> c52eac66ae0476e2500786fca6ea0bef5e2f2a40
                     </tr>
                     <tr style="font-weight: bold">
                         <td style="width:100%">
                             <strong>Conectores de Superficie'</strong>
                         </td>
                     </tr>
-<<<<<<< HEAD
                     <tr ng-repeat="prod in prod_list | filter:prod.tipo='Conectores de Superficie'">
                         <td>{{prod.prod}}</td>
                         <td> <span editable-text="prod.del">{{prod.del}}</span></td>
                         <td> <span editable-text="prod.dev">{{prod.dev}}</span></td>
                         <td> <span>{{prod.del - prod.dev}}</span></td>
-=======
-                    <tr ng-repeat="prod in prod_list.rows | filter:prod.doc.tipo='Conectores de Superficie'">
-                        <td>{{prod.doc.prod}}</td>
-                        <td> <span editable-text="prod.doc.del">{{prod.doc.del}}</span></td>
-                        <td> <span editable-text="prod.doc.dev">{{prod.doc.dev}}</span></td>
-                        <td> <span>{{prod.doc.del - prod.doc.dev}}</span></td>
->>>>>>> c52eac66ae0476e2500786fca6ea0bef5e2f2a40
                     </tr>
                     <tr style="font-weight: bold">
                         <td style="width:100%">
                             <strong>Líneas de inicio</strong>
                         </td>
                     </tr>
-<<<<<<< HEAD
                     <tr ng-repeat="prod in prod_list | filter:prod.tipo='Líneas de inicio' ">
                         <td>{{prod.prod}}</td>
                         <td> <span editable-text="prod.del">{{prod.del}}</span></td>
                         <td> <span editable-text="prod.dev">{{prod.dev}}</span></td>
                         <td> <span>{{prod.del - prod.dev}}</span></td>
-=======
-                    <tr ng-repeat="prod in prod_list.rows | filter:prod.doc.tipo='Líneas de inicio' ">
-                        <td>{{prod.doc.prod}}</td>
-                        <td> <span editable-text="prod.doc.del">{{prod.doc.del}}</span></td>
-                        <td> <span editable-text="prod.doc.dev">{{prod.doc.dev}}</span></td>
-                        <td> <span>{{prod.doc.del - prod.doc.dev}}</span></td>
->>>>>>> c52eac66ae0476e2500786fca6ea0bef5e2f2a40
                     </tr>
                     <tr style="font-weight: bold">
                         <td style="width:100%">
                             <strong>Cordón detonante</strong>
                         </td>
                     </tr>
-<<<<<<< HEAD
                     <tr ng-repeat="prod in prod_list | filter:prod.tipo='Cordón detonante' ">
                         <td>{{prod.prod}}</td>
                         <td> <span editable-text="prod.del">{{prod.del}}</span></td>
                         <td> <span editable-text="prod.dev">{{prod.dev}}</span></td>
                         <td> <span>{{prod.del - prod.dev}}</span></td>
-=======
-                    <tr ng-repeat="prod in prod_list.rows | filter:prod.doc.tipo='Cordón detonante' ">
-                        <td>{{prod.doc.prod}}</td>
-                        <td> <span editable-text="prod.doc.del">{{prod.doc.del}}</span></td>
-                        <td> <span editable-text="prod.doc.dev">{{prod.doc.dev}}</span></td>
-                        <td> <span>{{prod.doc.del - prod.doc.dev}}</span></td>
->>>>>>> c52eac66ae0476e2500786fca6ea0bef5e2f2a40
                     </tr>
                     <tr style="font-weight: bold">
                         <td style="width:100%">
                             <strong>Detonadores eléctricos y electrónicos</strong>
                         </td>
                     </tr>
-<<<<<<< HEAD
                     <tr ng-repeat="prod in prod_list | filter:prod.tipo='Detonadores eléctricos y electrónicos' ">
                         <td>{{prod.prod}}</td>
                         <td> <span editable-text="prod.del">{{prod.del}}</span></td>
                         <td> <span editable-text="prod.dev">{{prod.dev}}</span></td>
                         <td> <span>{{prod.del - prod.dev}}</span></td>
-=======
-                    <tr ng-repeat="prod in prod_list.rows | filter:prod.doc.tipo='Detonadores eléctricos y electrónicos' ">
-                        <td>{{prod.doc.prod}}</td>
-                        <td> <span editable-text="prod.doc.del">{{prod.doc.del}}</span></td>
-                        <td> <span editable-text="prod.doc.dev">{{prod.doc.dev}}</span></td>
-                        <td> <span>{{prod.doc.del - prod.doc.dev}}</span></td>
->>>>>>> c52eac66ae0476e2500786fca6ea0bef5e2f2a40
                     </tr>
                     <tr style="font-weight: bold">
                         <td style="width:100%">
                             <strong>Otros</strong>
                         </td>
                     </tr>
-<<<<<<< HEAD
                     <tr ng-repeat="prod in prod_list | filter:prod.tipo='Otros' ">
                         <td>{{prod.prod}}</td>
                         <td> <span editable-text="prod.del">{{prod.del}}</span></td>
                         <td> <span editable-text="prod.dev">{{prod.dev}}</span></td>
                         <td> <span>{{prod.del - prod.dev}}</span></td>
-=======
-                    <tr ng-repeat="prod in prod_list.rows | filter:prod.doc.tipo='Otros' ">
-                        <td>{{prod.doc.prod}}</td>
-                        <td> <span editable-text="prod.doc.del">{{prod.doc.del}}</span></td>
-                        <td> <span editable-text="prod.doc.dev">{{prod.doc.dev}}</span></td>
-                        <td> <span>{{prod.doc.del - prod.doc.dev}}</span></td>
->>>>>>> c52eac66ae0476e2500786fca6ea0bef5e2f2a40
                     </tr>
                 </table>
             </div>

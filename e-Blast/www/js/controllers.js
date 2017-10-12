@@ -1224,7 +1224,7 @@ angular.module('app.controllers', [])
                 attachments: true
             }).then(function(result) {
                 // handle result
-                $scope.barrenosw = result;
+                $scope.barrenos = result;
 
             }).catch(function(err) {
                 console.log(err);
@@ -1533,6 +1533,7 @@ angular.module('app.controllers', [])
                 angular.forEach($scope.barrRows, function(value) {
                     var barreno = {
                         barr: value.doc.barr,
+                        status: 'Pending',
                         coordx: value.doc.coordx,
                         coordy: value.doc.coordy,
                         prof: value.doc.prof,
@@ -2636,6 +2637,7 @@ angular.module('app.controllers', [])
             $scope.proj = doc;
             console.log(doc)
             $scope.tipobarr = doc.tipos;
+            $scope.Barrenos = [];
             $scope.Barrenos = doc.barrenos;
             console.log(doc.tipos)
         }).catch(function(err) {
@@ -2747,7 +2749,22 @@ angular.module('app.controllers', [])
 
 
         }
-
+        $scope.statusFilter = {
+            status: 'Pending',
+        };
+        $scope.incluirName = 'Pendientes'
+        $scope.complexFilter = function(obj) {
+            console.log(obj)
+            if (obj == true) {
+                $scope.statusFilter.status = 'Updated'
+                $scope.incluirName = 'Trabajados'
+                console.log('status ' + $scope.statusFilter.status)
+            } else if (obj == false) {
+                $scope.statusFilter.status = 'Pending'
+                $scope.incluirName = 'Pendientes'
+                console.log('status ' + $scope.statusFilter.status)
+            }
+        }
 
 
 
@@ -2766,6 +2783,7 @@ angular.module('app.controllers', [])
             $scope.coordy = obj.coordy / 1;
             $scope.coordx_u = $scope.coordx;
             $scope.coordy_u = $scope.coordy;
+
             //count barrenos
             $scope.message = "Presione Agregar Barreno"
 
@@ -2820,14 +2838,7 @@ angular.module('app.controllers', [])
                 'diametro': $scope.diametro_u,
                 'densidad': $scope.densidad_u,
                 'status': "Updated",
-                'cargasinaire ': $scope.cargaSinAire,
-                'cargamenosaire ': $scope.cargaMenosAire,
-                'cargaagraneldisp ': $scope.cargaAgraneldisp,
-                'volumencil ': $scope.volumenCil,
-                'cargaagranel ': $scope.cargaAgranel,
-                'volumentotal ': $scope.volumenTotal,
-                'pesototal ': $scope.pesoFinal,
-                'factordecarga ': $scope.factorDeCarga,
+                'calcs': $scope.calcVals,
                 'cargas ': $scope.cargas,
                 'iniciadores ': $scope.iniciadores,
                 'tacofinal ': $scope.tacofinal,
@@ -2876,6 +2887,7 @@ angular.module('app.controllers', [])
 
 
         }
+        $scope.enableResults = false;
         $scope.enableCalc = false;
         $scope.carga_u = [];
         $scope.tipodecarga = '';
@@ -2916,6 +2928,7 @@ angular.module('app.controllers', [])
 
                     $scope.calc = function() {
                         $scope.calcVarEmp();
+
                         console.log('Se calculo Carga Variable con Explosivo Empacado ')
                     }
                 } else if ($scope.tipoExplo == 'cg') {
@@ -2944,6 +2957,7 @@ angular.module('app.controllers', [])
                 }
             }
             $scope.enableCalc = true;
+            $scope.enableResults = true;
 
         }
 
@@ -3152,6 +3166,26 @@ angular.module('app.controllers', [])
                 ' Es ' + Es +
                 ' s ' + s);
 
+            $scope.calcVals = {
+                L: L,
+                D: D,
+                Tf: Tf,
+                Ta: Ta,
+                Li: Li,
+                Ci: Ci,
+                ci: ci,
+                d: d,
+                B: B,
+                Es: Es,
+                s: s,
+                Lc: Lc,
+                Cm: Cm,
+                Ct: Ct,
+                V: V,
+                Pt: Pt,
+                Fc: Fc
+
+            }
 
             console.log('Paso1 Cálculo del largo de la carga' +
                 ' Lc ' + Lc
@@ -3256,7 +3290,24 @@ angular.module('app.controllers', [])
             var V = B * Es * (L - s);
             var Pt = Ct + (Ci * ci);
             var Fc = Ct / V;
-
+            $scope.calcVals = {
+                L: L,
+                D: D,
+                Tf: Tf,
+                Ta: Ta,
+                Li: Li,
+                Ci: Ci,
+                ci: ci,
+                d: d,
+                B: B,
+                Es: Es,
+                s: s,
+                Lv: Lv,
+                Pe: Pe,
+                V: V,
+                Pt: Pt,
+                Fc: Fc
+            }
             console.log('Valores a Calcular ' +
                 'L ' + L +
                 ' D ' + D +
@@ -3403,6 +3454,24 @@ angular.module('app.controllers', [])
                 ' Pe ' + Pe +
                 ' Lc ' + Lc);
 
+            $scope.calcVals = {
+                L: L,
+                D: D,
+                Tf: Tf,
+                Ta: Ta,
+                Li: Li,
+                Ci: Ci,
+                ci: ci,
+                d: d,
+                B: B,
+                Es: Es,
+                s: s,
+                Lv: Lv,
+                Pe: Pe,
+                Lc: Lc,
+                Pt: Pt,
+                Fc: Fc
+            }
 
             console.log('Paso1 Cálculo del volumen de un cilindro en 1 metro' +
                 ' Vc ' + Vc
@@ -3531,12 +3600,31 @@ angular.module('app.controllers', [])
                 ' s ' + s +
                 //' Lv ' + Lv +
                 ' Pe ' + Pe +
-                ' Lc ' + Lc);
+                ' Lc ' + Lc +
+                ' Pt ' + Pt +
+                ' Fc ' + Fc);
 
-
-            //console.log('Paso1 Cálculo del volumen de un cilindro en 1 metro' +
-            //   ' Vc ' + Vc
-            //);
+            $scope.calcVals = {
+                    L: L,
+                    D: D,
+                    Tf: Tf,
+                    Ta: Ta,
+                    Li: Li,
+                    Ci: Ci,
+                    ci: ci,
+                    d: d,
+                    B: B,
+                    Es: Es,
+                    s: s,
+                    // Lv : Lv ,
+                    Pe: Pe,
+                    Lc: Lc,
+                    Pt: Pt,
+                    Fc: Fc
+                }
+                //console.log('Paso1 Cálculo del volumen de un cilindro en 1 metro' +
+                //   ' Vc ' + Vc
+                //);
 
 
 
@@ -3809,14 +3897,7 @@ angular.module('app.controllers', [])
                 'diametro': $scope.diametro_u,
                 'densidad': $scope.densidad_u,
                 'status': "Updated",
-                'cargasinaire ': $scope.cargaSinAire,
-                'cargamenosaire ': $scope.cargaMenosAire,
-                'cargaagraneldisp ': $scope.cargaAgraneldisp,
-                'volumencil ': $scope.volumenCil,
-                'cargaagranel ': $scope.cargaAgranel,
-                'volumentotal ': $scope.volumenTotal,
-                'pesototal ': $scope.pesoFinal,
-                'factordecarga ': $scope.factorDeCarga,
+                'calcs': $scope.calcVals,
                 'cargas ': $scope.cargas,
                 'iniciadores ': $scope.iniciadores,
                 'tacofinal ': $scope.tacofinal,

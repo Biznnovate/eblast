@@ -45,7 +45,7 @@
                         <strong>Avance: </strong>{{countUpdatedBarras()}}/{{Barrenos.length}}
                     </div>
                     <div class="col">
-                        <strong>Total de KG: </strong> {{pesoFinal}}
+                        <strong>Total de KG: </strong> {{Pe}}
                     </div>
                     <div class="col">
                         <strong>Profundidad Real</strong> (mts): {{profreal_u}}
@@ -55,10 +55,10 @@
             <div>
                 <div class="row">
                     <div class="col">
-                        <strong>Volumen:</strong> {{volumenTotal}}
+                        <strong>Volumen:</strong> {{calcVals.V}}
                     </div>
                     <div class="col">
-                        <strong>FC:</strong> {{factorDeCarga}}
+                        <strong>FC:</strong> {{calcVals.Fc}}
                     </div>
                     <!--div class="col">
             <strong>Carga Granel Sugerida</strong> {{cargaAgranel}}
@@ -88,26 +88,20 @@
       </label>
             <table class="table table-bordered table-hover table-condensed">
                 <tr>
-                    <td ng-show="includeUpdate"> <label class="item item-select" id="editarVoladuraMapa-select19">
+                    <td> <label class="item item-select" id="editarVoladuraMapa-select19">
                         <span class="input-label">ID de Barreno</span>
-                        <select ng-options="barreno as barreno.barr for barreno in Barrenos | orderBy: 'barr/1' | filter : searchedbarr  " ng-model="selectedBarreno" ng-change="updateSelectedBarr(selectedBarreno)"></select>
+                        <select ng-options="barreno as barreno.barr for barreno in Barrenos | orderBy: 'barr/1' | filter : statusFilter  | filter : searchedbarr " 
+                        ng-model="selectedBarreno" ng-change="updateSelectedBarr(selectedBarreno)"></select>
                             </label>
 
-                        <label class="item item-select" id="editarVoladuraMapa-select19" ng-show="showselectbarrchar">
+                        <!--label class="item item-select" id="editarVoladuraMapa-select19" ng-show="showselectbarrchar">
                                     <select ng-options="barreno as barreno.barr for barreno in Barrenos | filter : searchedbarr " ng-model="selectedBarrchar" ></select>
-                            </label>
+                            </label-->
                     </td>
-                    <td ng-hide="includeUpdate"> <label class="item item-select" id="editarVoladuraMapa-select19">
-                            <span class="input-label">ID de Barreno</span>
-                            <select ng-options="barreno as barreno.barr for barreno in Barrenos | orderBy: 'barr/1' | filter : searchedbarr " ng-model="selectedBarreno" ng-change="updateSelectedBarr(selectedBarreno)"></select>
-                          </label>
 
-                        <label class="item item-select" id="editarVoladuraMapa-select19" ng-show="showselectbarrchar">
-                                <select ng-options="barreno as barreno.barr for barreno in Barrenos | filter : searchedbarr " ng-model="selectedBarrchar" ></select>
-                          </label>
-                    </td>
                     <td>
-                        <ion-toggle ng-model="includeUpdate">Incluir Trabajados</ion-toggle>
+                        <ion-toggle ng-model="includeUpdated" ng-change="complexFilter(includeUpdated)">{{incluirName}}</ion-toggle>
+
                     </td>
                 </tr>
 
@@ -323,5 +317,94 @@
         <div id="editarVoladuraMapa-button-bar6" class="button-bar" ng-show="showBarrnam">
             <button id="editarVoladuraMapa-button31" ng-click="updateSelectedNewBarr(selectedBarreno,newBarrnam)" style="border-radius:50px 50px 50px 50px;" class="button button-positive button-block icon-left ion-android-checkmark-circle">Agregar Barreno</button>
         </div>
+
+        <form ng-show="enableResults" class="list">
+            <table class="table table-bordered table-hover table-condensed">
+                <tr>
+                    <td>Valor</td>
+                    <td>Resultados</td>
+
+                </tr>
+                <tr>
+                    <td>L</td>
+                    <td>{{calcVals.L}}</td>
+                </tr>
+                <tr>
+                    <td>D</td>
+                    <td>{{calcVals.D}}</td>
+                </tr>
+                <tr>
+                    <td>
+                        Tf</td>
+                    <td>{{calcVals.Tf}}</td>
+                </tr>
+                <tr>
+                    <td>
+                        Ta</td>
+                    <td>{{calcVals.Ta}}</td>
+                </tr>
+                <tr>
+                    <td>
+                        Li</td>
+                    <td>{{calcVals.Li}}</td>
+                </tr>
+                <tr>
+                    <td>
+                        Ci</td>
+                    <td>{{calcVals.Ci}}</td>
+                </tr>
+                <tr>
+                    <td>
+                        ci</td>
+                    <td>{{calcVals.ci}}</td>
+                </tr>
+                <tr>
+                    <td>
+                        d</td>
+                    <td>{{calcVals.d}}</td>
+                </tr>
+                <tr>
+                    <td>
+                        B</td>
+                    <td>{{calcVals.B}}</td>
+                </tr>
+                <tr>
+                    <td>
+                        Es</td>
+                    <td>{{calcVals.Es}}</td>
+                </tr>
+                <tr>
+                    <td>
+                        s</td>
+                    <td>{{calcVals.s}}</td>
+                </tr>
+                <tr>
+                    <td>
+                        Lv</td>
+                    <td>{{calcVals.Lv}}</td>
+                </tr>
+                <tr>
+                    <td>
+                        Pe</td>
+                    <td>{{calcVals.Pe}}</td>
+                </tr>
+                <tr>
+                    <td>
+                        V</td>
+                    <td>{{calcVals.V}}</td>
+                </tr>
+                <tr>
+                    <td>
+                        Pt</td>
+                    <td>{{calcVals.Pt}}</td>
+                </tr>
+                <tr>
+                    <td>
+                        Fc</td>
+                    <td>{{calcVals.Fc}}</td>
+                </tr>
+            </table>
+
+        </form>
     </ion-content>
 </ion-view>
