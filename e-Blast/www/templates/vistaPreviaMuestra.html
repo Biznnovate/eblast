@@ -1,111 +1,114 @@
 <ion-view title="Vista Previa Muestras" id="page23">
-        <style>
-            table, th , td {
-              border: 1px solid grey;
-              border-collapse: collapse;
-              padding: 5px;
-            }
-            table tr:nth-child(odd) {
-              background-color: #f1f1f1;
-            }
-            table tr:nth-child(even) {
-              background-color: #ffffff;
-            }
-            </style>
+    <style>
+        table,
+        th,
+        td {
+            border: 1px solid grey;
+            border-collapse: collapse;
+            padding: 5px;
+        }
+        
+        table tr:nth-child(odd) {
+            background-color: #f1f1f1;
+        }
+        
+        table tr:nth-child(even) {
+            background-color: #ffffff;
+        }
+    </style>
 
-<ion-content padding="true" class="has-header">
+    <ion-content padding="true" class="has-header">
 
 
-    <form id="generarReporteProductos-form13"  editable-form name="tableform" onaftersave="saveTable()" oncancel="cancel()">    
+        <form id="generarReporteProductos-form13" editable-form name="tableform" onaftersave="saveTable()" oncancel="cancel()">
 
-        <div class="btn-edit">
-            <button type="button" style="border-radius:50px 50px 50px 50px;" class="btn btn-default button button-positive icon-center ion-edit" ng-show="!tableform.$visible" ng-click="tableform.$show()">
+            <div class="btn-edit">
+                <button type="button" style="border-radius:50px 50px 50px 50px;" class="btn btn-default button button-positive icon-center ion-edit" ng-show="!tableform.$visible" ng-click="tableform.$show()">
               Editar
             </button>
-            <div class="btn-group">
+                <div class="btn-group">
                     <button class="btn btn-warning btn-sm dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bars"></i> Exportar</button>
                     <ul class="dropdown-menu " role="menu">
-                        <li><button class="btn btn-link" onClick ="$('#Muestras').tableExport({type:'pdf', escape:'true'});"><span class="glyphicon glyphicon-share"></span> PDF</button></li>
-                        <li><button class="btn btn-link" onClick ="$('#Muestras').tableExport({type:'excel',escape:'false'});"><span class="glyphicon glyphicon-share"></span> XLS</button></li>
-                        <li><button class="btn btn-link" onClick ="$('#Muestras').tableExport({type:'xml',escape:'false'});"><span class="glyphicon glyphicon-share"></span> XML</button></li>
-                       
+                        <li><button class="btn btn-link" onClick="$('#Muestras').tableExport({type:'pdf', escape:'true'});"><span class="glyphicon glyphicon-share"></span> PDF</button></li>
+                        <li><button class="btn btn-link" onClick="$('#Muestras').tableExport({type:'excel',escape:'false'});"><span class="glyphicon glyphicon-share"></span> XLS</button></li>
+                        <li><button class="btn btn-link" onClick="$('#Muestras').tableExport({type:'xml',escape:'false'});"><span class="glyphicon glyphicon-share"></span> XML</button></li>
+
                     </ul>
                 </div>
-          </div>
+            </div>
 
-      <div  id="Muestras">
-        <table class="table table-bordered table-hover table-condensed">
-          <thead>
-            <tr class="table-header" style="font-weight: bold">
-                    <th>barr</th>
-                    <th>camion</th>
-                    <th>hora</th>
-                    <th>r1</th>
-                    <th>vr2</th>
-                    <th>rpm</th>
-                    <th>temp</th>
-                    <th>dens0</th>
-                    <th>dens5</th>
-                    <th>dens10</th>
-                    <th>dens15</th>
-                    <th>dens20</th>
-                    <th>dens25</th>
-                    <th>dens30</th>
-                    <th>dens35</th>
-                    <th>dens40</th>
-                    <th>dens45</th>
-                    <th>dens50</th>
-                    <th>dens55</th>
-                    <th>dens60</th>
-                    <th>coment</th>
-            </tr>
-          </thead>
-          <tbody>
+            <div id="Muestras">
+                <table class="table table-bordered table-hover table-condensed">
+                    <thead>
+                        <tr class="table-header" style="font-weight: bold">
+                            <th>barr</th>
+                            <th>camion</th>
+                            <th>hora</th>
+                            <th>r1</th>
+                            <th>vr2</th>
+                            <th>rpm</th>
+                            <th>temp</th>
+                            <th>dens0</th>
+                            <th>dens5</th>
+                            <th>dens10</th>
+                            <th>dens15</th>
+                            <th>dens20</th>
+                            <th>dens25</th>
+                            <th>dens30</th>
+                            <th>dens35</th>
+                            <th>dens40</th>
+                            <th>dens45</th>
+                            <th>dens50</th>
+                            <th>dens55</th>
+                            <th>dens60</th>
+                            <th>coment</th>
+                        </tr>
+                    </thead>
+                    <tbody>
 
-            <tr ng-repeat="doc in Muesrow">
-         
-                    <td>{{doc.doc.barr}}</td>
-                    <td>{{doc.doc.camion}}</td>
-                    <td>{{doc.doc.hora}}</td>
-                    <td>{{doc.doc.r1}}</td>
-                    <td>{{doc.doc.vr2}}</td>
-                    <td>{{doc.doc.rpm}}</td>
-                    <td>{{doc.doc.temp}}</td>
-                    <td>{{doc.doc.dens0}}</td>
-                    <td>{{doc.doc.dens5}}</td>
-                    <td>{{doc.doc.dens10}}</td>
-                    <td>{{doc.doc.dens15}}</td>
-                    <td>{{doc.doc.dens20}}</td>
-                    <td>{{doc.doc.dens25}}</td>
-                    <td>{{doc.doc.dens30}}</td>
-                    <td>{{doc.doc.dens35}}</td>
-                    <td>{{doc.doc.dens40}}</td>
-                    <td>{{doc.doc.dens45}}</td>
-                    <td>{{doc.doc.dens50}}</td>
-                    <td>{{doc.doc.dens55}}</td>
-                    <td>{{doc.doc.dens60}}</td>
-                    <td>{{doc.doc.coment}}</td>
-                    <td><canvas id="bar" class="chart chart-line" 
-                        chart-data="[doc.doc.dens0,
-                        doc.doc.dens5,
-                        doc.doc.dens10,
-                        doc.doc.dens15,
-                        doc.doc.dens20,
-                        doc.doc.dens25,
-                        doc.doc.dens30,
-                        doc.doc.dens35,
-                        doc.doc.dens40,
-                        doc.doc.dens45,
-                        doc.doc.dens50,
-                        doc.doc.dens55,
-                        doc.doc.dens60]" chart-labels="[0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60]" chart-series="" chart-colors="red">
+                        <tr ng-repeat="doc in Muesrow">
+
+                            <td>{{doc.barr}}</td>
+                            <td>{{doc.camion}}</td>
+                            <td>{{doc.hora}}</td>
+                            <td>{{doc.r1}}</td>
+                            <td>{{doc.vr2}}</td>
+                            <td>{{doc.rpm}}</td>
+                            <td>{{doc.temp}}</td>
+                            <td>{{doc.dens0}}</td>
+                            <td>{{doc.dens5}}</td>
+                            <td>{{doc.dens10}}</td>
+                            <td>{{doc.dens15}}</td>
+                            <td>{{doc.dens20}}</td>
+                            <td>{{doc.dens25}}</td>
+                            <td>{{doc.dens30}}</td>
+                            <td>{{doc.dens35}}</td>
+                            <td>{{doc.dens40}}</td>
+                            <td>{{doc.dens45}}</td>
+                            <td>{{doc.dens50}}</td>
+                            <td>{{doc.dens55}}</td>
+                            <td>{{doc.dens60}}</td>
+                            <td>{{doc.coment}}</td>
+                            <td><canvas id="bar" class="chart chart-line" chart-data="[doc.dens0,
+                        doc.dens5,
+                        doc.dens10,
+                        doc.dens15,
+                        doc.dens20,
+                        doc.dens25,
+                        doc.dens30,
+                        doc.dens35,
+                        doc.dens40,
+                        doc.dens45,
+                        doc.dens50,
+                        doc.dens55,
+                        doc.dens60]" chart-labels="[0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60]" chart-series="" chart-colors="red">
                       </canvas></td>
-            
-            </tr>
-        
-          </tbody>
-        </table>
-      </div>
-</form>   
-</ion-content>
+
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </form>
+    </ion-content>
 </ion-view>

@@ -2,266 +2,323 @@ angular.module('app.routes', [])
 
 .config(function($stateProvider, $urlRouterProvider) {
 
-  // Ionic uses AngularUI Router which uses the concept of states
-  // Learn more here: https://github.com/angular-ui/ui-router
-  // Set up the various states which the app can be in.
-  // Each state's controller can be found in controllers.js
-  $stateProvider
-    
+    // Ionic uses AngularUI Router which uses the concept of states
+    // Learn more here: https://github.com/angular-ui/ui-router
+    // Set up the various states which the app can be in.
+    // Each state's controller can be found in controllers.js
+    $stateProvider
 
-      .state('menu.inicio', {
-    url: '/page1',
-    views: {
-      'side-menu21': {
-        templateUrl: 'templates/inicio.html',
-        controller: 'inicioCtrl'
-      }
-    }
-  })
 
-  .state('menu.vistaDeProyecto', {
-    url: '/page13',
-    views: {
-      'side-menu21': {
-        templateUrl: 'templates/vistaDeProyecto.html',
-        controller: 'vistaDeProyectoCtrl'
-      }
-    }
-  })
+        .state('menu.inicio', {
+        url: '/page1',
+        params: {
+            id: "",
+            status: "",
+            proj: ""
+        },
+        views: {
+            'side-menu21': {
+                templateUrl: 'templates/inicio.html',
+                controller: 'inicioCtrl'
+            }
+        }
+    })
 
-  .state('menu.vistaDeReporte', {
-    url: '/page16',
-	params: {
-		menu: ""		
-},
-    views: {
-      'side-menu21': {
-        templateUrl: 'templates/vistaDeReporte.html',
-        controller: 'vistaDeReporteCtrl'
-      }
-    }
-  })
+    .state('menu.vistaDeProyecto', {
+        url: '/page13',
+        params: {
+            id: "",
+            status: "",
+            proj: ""
+        },
+        views: {
+            'side-menu21': {
+                templateUrl: 'templates/vistaDeProyecto.html',
+                controller: 'vistaDeProyectoCtrl'
+            }
+        }
+    })
 
-  .state('menu', {
-    url: '/side-menu21',
-    templateUrl: 'templates/menu.html',
-    controller: 'menuCtrl'
-  })
+    .state('menu.vistaDeReporte', {
+        url: '/page16',
+        params: {
+            id: "",
+            status: "",
+            proj: ""
+        },
 
-  .state('menu.login', {
-    url: '/page4',
-    views: {
-      'side-menu21': {
-        templateUrl: 'templates/login.html',
-        controller: 'loginCtrl'
-      }
-    }
-  })
+        views: {
+            'side-menu21': {
+                templateUrl: 'templates/vistaDeReporte.html',
+                controller: 'vistaDeReporteCtrl'
+            }
+        }
+    })
 
-  .state('menu.subirProyecto', {
-    url: '/page5',
-    views: {
-      'side-menu21': {
-        templateUrl: 'templates/subirProyecto.html',
-        controller: 'subirProyectoCtrl'
-      }
-    }
-  })
+    .state('menu', {
+        url: '/side-menu21',
+        templateUrl: 'templates/menu.html',
+        controller: 'menuCtrl'
+    })
 
-  .state('menu.ajustarCSV', {
-    url: '/page6',
-    params: {
-      id: "",
-      status: ""		
-    },
-    views: {
-      'side-menu21': {
-        templateUrl: 'templates/ajustarCSV.html',
-        controller: 'ajustarCSVCtrl'
-      }
-    }
-  })
+    .state('menu.login', {
+        url: '/page4',
 
-  .state('parMetrosDeCSVPaso1', {
-    url: '/page9',
-    templateUrl: 'templates/parMetrosDeCSVPaso1.html',
-    controller: 'parMetrosDeCSVPaso1Ctrl'
-  })
+        views: {
+            'side-menu21': {
+                templateUrl: 'templates/login.html',
+                controller: 'loginCtrl'
+            }
+        }
+    })
 
-  .state('parMetrosDeCSVPaso3', {
-    url: '/page10',
-    templateUrl: 'templates/parMetrosDeCSVPaso3.html',
-    controller: 'parMetrosDeCSVPaso3Ctrl'
-  })
+    .state('menu.subirProyecto', {
+        url: '/page5',
+        params: {
+            id: "",
+            status: "",
+            proj: ""
+        },
+        views: {
+            'side-menu21': {
+                templateUrl: 'templates/subirProyecto.html',
+                controller: 'subirProyectoCtrl'
+            }
+        }
+    })
 
-  .state('menu.mapaVoladura1', {
-    url: '/page7',
-    views: {
-      'side-menu21': {
-        templateUrl: 'templates/mapaVoladura1.html',
-        controller: 'mapaVoladura1Ctrl'
-      }
-    }
-  })
+    .state('menu.ajustarCSV', {
+        url: '/page6',
+        params: {
+            id: "",
+            status: "",
+            proj: ""
+        },
 
-  .state('menu.parametrosVoladura1', {
-    url: '/page8/',
-    params: {
-      id: "",
-      status: "",
-      proj:""		
-  },
-    views: {
-      'side-menu21': {
-        templateUrl: 'templates/parametrosVoladura1.html',
-        controller: 'parametrosVoladura1Ctrl'
-      }
-    }
-  })
-  
+        views: {
+            'side-menu21': {
+                templateUrl: 'templates/ajustarCSV.html',
+                controller: 'ajustarCSVCtrl'
+            }
+        }
+    })
 
-  .state('menu.editarVoladuraMapa', {
-    url: '/page12',
-	params: {
-    id: "",
-    status: "",
-    proj:""		
-},
-    views: {
-      'side-menu21': {
-        templateUrl: 'templates/editarVoladuraMapa.html',
-        controller: 'editarVoladuraMapaCtrl'
-      }
-    }
-  })
 
-  .state('menu.editarVoladuraCaptaciN', {
-    url: '/page17',
-    views: {
-      'side-menu21': {
-        templateUrl: 'templates/editarVoladuraCaptaciN.html',
-        controller: 'editarVoladuraCaptaciNCtrl'
-      }
-    }
-  })
+    .state('menu.mapaVoladura1', {
+        url: '/page7',
+        views: {
+            'side-menu21': {
+                templateUrl: 'templates/mapaVoladura1.html',
+                controller: 'mapaVoladura1Ctrl'
+            }
+        }
+    })
 
-  .state('menu.tomaDeMuestra', {
-    url: '/page11',
-    views: {
-      'side-menu21': {
-        templateUrl: 'templates/tomaDeMuestra.html',
-        controller: 'tomaDeMuestraCtrl'
-      }
-    }
-  })
+    .state('menu.parametrosVoladura1', {
+        url: '/page8/',
+        params: {
+            id: "",
+            status: "",
+            proj: ""
+        },
+        views: {
+            'side-menu21': {
+                templateUrl: 'templates/parametrosVoladura1.html',
+                controller: 'parametrosVoladura1Ctrl'
+            }
+        }
+    })
 
-  .state('menu.generarReporteProductos', {
-    url: '/page14',
-    views: {
-      'side-menu21': {
-        templateUrl: 'templates/generarReporteProductos.html',
-        controller: 'generarReporteProductosCtrl'
-      }
-    }
-  })
 
-  .state('menu.generarReporteDatosGenerales', {
-    url: '/page15',
-    views: {
-      'side-menu21': {
-        templateUrl: 'templates/generarReporteDatosGenerales.html',
-        controller: 'generarReporteDatosGeneralesCtrl'
-      }
-    }
-  })
+    .state('menu.editarVoladuraMapa', {
+        url: '/page12',
+        params: {
+            id: "",
+            status: "",
+            proj: ""
+        },
+        views: {
+            'side-menu21': {
+                templateUrl: 'templates/editarVoladuraMapa.html',
+                controller: 'editarVoladuraMapaCtrl'
+            }
+        }
+    })
 
-  .state('menu.agregarBarreno', {
-    url: '/page18',
-    views: {
-      'side-menu21': {
-        templateUrl: 'templates/agregarBarreno.html',
-        controller: 'agregarBarrenoCtrl'
-      }
-    }
-  })
+    .state('menu.editarVoladuraCaptaciN', {
+        url: '/page17',
+        params: {
+            id: "",
+            status: "",
+            proj: ""
+        },
+        views: {
+            'side-menu21': {
+                templateUrl: 'templates/editarVoladuraCaptaciN.html',
+                controller: 'editarVoladuraCaptaciNCtrl'
+            }
+        }
+    })
 
-  .state('menu.verBarrenos', {
-    url: '/page19',
-	params: {
-		id: "",
-		status: ""		
-},
-    views: {
-      'side-menu21': {
-        templateUrl: 'templates/verBarrenos.html',
-        controller: 'verBarrenosCtrl'
-      }
-    }
-  })
+    .state('menu.tomaDeMuestra', {
+        url: '/page11',
+        params: {
+            id: "",
+            status: "",
+            proj: ""
+        },
+        views: {
+            'side-menu21': {
+                templateUrl: 'templates/tomaDeMuestra.html',
+                controller: 'tomaDeMuestraCtrl'
+            }
+        }
+    })
 
-  .state('menu.tiposDeBarreno', {
-    url: '/page20',
-	params: {
-		id: "",
-    status: "",
-    proj: "",		
-},
-    views: {
-      'side-menu21': {
-        templateUrl: 'templates/tiposDeBarreno.html',
-        controller: 'tiposDeBarrenoCtrl'
-      }
-    }
-  })
+    .state('menu.generarReporteProductos', {
+        url: '/page14',
+        params: {
+            id: "",
+            status: "",
+            proj: ""
+        },
+        views: {
+            'side-menu21': {
+                templateUrl: 'templates/generarReporteProductos.html',
+                controller: 'generarReporteProductosCtrl'
+            }
+        }
+    })
 
-  .state('menu.buscarBarreno', {
-    url: '/page21',
-    views: {
-      'side-menu21': {
-        templateUrl: 'templates/buscarBarreno.html',
-        controller: 'buscarBarrenoCtrl'
-      }
-    }
-  })
-  .state('menu.tomaDeSismografos', {
-    url: '/page22',
-    views: {
-      'side-menu21': {
-        templateUrl: 'templates/tomaDeSismografos.html',
-        controller: 'tomaDeSismografosCtrl'
-      }
-    }
-  })
-  .state('menu.vistaPreviaMuestra', {
-    url: '/page23',
-    views: {
-      'side-menu21': {
-        templateUrl: 'templates/vistaPreviaMuestra.html',
-        controller: 'vistaPreviaMuestraCtrl'
-      }
-    }
-  })
-  .state('menu.vistaPreviaGrl', {
-    url: '/page24',
-    views: {
-      'side-menu21': {
-        templateUrl: 'templates/vistaPreviaGrl.html',
-        controller: 'vistaPreviaGrlCtrl'
-      }
-    }
-  })
-  .state('menu.reporteCarga1', {
-    url: '/page25',
-    views: {
-      'side-menu21': {
-        templateUrl: 'templates/reporteCarga1.html',
-        controller: 'reporteCarga1Ctrl'
-      }
-    }
-  })
-  
+    .state('menu.generarReporteDatosGenerales', {
+        url: '/page15',
+        params: {
+            id: "",
+            status: "",
+            proj: ""
+        },
+        views: {
+            'side-menu21': {
+                templateUrl: 'templates/generarReporteDatosGenerales.html',
+                controller: 'generarReporteDatosGeneralesCtrl'
+            }
+        }
+    })
 
-$urlRouterProvider.otherwise('/side-menu21/page1')
+    .state('menu.agregarBarreno', {
+        url: '/page18',
+        params: {
+            id: "",
+            status: "",
+            proj: ""
+        },
+        views: {
+            'side-menu21': {
+                templateUrl: 'templates/agregarBarreno.html',
+                controller: 'agregarBarrenoCtrl'
+            }
+        }
+    })
+
+    .state('menu.verBarrenos', {
+        url: '/page19',
+        params: {
+            id: "",
+            status: "",
+            proj: ""
+        },
+
+        views: {
+            'side-menu21': {
+                templateUrl: 'templates/verBarrenos.html',
+                controller: 'verBarrenosCtrl'
+            }
+        }
+    })
+
+    .state('menu.tiposDeBarreno', {
+        url: '/page20',
+        params: {
+            id: "",
+            status: "",
+            proj: "",
+        },
+        views: {
+            'side-menu21': {
+                templateUrl: 'templates/tiposDeBarreno.html',
+                controller: 'tiposDeBarrenoCtrl'
+            }
+        }
+    })
+
+    .state('menu.buscarBarreno', {
+            url: '/page21',
+            params: {
+                id: "",
+                status: "",
+                proj: ""
+            },
+            views: {
+                'side-menu21': {
+                    templateUrl: 'templates/buscarBarreno.html',
+                    controller: 'buscarBarrenoCtrl'
+                }
+            }
+        })
+        .state('menu.tomaDeSismografos', {
+            url: '/page22',
+            views: {
+                'side-menu21': {
+                    templateUrl: 'templates/tomaDeSismografos.html',
+                    controller: 'tomaDeSismografosCtrl'
+                }
+            }
+        })
+        .state('menu.vistaPreviaMuestra', {
+            url: '/page23',
+            params: {
+                id: "",
+                status: "",
+                proj: ""
+            },
+            views: {
+                'side-menu21': {
+                    templateUrl: 'templates/vistaPreviaMuestra.html',
+                    controller: 'vistaPreviaMuestraCtrl'
+                }
+            }
+        })
+        .state('menu.vistaPreviaGrl', {
+            url: '/page24',
+            params: {
+                id: "",
+                status: "",
+                proj: ""
+            },
+            views: {
+                'side-menu21': {
+                    templateUrl: 'templates/vistaPreviaGrl.html',
+                    controller: 'vistaPreviaGrlCtrl'
+                }
+            }
+        })
+        .state('menu.reporteCarga1', {
+            url: '/page25',
+            params: {
+                id: "",
+                status: "",
+                proj: ""
+            },
+            views: {
+                'side-menu21': {
+                    templateUrl: 'templates/reporteCarga1.html',
+                    controller: 'reporteCarga1Ctrl'
+                }
+            }
+        })
+
+
+    $urlRouterProvider.otherwise('/side-menu21/page1')
 
 
 

@@ -6,110 +6,179 @@ angular.module('app.controllers', [])
     function($scope, $stateParams) {
 
 
+
     }
 ])
 
-.controller('vistaDeProyectoCtrl', ['$scope', '$stateParams', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+.controller('vistaDeProyectoCtrl', ['$scope', '$stateParams', '$state', 'pouchDB', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
     // You can include any angular dependencies as parameters for this function
     // TIP: Access Route Parameters for your page via $stateParams.parameterName
-    function($scope, $stateParams) {
+    function($scope, $stateParams, $state, pouchDB) {
+        $scope.projparam = {
+            'id': $stateParams.id,
+            'status': $stateParams.status,
+            'proj': $stateParams.proj,
+        }
+
+        //Declara y Sincroniza base de datos de Tipo
+        let localprojDB = new pouchDB('projects');
+        let remoteprojDB = new PouchDB('https://biznnovate.cloudant.com/eblast-proj', { skipSetup: true });
+        remoteprojDB.login('biznnovate', '5t24XN-Am@8dqF:R').then(function(batman) {
+            console.log("I'm Batman.");
+            return remoteprojDB.getSession();
+        });
+        localprojDB.sync(remoteprojDB).on('complete', function() {
+            // yay, we're in sync!
+        }).on('error', function(err) {
+            // boo, we hit an error!
+        });
+        localprojDB.allDocs({
+            include_docs: true,
+            attachments: true
+        }).then(function(result) {
+            // handle result
+            $scope.projInfo = result;
+
+
+        }).catch(function(err) {
+            console.log(err);
+        });
+
+        $scope.projID = $scope.projparam.proj || '';
+        $scope.selectProjFunc = function() {
+            if ($scope.projID != '') {
+                var proj = $scope.projID;
+                localprojDB.get(proj).then(function(doc) {
+                    $scope.selectedProj = doc;
+                    console.log(doc)
+                    $scope.tipobarr = doc.tipos;
+                    $scope.Barrenos = doc.barrenos;
+                    $scope.muestraData = doc.muestras;
+                    $scope.Muesrow = doc.muestras;
+                    console.log(doc.tipos)
+                    console.log('se encontro el proyecto:' + proj)
+                }).catch(function(err) {
+                    console.log(err);
+                });
+            } else {
+                $scope.selectedProj = ''
+                console.log('no se ha seleccionado un proyecto')
+            };
+        }
+        $scope.selectProjFunc();
+        $scope.selectProj = function(obj) {
+            console.log(obj)
+            $scope.selectedproj_u = obj;
+            $scope.projID = obj.doc._id;
+            $scope.selectProjFunc();
+
+
+        }
+        $scope.changeProjID = function() {
+            $scope.projID = '';
+        }
+
+
+        $scope.gotoProductos = function() {
+            $state.go('menu.generarReporteProductos', { 'proj': $scope.projID });
+        }
+        $scope.gotoMuestra = function() {
+            $state.go('menu.tomaDeMuestra', { 'proj': $scope.projID });
+        }
+        $scope.gotoSismo = function() {
+            $state.go('menu.tomaDeSismografos', { 'proj': $scope.projID });
+        }
+        $scope.gotoDataGral = function() {
+            $state.go('menu.generarReporteDatosGenerales', { 'proj': $scope.projID });
+        }
+        $scope.gotoCarga = function() {
+            $state.go('menu.reporteCarga1', { 'proj': $scope.projID });
+        }
+        $scope.gotoReporte = function() {
+            $state.go('menu.vistaDeReporte', { 'proj': $scope.projID });
+        }
 
 
     }
 ])
 
-.controller('vistaDeReporteCtrl', ['$scope', '$stateParams', 'pouchDB', 'Excel', '$timeout', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+.controller('vistaDeReporteCtrl', ['$scope', '$stateParams', '$state', 'pouchDB', 'Excel', '$timeout', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
         // You can include any angular dependencies as parameters for this function
         // TIP: Access Route Parameters for your page via $stateParams.parameterName
-        function($scope, $stateParams, pouchDB, Excel, $timeout) {
+        function($scope, $stateParams, $state, pouchDB, Excel, $timeout) {
             //llama bd de data
-            let localDB = new pouchDB('barrenos');
-            let remoteDB = new PouchDB('https://biznnovate.cloudant.com/eblast-barrenos');
-            localDB.sync(remoteDB).on('complete', function() {
-                // yay, we're in sync!
-            }).on('error', function(err) {
-                // boo, we hit an error!
-            });
+            $scope.projparam = {
+                'id': $stateParams.id,
+                'status': $stateParams.status,
+                'proj': $stateParams.proj,
+            }
 
-            localDB.allDocs({
-                include_docs: true,
-                attachments: true
-            }).then(function(result) {
-                // handle result
-                $scope.Barrenos = result;
-            }).catch(function(err) {
-                console.log(err);
-            });
+            //Declara y Sincroniza base de datos de Tipo
             let localprojDB = new pouchDB('projects');
-            let remoteprojDB = new PouchDB('https://biznnovate.cloudant.com/eblast-proj');
-
+            let remoteprojDB = new PouchDB('https://biznnovate.cloudant.com/eblast-proj', { skipSetup: true });
+            remoteprojDB.login('biznnovate', '5t24XN-Am@8dqF:R').then(function(batman) {
+                console.log("I'm Batman.");
+                return remoteprojDB.getSession();
+            });
             localprojDB.sync(remoteprojDB).on('complete', function() {
                 // yay, we're in sync!
             }).on('error', function(err) {
                 // boo, we hit an error!
             });
-            //llama datos de DB de Explosivistas
             localprojDB.allDocs({
                 include_docs: true,
                 attachments: true
             }).then(function(result) {
                 // handle result
                 $scope.projInfo = result;
+
+
             }).catch(function(err) {
                 console.log(err);
             });
 
-            //llama Sismografos
-            let localSDB = new PouchDB('sismografo');
-            let remoteSDB = new PouchDB('https://biznnovate.cloudant.com/eblast-sismografo');
+            $scope.projID = $scope.projparam.proj || '';
+            $scope.selectProjFunc = function() {
+                if ($scope.projID != '') {
+                    var proj = $scope.projID;
+                    localprojDB.get(proj).then(function(doc) {
+                        $scope.selectedProj = doc;
+                        console.log(doc)
+                        $scope.tipobarr = doc.tipos;
+                        $scope.Barrenos = doc.barrenos;
+                        $scope.Muesrow = doc.muestras;
+                        $scope.Productos = doc.productos;
+                        $scope.dataGral = doc.datagral;
+                        console.log(doc.tipos)
+                        console.log('se encontro el proyecto:' + proj)
+                    }).catch(function(err) {
+                        console.log(err);
+                    });
+                } else {
+                    $scope.selectedProj = ''
+                    console.log('no se ha seleccionado un proyecto')
+                };
+            }
+            $scope.selectProjFunc();
+            $scope.selectProj = function(obj) {
+                console.log(obj)
+                $scope.selectedproj_u = obj;
+                $scope.projID = obj.doc._id;
+                $scope.selectProjFunc();
 
 
-            localSDB.sync(remoteSDB).on('complete', function() {
-                // yay, we're in sync!
-            }).on('error', function(err) {
-                // boo, we hit an error!
-            });
-            $scope.Sismografos = [];
-            localSDB.allDocs({
-                include_docs: true,
-                attachments: true
-            }).then(function(result) {
-                // handle result
-                $scope.Sismografos = result;
-                $scope.Sisrow = result.rows;
-            }).catch(function(err) {
-                console.log(err);
-            });
+            }
+            $scope.changeProjID = function() {
+                $scope.projID = '';
+            }
 
-            //llama muestras
-
-            let localMDB = new PouchDB('muestras');
-            let remoteMDB = new PouchDB('https://biznnovate.cloudant.com/eblast-muestras');
-
-
-            localMDB.sync(remoteMDB).on('complete', function() {
-                // yay, we're in sync!
-            }).on('error', function(err) {
-                // boo, we hit an error!
-            });
-            $scope.Muestras = [];
-            localMDB.allDocs({
-                include_docs: true,
-                attachments: true
-            }).then(function(result) {
-                // handle result
-                $scope.Muestras = result;
-                $scope.Muesrow = result.rows;
-            }).catch(function(err) {
-                console.log(err);
-            });
 
             $scope.butGen = true;
             $scope.butExp = false;
             $scope.dataExport = []
             $scope.frontExport = []
 
-            $scope.selectProj = function() {
+            $scope.selectProj1 = function() {
 
 
                 angular.forEach($scope.Barrenos.rows, function(value, key) {
@@ -267,100 +336,87 @@ angular.module('app.controllers', [])
 
         }
     ])
-    .controller('reporteCarga1Ctrl', ['$scope', '$stateParams', 'pouchDB', 'Excel', '$timeout', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+    .controller('reporteCarga1Ctrl', ['$scope', '$stateParams', '$state', 'pouchDB', 'Excel', '$timeout', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
         // You can include any angular dependencies as parameters for this function
         // TIP: Access Route Parameters for your page via $stateParams.parameterName
-        function($scope, $stateParams, pouchDB, Excel, $timeout) {
+        function($scope, $stateParams, $state, pouchDB, Excel, $timeout) {
             //llama bd de data
-            let localDB = new pouchDB('barrenos');
-            let remoteDB = new PouchDB('https://biznnovate.cloudant.com/eblast-barrenos');
-            localDB.sync(remoteDB).on('complete', function() {
-                // yay, we're in sync!
-            }).on('error', function(err) {
-                // boo, we hit an error!
-            });
+            $scope.projparam = {
+                'id': $stateParams.id,
+                'status': $stateParams.status,
+                'proj': $stateParams.proj,
+            }
 
-            localDB.allDocs({
-                include_docs: true,
-                attachments: true
-            }).then(function(result) {
-                // handle result
-                $scope.Barrenos = result;
-            }).catch(function(err) {
-                console.log(err);
-            });
+            //Declara y Sincroniza base de datos de Tipo
             let localprojDB = new pouchDB('projects');
-            let remoteprojDB = new PouchDB('https://biznnovate.cloudant.com/eblast-proj');
+            let remoteprojDB = new PouchDB('https://biznnovate.cloudant.com/eblast-proj', { skipSetup: true });
+            remoteprojDB.login('biznnovate', '5t24XN-Am@8dqF:R').then(function(batman) {
+                console.log("I'm Batman.");
+                return remoteprojDB.getSession();
+            });
             localprojDB.sync(remoteprojDB).on('complete', function() {
                 // yay, we're in sync!
             }).on('error', function(err) {
                 // boo, we hit an error!
             });
-            //llama datos de DB de Explosivistas
             localprojDB.allDocs({
                 include_docs: true,
                 attachments: true
             }).then(function(result) {
                 // handle result
                 $scope.projInfo = result;
+
+
             }).catch(function(err) {
                 console.log(err);
             });
 
-            //llama Sismografos
-            let localSDB = new PouchDB('sismografo');
-            let remoteSDB = new PouchDB('https://biznnovate.cloudant.com/eblast-sismografo');
+            $scope.projID = $scope.projparam.proj || '';
+            $scope.selectProjFunc = function() {
+                if ($scope.projID != '') {
+                    var proj = $scope.projID;
+                    localprojDB.get(proj).then(function(doc) {
+                        $scope.selectedProj = doc;
+                        console.log(doc)
+                        $scope.tipobarr = doc.tipos;
+                        $scope.Barrenos = doc.barrenos;
+                        $scope.Muesrow = doc.muestras;
+                        $scope.Productos = doc.productos;
+                        $scope.dataGral = doc.datagral;
+                        console.log(doc.tipos)
+                        console.log('se encontro el proyecto:' + proj)
+                    }).catch(function(err) {
+                        console.log(err);
+                    });
+                } else {
+                    $scope.selectedProj = ''
+                    console.log('no se ha seleccionado un proyecto')
+                };
+            }
+            $scope.selectProjFunc();
+            $scope.selectProj = function(obj) {
+                console.log(obj)
+                $scope.selectedproj_u = obj;
+                $scope.projID = obj.doc._id;
+                $scope.selectProjFunc();
 
 
-            localSDB.sync(remoteSDB).on('complete', function() {
-                // yay, we're in sync!
-            }).on('error', function(err) {
-                // boo, we hit an error!
-            });
-            $scope.Sismografos = [];
-            localSDB.allDocs({
-                include_docs: true,
-                attachments: true
-            }).then(function(result) {
-                // handle result
-                $scope.Sismografos = result;
-                $scope.Sisrow = result.rows;
-            }).catch(function(err) {
-                console.log(err);
-            });
-
-            //llama muestras
-
-            let localMDB = new PouchDB('muestras');
-            let remoteMDB = new PouchDB('https://biznnovate.cloudant.com/eblast-muestras');
+            }
+            $scope.changeProjID = function() {
+                $scope.projID = '';
+            }
 
 
-            localMDB.sync(remoteMDB).on('complete', function() {
-                // yay, we're in sync!
-            }).on('error', function(err) {
-                // boo, we hit an error!
-            });
-            $scope.Muestras = [];
-            localMDB.allDocs({
-                include_docs: true,
-                attachments: true
-            }).then(function(result) {
-                // handle result
-                $scope.Muestras = result;
-                $scope.Muesrow = result.rows;
-            }).catch(function(err) {
-                console.log(err);
-            });
 
             $scope.butGen = true;
             $scope.butExp = false;
             $scope.dataExport = []
             $scope.frontExport = []
 
-            $scope.selectProj = function() {
+            $scope.selectProj1 = function() {
 
 
-                angular.forEach($scope.Barrenos.rows, function(value, key) {
+                angular.forEach($scope.Barrenos, function(value, key) {
                     var dataExp = {
                         'Barreno': value.doc.barr,
                         'CoordX': value.doc.coordx,
@@ -1578,7 +1634,7 @@ angular.module('app.controllers', [])
             $state.go('menu.parametrosVoladura1', { 'proj': $scope.projID });
         }
         $scope.gotoMenu = function() {
-            $state.go('menu.parametrosVoladura1');
+            $state.go('menu.parametrosVoladura1', { 'proj': $scope.projID });
             localDB.sync(remoteDB).on('complete', function() {
                 // yay, we're in sync!
             }).on('error', function(err) {
@@ -2100,6 +2156,10 @@ angular.module('app.controllers', [])
                     date: doc.date,
                     barrenos: doc.barrenos,
                     tipos: $scope.projTipos,
+                    productos: doc.productos,
+                    muestras: doc.muestras,
+                    datagral: doc.datagral,
+
 
 
                 }).catch(function(err) {
@@ -2136,6 +2196,9 @@ angular.module('app.controllers', [])
                     date: doc.date,
                     barrenos: doc.barrenos,
                     tipos: $scope.projTipos,
+                    productos: doc.productos,
+                    muestras: doc.muestras,
+                    datagral: doc.datagral,
 
 
                 }).catch(function(err) {
@@ -2211,6 +2274,9 @@ angular.module('app.controllers', [])
                     date: doc.date,
                     barrenos: doc.barrenos,
                     tipos: $scope.projTipos,
+                    productos: doc.productos,
+                    muestras: doc.muestras,
+                    datagral: doc.datagral,
 
 
 
@@ -2786,7 +2852,7 @@ angular.module('app.controllers', [])
 
             //count barrenos
             $scope.message = "Presione Agregar Barreno"
-
+            $scope.calc();
         };
         $scope.updateSelectedBarr2 = function(obj) {
             console.log(obj)
@@ -2854,6 +2920,9 @@ angular.module('app.controllers', [])
                     date: doc.date,
                     barrenos: $scope.Barrenos,
                     tipos: doc.tipos,
+                    productos: doc.productos,
+                    muestras: doc.muestras,
+                    datagral: doc.datagral,
                 });
             }).then(function() {
                 return localprojDB.get(id);
@@ -2958,6 +3027,7 @@ angular.module('app.controllers', [])
             }
             $scope.enableCalc = true;
             $scope.enableResults = true;
+            $scope.calc();
 
         }
 
@@ -3004,7 +3074,7 @@ angular.module('app.controllers', [])
             $scope.profreal_u = obj;
 
             $scope.showProfDis = true;
-
+            $scope.calc();
 
         };
         $scope.updateLdecarga = function(obj) {
@@ -3012,21 +3082,25 @@ angular.module('app.controllers', [])
             console.log($scope.ldecarga)
             $scope.ldecarga_u = obj;
             $scope.profcarga_u = obj;
+            $scope.calc();
         };
         $scope.updatePeso = function(obj) {
             console.log(obj)
             console.log($scope.peso)
             $scope.peso_u = obj;
+            $scope.calc();
         };
         $scope.updateProf = function(obj) {
             console.log(obj)
             console.log($scope.profcarga)
             $scope.profcarga_u = obj;
+            $scope.calc();
         };
         $scope.updateTaco = function(obj) {
             console.log(obj)
             console.log($scope.taco)
             $scope.taco_u = obj;
+            $scope.calc();
         };
         $scope.updateAire = function(obj) {
             console.log(obj)
@@ -3038,26 +3112,31 @@ angular.module('app.controllers', [])
             console.log(obj)
             console.log($scope.bordo)
             $scope.bordo_u = obj;
+            $scope.calc();
         };
         $scope.updateEspaciamiento = function(obj) {
             console.log(obj)
             console.log($scope.espaciamiento)
             $scope.espaciamiento_u = obj;
+            $scope.calc();
         };
         $scope.updateDiametro = function(obj) {
             console.log(obj)
             console.log($scope.diametro)
             $scope.diametro_u = obj;
+            $scope.calc();
         };
         $scope.updateSubperf = function(obj) {
             console.log(obj)
             console.log($scope.subperf)
             $scope.subperf_u = obj;
+            $scope.calc();
         };
         $scope.updateSelectedProdGra = function(obj) {
             console.log(obj)
             console.log($scope.selectedProdGra)
             $scope.prodgra_u = obj.doc;
+            $scope.calc();
         };
 
 
@@ -3065,6 +3144,7 @@ angular.module('app.controllers', [])
             console.log(obj)
             console.log($scope.cargaAgranel)
             $scope.cargaAgranel = obj;
+            $scope.calc();
         };
         $scope.updateBarrid = function(obj) {
             console.log(obj)
@@ -3072,9 +3152,10 @@ angular.module('app.controllers', [])
 
             $scope.newBarrnam = obj;
             $scope.message = 'Seleccione el Barreno más cercano para copiar parámetros';
+            $scope.calc();
         };
 
-
+        $scope.hideCalcs = false;
         //Calculos de Barrenos
         $scope.calcVarGra = function() {
             var calcCargasVar = function() {
@@ -3470,6 +3551,7 @@ angular.module('app.controllers', [])
                 Pe: Pe,
                 Lc: Lc,
                 Pt: Pt,
+                V: V,
                 Fc: Fc
             }
 
@@ -3620,6 +3702,7 @@ angular.module('app.controllers', [])
                     Pe: Pe,
                     Lc: Lc,
                     Pt: Pt,
+                    V: V,
                     Fc: Fc
                 }
                 //console.log('Paso1 Cálculo del volumen de un cilindro en 1 metro' +
@@ -3913,6 +3996,9 @@ angular.module('app.controllers', [])
                     date: doc.date,
                     barrenos: $scope.Barrenos,
                     tipos: doc.tipos,
+                    productos: doc.productos,
+                    muestras: doc.muestras,
+                    datagral: doc.datagral,
                 });
             }).then(function() {
                 return localprojDB.get(id);
@@ -4125,51 +4211,81 @@ angular.module('app.controllers', [])
     // You can include any angular dependencies as parameters for this function
     // TIP: Access Route Parameters for your page via $stateParams.parameterName
     function($scope, $stateParams, $state, $window, pouchDB) {
-        let localDB = new PouchDB('barrenos');
-        let remoteDB = new PouchDB('https://biznnovate.cloudant.com/eblast-barrenos', { skipSetup: true });
-        remoteDB.login('biznnovate', '5t24XN-Am@8dqF:R').then(function(batman) {
+        $scope.projparam = {
+            'id': $stateParams.id,
+            'status': $stateParams.status,
+            'proj': $stateParams.proj,
+        }
+
+        //Declara y Sincroniza base de datos de Tipo
+        let localprojDB = new pouchDB('projects');
+        let remoteprojDB = new PouchDB('https://biznnovate.cloudant.com/eblast-proj', { skipSetup: true });
+        remoteprojDB.login('biznnovate', '5t24XN-Am@8dqF:R').then(function(batman) {
             console.log("I'm Batman.");
-            return remoteDB.getSession();
+            return remoteprojDB.getSession();
         });
-
-
-        localDB.sync(remoteDB).on('complete', function() {
+        localprojDB.sync(remoteprojDB).on('complete', function() {
             // yay, we're in sync!
         }).on('error', function(err) {
             // boo, we hit an error!
         });
-
-        let localMDB = new PouchDB('muestras');
-        let remoteMDB = new PouchDB('https://biznnovate.cloudant.com/eblast-muestras', { skipSetup: true });
-        remoteDB.login('biznnovate', '5t24XN-Am@8dqF:R').then(function(batman) {
-            console.log("I'm Batman.");
-            return remoteMDB.getSession();
-        });
-
-
-        localMDB.sync(remoteMDB).on('complete', function() {
-            // yay, we're in sync!
-        }).on('error', function(err) {
-            // boo, we hit an error!
-        });
-
-
-        localDB.allDocs({
+        localprojDB.allDocs({
             include_docs: true,
             attachments: true
         }).then(function(result) {
             // handle result
-            $scope.Barrenos = result;
-            $scope.Barrchar = result.rows;
+            $scope.projInfo = result;
+
+
         }).catch(function(err) {
             console.log(err);
         });
+
+        $scope.projID = $scope.projparam.proj || '';
+        $scope.selectProjFunc = function() {
+            if ($scope.projID != '') {
+                var proj = $scope.projID;
+                localprojDB.get(proj).then(function(doc) {
+                    $scope.selectedProj = doc;
+                    console.log(doc)
+                    $scope.tipobarr = doc.tipos;
+                    $scope.Barrenos = doc.barrenos;
+                    $scope.muestraData = doc.muestras || [];
+
+                    console.log(doc.tipos)
+                    console.log('se encontro el proyecto:' + proj)
+                }).catch(function(err) {
+                    console.log(err);
+                });
+            } else {
+                $scope.selectedProj = ''
+                console.log('no se ha seleccionado un proyecto')
+            };
+        }
+        $scope.selectProjFunc();
+        $scope.selectProj = function(obj) {
+            console.log(obj)
+            $scope.selectedproj_u = obj;
+            $scope.projID = obj.doc._id;
+            $scope.selectProjFunc();
+
+
+        }
+        $scope.changeProjID = function() {
+            $scope.projID = '';
+        }
+
+
+
+
+
+
 
         $scope.updateSelectedBarr = function(obj) {
             console.log(obj)
                 // console.log($scope.barr_u)
                 // console.log($scope.selectedBarreno)
-            $scope.barr_u = obj.doc.barr;
+            $scope.barr_u = obj.barr;
             console.log($scope.barr_u)
         };
 
@@ -4341,15 +4457,85 @@ angular.module('app.controllers', [])
         }
 
         $scope.gotoMenu = function() {
-            $state.go('menu.vistaDeProyecto');
+            $state.go('menu.vistaDeProyecto', { 'proj': $scope.projID });
         }
-
         $scope.reloadPage = function() {
-            $window.location.reload();
+            $state.go('menu.tomaDeMuestra', { 'proj': $scope.projID });
 
         }
         $scope.showGraph = false;
+
         $scope.newMuestra = function() {
+            var data = {
+                _id: new Date().toISOString(),
+                barr: $scope.barr_u,
+                camion: $scope.camion_u,
+                hora: $scope.hora_u,
+                r1: $scope.r1_u,
+                r2: $scope.r2_u,
+                rpm: $scope.rpm_u,
+                temp: $scope.temp_u,
+                dens0: $scope.dens0_u,
+                dens5: $scope.dens5_u,
+                dens10: $scope.dens10_u,
+                dens15: $scope.dens15_u,
+                dens20: $scope.dens20_u,
+                dens25: $scope.dens25_u,
+                dens30: $scope.dens30_u,
+                dens35: $scope.dens35_u,
+                dens40: $scope.dens40_u,
+                dens45: $scope.dens45_u,
+                dens50: $scope.dens50_u,
+                dens55: $scope.dens55_u,
+                dens60: $scope.dens60_u,
+                coment: $scope.coment_u,
+            }
+
+            $scope.muestraData.push(data);
+            $scope.insertMuestra();
+            $scope.reloadPage()
+
+
+
+
+        };
+
+        $scope.insertMuestra = function() {
+            var id = $scope.projID;
+            localprojDB.get(id).then(function(doc) {
+
+                return localprojDB.put({
+                    _id: id,
+                    _rev: doc._rev,
+                    proj: doc.proj,
+                    date: doc.date,
+                    barrenos: doc.barrenos,
+                    tipos: doc.tipos,
+                    muestras: $scope.muestraData,
+                    productos: doc.productos,
+
+                });
+            }).then(function() {
+                return localprojDB.get(id);
+                // handle response
+
+            }).catch(function(err) {
+                console.log(err);
+            });
+
+
+
+            localprojDB.sync(remoteprojDB).on('complete', function() {
+                // yay, we're in sync!
+
+            }).on('error', function(err) {
+                // boo, we hit an error!
+            });
+        }
+
+
+
+        $scope.newMuestra1 = function() {
             localMDB.put({
 
                 _id: new Date().toISOString(),
@@ -4395,7 +4581,7 @@ angular.module('app.controllers', [])
 
         }
         $scope.gotoPreview = function() {
-            $state.go('menu.vistaPreviaMuestra');
+            $state.go('menu.vistaPreviaMuestra', { 'proj': $scope.projID });
         }
 
     }
@@ -4536,11 +4722,13 @@ angular.module('app.controllers', [])
 
             };
 
+
+
             $scope.gotoMenu = function() {
-                $state.go('menu.vistaDeProyecto');
+                $state.go('menu.vistaDeProyecto', { 'proj': $scope.projID });
             }
             $scope.reloadPage = function() {
-                $window.location.reload();
+                $state.go('menu.tomaDeMuestra', { 'proj': $scope.projID });
 
             }
             $scope.showSis = false;
@@ -4597,30 +4785,72 @@ angular.module('app.controllers', [])
         // TIP: Access Route Parameters for your page via $stateParams.parameterName
         function($scope, $stateParams, $state, pouchDB, Excel, $timeout, $window) {
 
-            let localMDB = new PouchDB('muestras');
-            let remoteMDB = new PouchDB('https://biznnovate.cloudant.com/eblast-muestras', { skipSetup: true });
-            remoteMDB.login('biznnovate', '5t24XN-Am@8dqF:R').then(function(batman) {
+            $scope.projparam = {
+                'id': $stateParams.id,
+                'status': $stateParams.status,
+                'proj': $stateParams.proj,
+            }
+
+            //Declara y Sincroniza base de datos de Tipo
+            let localprojDB = new pouchDB('projects');
+            let remoteprojDB = new PouchDB('https://biznnovate.cloudant.com/eblast-proj', { skipSetup: true });
+            remoteprojDB.login('biznnovate', '5t24XN-Am@8dqF:R').then(function(batman) {
                 console.log("I'm Batman.");
-                return remoteMDB.getSession();
+                return remoteprojDB.getSession();
             });
-
-
-            localMDB.sync(remoteMDB).on('complete', function() {
+            localprojDB.sync(remoteprojDB).on('complete', function() {
                 // yay, we're in sync!
             }).on('error', function(err) {
                 // boo, we hit an error!
             });
-            $scope.Muestras = [];
-            localMDB.allDocs({
+            localprojDB.allDocs({
                 include_docs: true,
                 attachments: true
             }).then(function(result) {
                 // handle result
-                $scope.Muestras = result;
-                $scope.Muesrow = result.rows;
+                $scope.projInfo = result;
+
+
             }).catch(function(err) {
                 console.log(err);
             });
+
+            $scope.projID = $scope.projparam.proj || '';
+            $scope.selectProjFunc = function() {
+                if ($scope.projID != '') {
+                    var proj = $scope.projID;
+                    localprojDB.get(proj).then(function(doc) {
+                        $scope.selectedProj = doc;
+                        console.log(doc)
+                        $scope.tipobarr = doc.tipos;
+                        $scope.Barrenos = doc.barrenos;
+                        $scope.muestraData = doc.muestras;
+                        $scope.Muesrow = doc.muestras;
+                        console.log(doc.tipos)
+                        console.log('se encontro el proyecto:' + proj)
+                    }).catch(function(err) {
+                        console.log(err);
+                    });
+                } else {
+                    $scope.selectedProj = ''
+                    console.log('no se ha seleccionado un proyecto')
+                };
+            }
+            $scope.selectProjFunc();
+            $scope.selectProj = function(obj) {
+                console.log(obj)
+                $scope.selectedproj_u = obj;
+                $scope.projID = obj.doc._id;
+                $scope.selectProjFunc();
+
+
+            }
+            $scope.changeProjID = function() {
+                $scope.projID = '';
+            }
+
+
+
             $scope.exportToExcel = function(tableId, name) { // ex: '#my-table'
                 var data = tableId;
 
@@ -4719,6 +4949,11 @@ angular.module('app.controllers', [])
             console.log("I'm Batman.");
             return remoteprojDB.getSession();
         });
+        localprojDB.sync(remoteprojDB).on('complete', function() {
+            // yay, we're in sync!
+        }).on('error', function(err) {
+            // boo, we hit an error!
+        });
         localprojDB.allDocs({
             include_docs: true,
             attachments: true
@@ -4740,6 +4975,7 @@ angular.module('app.controllers', [])
                 'id': 'prod_1',
                 'tipo': 'Componentes / Emulsión a granel',
                 'prod': 'Hydromite 70 - Emulsión Gasificada',
+                "fab": "APP",
                 'del': 0,
                 'dev': 0,
                 'used': 0,
@@ -4748,6 +4984,7 @@ angular.module('app.controllers', [])
                 'id': 'prod_2',
                 'tipo': 'Componentes / Emulsión a granel',
                 'prod': 'Hydromite 100 - Emulsión Gasificada',
+                "fab": "APP",
                 'del': 0,
                 'dev': 0,
                 'used': 0,
@@ -4756,6 +4993,7 @@ angular.module('app.controllers', [])
                 'id': 'prod_3',
                 'tipo': 'Emulsión Empacada',
                 'prod': 'Hydromite 3 (63x400mm)',
+                "fab": "IACR",
                 'del': 0,
                 'dev': 0,
                 'used': 0,
@@ -4766,6 +5004,7 @@ angular.module('app.controllers', [])
                 'id': 'prod_4',
                 'tipo': 'Emulsión Empacada',
                 'prod': 'Hydromite 3 (75x800mm)',
+                "fab": "IACR",
                 'del': 0,
                 'dev': 0,
                 'used': 0,
@@ -4774,6 +5013,7 @@ angular.module('app.controllers', [])
                 'id': 'prod_5',
                 'tipo': 'Emulsión Empacada',
                 'prod': 'Emulex 1 (25x400)',
+                "fab": "IACR",
                 'del': 0,
                 'dev': 0,
                 'used': 0,
@@ -4782,6 +5022,7 @@ angular.module('app.controllers', [])
                 'id': 'prod_6',
                 'tipo': 'Emulsión Empacada',
                 'prod': 'Emulex 1 (25x200)',
+                "fab": "IACR",
                 'del': 0,
                 'dev': 0,
                 'used': 0,
@@ -4790,6 +5031,7 @@ angular.module('app.controllers', [])
                 'id': 'prod_7',
                 'tipo': 'Emulsión Empacada',
                 'prod': 'Emulex 1 (32x400)',
+                "fab": "IACR",
                 'del': 0,
                 'dev': 0,
                 'used': 0,
@@ -4798,6 +5040,7 @@ angular.module('app.controllers', [])
                 'id': 'prod_8',
                 'tipo': 'Booster (Iniciador)',
                 'prod': 'Booster HDP-1/2 lb',
+                "fab": "FAMESA",
                 'del': 0,
                 'dev': 0,
                 'used': 0,
@@ -4806,6 +5049,7 @@ angular.module('app.controllers', [])
                 'id': 'prod_9',
                 'tipo': 'Booster (Iniciador)',
                 'prod': 'Booster HDP-1 lb',
+                "fab": "FAMESA",
                 'del': 0,
                 'dev': 0,
                 'used': 0,
@@ -4814,6 +5058,7 @@ angular.module('app.controllers', [])
                 'id': 'prod_10',
                 'tipo': 'Booster (Iniciador)',
                 'prod': 'Booster HDP-3 lb',
+                "fab": "FAMESA",
                 'del': 0,
                 'dev': 0,
                 'used': 0,
@@ -4822,6 +5067,7 @@ angular.module('app.controllers', [])
                 'id': 'prod_11',
                 'tipo': 'Booster (Iniciador)',
                 'prod': 'Emulex 50x400',
+                "fab": "IACR",
                 'del': 0,
                 'dev': 0,
                 'used': 0,
@@ -4830,6 +5076,7 @@ angular.module('app.controllers', [])
                 'id': 'prod_12',
                 'tipo': 'Detonadores Duales',
                 'prod': "SSDD 30'(9m 25/500 ms)",
+
                 'del': 0,
                 'dev': 0,
                 'used': 0,
@@ -5071,10 +5318,27 @@ angular.module('app.controllers', [])
                 // boo, we hit an error!
             });
         }
-
+        $scope.gotoMenu = function() {
+            $state.go('menu.vistaDeProyecto', { 'proj': $scope.projID });
+        }
+        $scope.calcProds = function() {
+            $scope.prodListUpload = [];
+            angular.forEach($scope.prod_list, function(value) {
+                var data = {
+                    tipo: value.tipo,
+                    prod: value.prod,
+                    fab: value.fab,
+                    del: value.del || 0,
+                    dev: value.dev || 0,
+                    used: (value.del - value.dev) || 0
+                }
+                $scope.prodListUpload.push(data);
+            });
+        }
         $scope.updateProductos = function() {
-            var id = $scope.projID;
 
+            var id = $scope.projID;
+            $scope.calcProds();
 
             localprojDB.get(id).then(function(doc) {
                 return localprojDB.put({
@@ -5084,7 +5348,8 @@ angular.module('app.controllers', [])
                     date: doc.date,
                     barrenos: doc.barrenos,
                     tipos: doc.tipos,
-                    productos: $scope.prod_list,
+                    muestras: doc.muestras || [],
+                    productos: $scope.prodListUpload,
                 });
 
 
@@ -5093,6 +5358,13 @@ angular.module('app.controllers', [])
 
             });
             console.log('se subio el proyecto ' + id);
+            localprojDB.sync(remoteprojDB).on('complete', function() {
+                // yay, we're in sync!
+            }).on('error', function(err) {
+                // boo, we hit an error!
+            });
+            $state.go('menu.vistaDeProyecto', { 'proj': $scope.projID });
+
         }
 
         $scope.updateProductos1 = function() {
@@ -5151,153 +5423,85 @@ angular.module('app.controllers', [])
     }
 ])
 
-.controller('generarReporteDatosGeneralesCtrl', ['$scope', '$stateParams', 'pouchDB', '$window', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
+.controller('generarReporteDatosGeneralesCtrl', ['$scope', '$stateParams', '$state', 'pouchDB', '$window', // The following is the constructor function for this page's controller. See https://docs.angularjs.org/guide/controller
     // You can include any angular dependencies as parameters for this function
     // TIP: Access Route Parameters for your page via $stateParams.parameterName
-    function($scope, $stateParams, pouchDB, $window) {
+    function($scope, $stateParams, $state, pouchDB) {
+        $scope.projparam = {
+            'id': $stateParams.id,
+            'status': $stateParams.status,
+            'proj': $stateParams.proj,
+        }
 
 
-        $scope.editProjstatus = '';
-        $scope.explisttemp = [
-            { 'name': 'Arnaldo Barría', 'lic': 'DIASP-00380-040615' },
-            { 'name': 'Eliodoro Olmos', 'lic': 'DIASP-00378-200515' },
-            { 'name': 'Hernan de Leon', 'lic': 'DIASP-00261-190314' },
-            { 'name': 'José Luis Hernandez', 'lic': 'DIASP-00381-190615' },
-            { 'name': 'Nelson Martinez', 'lic': 'DIASP-00267-070414' },
-            { 'name': 'Omar Rodriguez', 'lic': 'DIASP-00266-070414' },
-            { 'name': 'Osman Jiménez', 'lic': 'DIASP-00382-250615' },
-        ];
-        //declara db de Explosivistas
 
-        let localexpDB = new pouchDB('explo');
-        let remoteexpDB = new PouchDB('https://biznnovate.cloudant.com/eblast-explo', { skipSetup: true });
-        remoteexpDB.login('biznnovate', '5t24XN-Am@8dqF:R').then(function(batman) {
-            console.log("I'm Batman.");
-            return remoteexpDB.getSession();
-        });
-        localexpDB.sync(remoteexpDB).on('complete', function() {
-            // yay, we're in sync!
-        }).on('error', function(err) {
-            // boo, we hit an error!
-        });
-
-
-        //llama datos de DB de Explosivistas
-        localexpDB.allDocs({
-            include_docs: true,
-            attachments: true
-        }).then(function(result) {
-            // handle result
-            $scope.explolist = result;
-        }).catch(function(err) {
-            console.log(err);
-        });
-
-        //load productos
-        let localprodDB = new pouchDB('productos');
-        let remoteprodDB = new PouchDB('https://biznnovate.cloudant.com/eblast-prods', { skipSetup: true });
-        remoteprodDB.login('biznnovate', '5t24XN-Am@8dqF:R').then(function(batman) {
-            console.log("I'm Batman.");
-            return remoteprodDB.getSession();
-        });
-        localprodDB.sync(remoteprodDB).on('complete', function() {
-            // yay, we're in sync!
-        }).on('error', function(err) {
-            // boo, we hit an error!
-        });
-
-        localprodDB.createIndex({
-            index: {
-                fields: ['used', '_id', 'tipo', 'prod']
-            }
-        }).then(function() {
-            return localprodDB.find({
-                selector: { used: { $gt: 0 } },
-                fields: ['_rev', '_id', 'tipo', 'prod', 'used', 'del', 'dev', 'used', 'fab'],
-                // sort: ['oldid']
-
-            }).then(function(result) {
-
-                $scope.prodlist = result;
-                console.log(result);
-            }).catch(function(err) {
-                console.log(err);
-            });
-        });
-
-        $scope.ExplosiveTypeList = ['Componentes / Emulsión a granel', 'Emulsión Empacada'];
-
-        $scope.filterByType = function(producto) {
-            return ($scope.ExplosiveTypeList.indexOf(producto.tipo) !== -1);
-        };
-
-        $scope.DetTypeList = ['Detonadores Duales', 'Conectores de Superficie', 'Líneas de inicio', 'Detonadores eléctricos y electrónicos', 'Otros'];
-
-        $scope.filterByTypeDet = function(producto) {
-            return ($scope.DetTypeList.indexOf(producto.tipo) !== -1);
-        };
-
-        var uploadExplosivista = function() {
-                angular.forEach($scope.explisttemp, function(value, key) {
-
-
-                    localexpDB.post({
-
-                        name: value.name,
-                        lic: value.lic,
-
-                    }).then(function(response) {
-                        // handle response
-                    }).catch(function(err) {
-                        console.log(err);
-                    });
-                });
-                localexpDB.sync(remoteexpDB).on('complete', function() {
-                    // yay, we're in sync!
-                }).on('error', function(err) {
-                    // boo, we hit an error!
-                });
-            }
-            //llama bd de data
-        let localDB = new pouchDB('barrenos');
-        let remoteDB = new PouchDB('https://biznnovate.cloudant.com/eblast-barrenos');
-        localDB.sync(remoteDB).on('complete', function() {
-            // yay, we're in sync!
-        }).on('error', function(err) {
-            // boo, we hit an error!
-        });
-
-        localDB.allDocs({
-            include_docs: true,
-            attachments: true
-        }).then(function(result) {
-            // handle result
-            $scope.Barrenos = result;
-            $scope.BarrenosRows = result.rows;
-        }).catch(function(err) {
-            console.log(err);
-        });
-        //llama bd de proyecto
+        //Declara y Sincroniza base de datos de Tipo
         let localprojDB = new pouchDB('projects');
-        let remoteprojDB = new PouchDB('https://biznnovate.cloudant.com/eblast-proj');
+        let remoteprojDB = new PouchDB('https://biznnovate.cloudant.com/eblast-proj', { skipSetup: true });
+        remoteprojDB.login('biznnovate', '5t24XN-Am@8dqF:R').then(function(batman) {
+            console.log("I'm Batman.");
+            return remoteprojDB.getSession();
+        });
         localprojDB.sync(remoteprojDB).on('complete', function() {
             // yay, we're in sync!
         }).on('error', function(err) {
             // boo, we hit an error!
         });
-        //llama datos de DB de Explosivistas
         localprojDB.allDocs({
             include_docs: true,
             attachments: true
         }).then(function(result) {
             // handle result
             $scope.projInfo = result;
-            $scope.projInfoRows = result.rows;
+
+
         }).catch(function(err) {
             console.log(err);
         });
 
-        $scope.proj = {
+        $scope.projID = $scope.projparam.proj || '';
+        $scope.BarrenosUpdated = [];
+        $scope.BarrenosUpdatedCalcs = [];
+        $scope.createBarrenosUpdated = function() {
+            angular.forEach($scope.Barrenos, function(value) {
+
+                var filtro = 'Updated'
+                if (value.status == filtro) {
+                    $scope.BarrenosUpdated.push(value);
+                    console.log('se agrego el Barreno ' + value.barr)
+                } else {
+                    console.log('no se ha trabajado aun ' + value.barr)
+                }
+            });
+        };
+        $scope.calcBarrenosUpdated = function() {
+            angular.forEach($scope.BarrenosUpdated, function(value) {
+                var data = {
+                    barr: value.barr,
+                    L: value.calcs.L,
+                    D: value.calcs.D,
+                    Tf: value.calcs.Tf,
+                    Ta: value.calcs.Ta,
+                    Li: value.calcs.Li,
+                    Ci: value.calcs.Ci,
+                    ci: value.calcs.ci,
+                    d: value.calcs.d,
+                    B: value.calcs.B,
+                    Es: value.calcs.Es,
+                    s: value.calcs.s,
+                    Lc: value.calcs.Lc,
+                    Cm: value.calcs.Cm,
+                    Ct: value.calcs.Ct,
+                    V: value.calcs.V,
+                    Pt: value.calcs.Pt,
+                    Fc: value.calcs.Fc
+                }
+
+                $scope.BarrenosUpdatedCalcs.push(data);
+
+            });
+        }
+        $scope.projFormat = {
             'voladuranum': '',
             'horavol': '',
             'fechatiro': '',
@@ -5366,7 +5570,130 @@ angular.module('app.controllers', [])
             'explo': '',
             'expllic': '',
             'comment': '',
+        }
+
+        $scope.selectProjFunc = function() {
+            if ($scope.projID != '') {
+                var proj = $scope.projID;
+                localprojDB.get(proj).then(function(doc) {
+                    $scope.selectedProj = doc;
+                    console.log(doc)
+                    $scope.tipobarr = doc.tipos;
+                    $scope.Barrenos = doc.barrenos;
+                    $scope.muestraData = doc.muestras;
+                    $scope.prodlist = doc.productos;
+                    $scope.proj = doc.datagral || $scope.projFormat;
+                    console.log(doc.tipos)
+                    console.log('se encontro el proyecto:' + proj)
+                    $scope.createBarrenosUpdated();
+                    $scope.calcBarrenosUpdated();
+                }).catch(function(err) {
+                    console.log(err);
+                });
+
+            } else {
+                $scope.selectedProj = ''
+                console.log('no se ha seleccionado un proyecto')
+            };
+
+
+
+        }
+
+
+
+        $scope.selectProjFunc();
+        $scope.selectProj = function(obj) {
+            console.log(obj)
+            $scope.selectedproj_u = obj;
+            $scope.projID = obj.doc._id;
+            $scope.selectProjFunc();
+
+
+        }
+        $scope.changeProjID = function() {
+            $scope.projID = '';
+        }
+
+
+
+
+        $scope.editProjstatus = '';
+        $scope.explisttemp = [
+            { 'name': 'Arnaldo Barría', 'lic': 'DIASP-00380-040615' },
+            { 'name': 'Eliodoro Olmos', 'lic': 'DIASP-00378-200515' },
+            { 'name': 'Hernan de Leon', 'lic': 'DIASP-00261-190314' },
+            { 'name': 'José Luis Hernandez', 'lic': 'DIASP-00381-190615' },
+            { 'name': 'Nelson Martinez', 'lic': 'DIASP-00267-070414' },
+            { 'name': 'Omar Rodriguez', 'lic': 'DIASP-00266-070414' },
+            { 'name': 'Osman Jiménez', 'lic': 'DIASP-00382-250615' },
+        ];
+        //declara db de Explosivistas
+
+        let localexpDB = new pouchDB('explo');
+        let remoteexpDB = new PouchDB('https://biznnovate.cloudant.com/eblast-explo', { skipSetup: true });
+        remoteexpDB.login('biznnovate', '5t24XN-Am@8dqF:R').then(function(batman) {
+            console.log("I'm Batman.");
+            return remoteexpDB.getSession();
+        });
+        localexpDB.sync(remoteexpDB).on('complete', function() {
+            // yay, we're in sync!
+        }).on('error', function(err) {
+            // boo, we hit an error!
+        });
+
+
+        //llama datos de DB de Explosivistas
+        localexpDB.allDocs({
+            include_docs: true,
+            attachments: true
+        }).then(function(result) {
+            // handle result
+            $scope.explolist = result;
+        }).catch(function(err) {
+            console.log(err);
+        });
+
+
+
+        $scope.ExplosiveTypeList = ['Componentes / Emulsión a granel', 'Emulsión Empacada'];
+
+        $scope.filterByType = function(producto) {
+            return ($scope.ExplosiveTypeList.indexOf(producto.tipo) !== -1);
         };
+
+        $scope.DetTypeList = ['Detonadores Duales', 'Conectores de Superficie', 'Líneas de inicio', 'Detonadores eléctricos y electrónicos', 'Otros'];
+
+        $scope.filterByTypeDet = function(producto) {
+            return ($scope.DetTypeList.indexOf(producto.tipo) !== -1);
+        };
+
+        var uploadExplosivista = function() {
+                angular.forEach($scope.explisttemp, function(value, key) {
+
+
+                    localexpDB.post({
+
+                        name: value.name,
+                        lic: value.lic,
+
+                    }).then(function(response) {
+                        // handle response
+                    }).catch(function(err) {
+                        console.log(err);
+                    });
+                });
+                localexpDB.sync(remoteexpDB).on('complete', function() {
+                    // yay, we're in sync!
+                }).on('error', function(err) {
+                    // boo, we hit an error!
+                });
+            }
+            //llama bd de data
+
+
+
+
 
         $scope.updateStracon = function(obj) {
             console.log(obj)
@@ -5421,19 +5748,25 @@ angular.module('app.controllers', [])
         };
 
         $scope.saveDataGral = function() {
+            var id = $scope.projID;
 
-            localprojDB.put({
-                _id: $scope.proj.stracon,
-                stracon: $scope.proj.stracon,
-                info: $scope.proj,
-                prods: $scope.prodlist,
+            localprojDB.get(id).then(function(doc) {
+                return localprojDB.put({
+                    _id: id,
+                    _rev: doc._rev,
+                    proj: doc.proj,
+                    date: doc.date,
+                    barrenos: doc.barrenos,
+                    tipos: doc.tipos,
+                    muestras: doc.muestras || [],
+                    productos: doc.productos,
+                    datagral: $scope.proj,
+                });
 
 
-
-            }).then(function(response) {
-                // handle response
             }).catch(function(err) {
                 console.log(err);
+
             });
 
             localprojDB.sync(remoteprojDB).on('complete', function() {
@@ -5443,15 +5776,15 @@ angular.module('app.controllers', [])
             });
         }
 
-        $scope.updateSelectedproj = function(obj) {
-            console.log(obj);
-            $scope.project_id = obj.doc._id;
+        $scope.loadDataproj = function() {
 
 
-            var id = $scope.project_id;
+
+
+            var id = $scope.projID;
             localprojDB.get(id).then(function(doc) {
-                $scope.project = doc.info;
-                $scope.proj = {
+                $scope.proj = doc.datagral;
+                $scope.proj1 = {
                     'voladuranum': doc.info.voladuranum,
                     'horavol': doc.info.horavol,
                     'fechatiro': doc.info.fechatiro,
@@ -5505,7 +5838,7 @@ angular.module('app.controllers', [])
         }
 
 
-        $scope.updateProject = function() {
+        $scope.updateProject1 = function() {
             var proj = $scope.proj
             var id = $scope.project_id;
             localprojDB.get(id).then(function(doc) {
@@ -5524,30 +5857,35 @@ angular.module('app.controllers', [])
             });
             $window.location.reload();
         }
-        localDB.createIndex({
-            index: {
-                fields: ['barr', '_id', 'pesototal', 'status', 'volumentotal', 'prof', 'profreal', 'volumencil']
-            }
-        }).then(function() {
-            return localDB.find({
-                selector: { status: 'Updated' },
-                fields: ['_rev', '_id', 'barr', 'factordecarga', 'pesototal', 'status', 'prof', 'profreal', 'volumentotal', 'volumencil'],
-                // sort: ['oldid']
+        $scope.tempfunc = function() {
+            localDB.createIndex({
+                index: {
+                    fields: ['barr', '_id', 'pesototal', 'status', 'volumentotal', 'prof', 'profreal', 'volumencil']
+                }
+            }).then(function() {
+                return localDB.find({
+                    selector: { status: 'Updated' },
+                    fields: ['_rev', '_id', 'barr', 'factordecarga', 'pesototal', 'status', 'prof', 'profreal', 'volumentotal', 'volumencil'],
+                    // sort: ['oldid']
 
-            }).then(function(result) {
+                }).then(function(result) {
 
-                $scope.BarrenosUpdated = result;
-                console.log(result);
-            }).catch(function(err) {
-                console.log(err);
+                    $scope.BarrenosUpdated = result;
+                    console.log(result);
+                }).catch(function(err) {
+                    console.log(err);
+                });
             });
-        });
+        }
+
+
+
         $scope.getPesoTotal = function() {
             var total = 0;
-            for (var i = 0; i < $scope.BarrenosUpdated.docs.length; i++) {
-                var product = $scope.BarrenosUpdated.docs[i];
-                console.log(product.pesototal * 1);
-                total += (product.pesototal);
+            for (var i = 0; i < $scope.BarrenosUpdated.length; i++) {
+                var product = $scope.BarrenosUpdated[i];
+                console.log(product.calcs.Pt * 1);
+                total += (product.calcs.Pt);
                 //$scope.PesoTotal = total;
             }
             return total;
@@ -5555,10 +5893,34 @@ angular.module('app.controllers', [])
         }
         $scope.getVolumenTotal = function() {
             var total = 0;
-            for (var i = 0; i < $scope.BarrenosUpdated.docs.length; i++) {
-                var product = $scope.BarrenosUpdated.docs[i];
-                console.log(product.volumentotal * 1);
-                total += (product.volumentotal);
+            var B = 0;
+            var Es = 0;
+            var L = 0;
+            var s = 0;
+            var V = 0;
+            for (var i = 0; i < $scope.BarrenosUpdatedCalcs.length; i++) {
+                var product = $scope.BarrenosUpdatedCalcs[i];
+
+                B += (product.V);
+                Es += (product.Es);
+                L += (product.L);
+                s += (product.s);
+                V = B * Es * (L - s);
+                total = V;
+                console.log('volumen ' + product.V);
+                console.log('volumen calculado ' + V);
+
+                //$scope.PesoTotal = total;
+            }
+            return total;
+
+        }
+        $scope.getCt = function() {
+            var total = 0;
+            for (var i = 0; i < $scope.BarrenosUpdatedCalcs.length; i++) {
+                var product = $scope.BarrenosUpdatedCalcs[i];
+                console.log('Carga Total ' + product.Ct);
+                total += (product.Ct);
                 //$scope.PesoTotal = total;
             }
             return total;
@@ -5566,10 +5928,10 @@ angular.module('app.controllers', [])
         }
         $scope.getFactordecarga = function() {
             var total = 0;
-            for (var i = 0; i < $scope.BarrenosUpdated.docs.length; i++) {
-                var product = $scope.BarrenosUpdated.docs[i];
-                console.log(product.factordecarga * 1);
-                total += (product.factordecarga);
+            for (var i = 0; i < $scope.BarrenosUpdatedCalcs.length; i++) {
+                var product = $scope.BarrenosUpdatedCalcs[i];
+                console.log('Factor de Carga ' + product.Fc);
+                total += (product.Fc);
                 //$scope.PesoTotal = total;
             }
             return total;
@@ -5577,8 +5939,8 @@ angular.module('app.controllers', [])
         }
         $scope.getProfRealTotal = function() {
             var total = 0;
-            for (var i = 0; i < $scope.BarrenosUpdated.docs.length; i++) {
-                var product = $scope.BarrenosUpdated.docs[i];
+            for (var i = 0; i < $scope.BarrenosUpdated.length; i++) {
+                var product = $scope.BarrenosUpdated[i];
                 console.log(product.profreal * 1);
                 total += (product.profreal);
                 //$scope.PesoTotal = total;
@@ -5596,6 +5958,9 @@ angular.module('app.controllers', [])
             return count;
 
 
+        }
+        $scope.gotoMenu = function() {
+            $state.go('menu.vistaDeProyecto', { 'proj': $scope.projID });
         }
 
 

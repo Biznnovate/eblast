@@ -45,8 +45,8 @@
                     </tr>
                     <tr ng-repeat="prod in prod_list | filter:prod.tipo='Componentes / Emulsión a granel' ">
                         <td>{{prod.prod}}</td>
-                        <td> <span editable-text="prod.del">{{prod.del}}</span></td>
-                        <td> <span editable-text="prod.dev">{{prod.dev}}</span></td>
+                        <td> <span editable-number="prod.del">{{prod.del}}</span></td>
+                        <td> <span editable-number="prod.dev">{{prod.dev}}</span></td>
                         <td> <span>{{prod.del - prod.dev}}</span></td>
                     </tr>
                     <tr style="font-weight: bold">
@@ -56,8 +56,8 @@
                     </tr>
                     <tr ng-repeat="prod in prod_list | filter:prod.tipo='Emulsión Empacada' ">
                         <td>{{prod.prod}}</td>
-                        <td> <span editable-text="prod.del">{{prod.del}}</span></td>
-                        <td> <span editable-text="prod.dev">{{prod.dev}}</span></td>
+                        <td> <span editable-number="prod.del">{{prod.del}}</span></td>
+                        <td> <span editable-number="prod.dev">{{prod.dev}}</span></td>
                         <td> <span>{{prod.del - prod.dev}}</span></td>
                     </tr>
                     <tr style="font-weight: bold">
@@ -67,8 +67,8 @@
                     </tr>
                     <tr ng-repeat="prod in prod_list | filter:prod.tipo='Booster (Iniciador)' ">
                         <td>{{prod.prod}}</td>
-                        <td> <span editable-text="prod.del">{{prod.del}}</span></td>
-                        <td> <span editable-text="prod.dev">{{prod.dev}}</span></td>
+                        <td> <span editable-number="prod.del">{{prod.del}}</span></td>
+                        <td> <span editable-number="prod.dev">{{prod.dev}}</span></td>
                         <td> <span>{{prod.del - prod.dev}}</span></td>
                     </tr>
                     <tr style="font-weight: bold">
@@ -78,8 +78,8 @@
                     </tr>
                     <tr ng-repeat="prod in prod_list | filter:prod.tipo='Detonadores Duales' ">
                         <td>{{prod.prod}}</td>
-                        <td> <span editable-text="prod.del">{{prod.del}}</span></td>
-                        <td> <span editable-text="prod.dev">{{prod.dev}}</span></td>
+                        <td> <span editable-number="prod.del">{{prod.del}}</span></td>
+                        <td> <span editable-number="prod.dev">{{prod.dev}}</span></td>
                         <td> <span>{{prod.del - prod.dev}}</span></td>
                     </tr>
                     <tr style="font-weight: bold">
@@ -89,8 +89,8 @@
                     </tr>
                     <tr ng-repeat="prod in prod_list | filter:prod.tipo='Conectores de Superficie'">
                         <td>{{prod.prod}}</td>
-                        <td> <span editable-text="prod.del">{{prod.del}}</span></td>
-                        <td> <span editable-text="prod.dev">{{prod.dev}}</span></td>
+                        <td> <span editable-number="prod.del">{{prod.del}}</span></td>
+                        <td> <span editable-number="prod.dev">{{prod.dev}}</span></td>
                         <td> <span>{{prod.del - prod.dev}}</span></td>
                     </tr>
                     <tr style="font-weight: bold">
@@ -100,8 +100,8 @@
                     </tr>
                     <tr ng-repeat="prod in prod_list | filter:prod.tipo='Líneas de inicio' ">
                         <td>{{prod.prod}}</td>
-                        <td> <span editable-text="prod.del">{{prod.del}}</span></td>
-                        <td> <span editable-text="prod.dev">{{prod.dev}}</span></td>
+                        <td> <span editable-number="prod.del">{{prod.del}}</span></td>
+                        <td> <span editable-number="prod.dev">{{prod.dev}}</span></td>
                         <td> <span>{{prod.del - prod.dev}}</span></td>
                     </tr>
                     <tr style="font-weight: bold">
@@ -111,8 +111,8 @@
                     </tr>
                     <tr ng-repeat="prod in prod_list | filter:prod.tipo='Cordón detonante' ">
                         <td>{{prod.prod}}</td>
-                        <td> <span editable-text="prod.del">{{prod.del}}</span></td>
-                        <td> <span editable-text="prod.dev">{{prod.dev}}</span></td>
+                        <td> <span editable-number="prod.del">{{prod.del}}</span></td>
+                        <td> <span editable-number="prod.dev">{{prod.dev}}</span></td>
                         <td> <span>{{prod.del - prod.dev}}</span></td>
                     </tr>
                     <tr style="font-weight: bold">
@@ -122,8 +122,8 @@
                     </tr>
                     <tr ng-repeat="prod in prod_list | filter:prod.tipo='Detonadores eléctricos y electrónicos' ">
                         <td>{{prod.prod}}</td>
-                        <td> <span editable-text="prod.del">{{prod.del}}</span></td>
-                        <td> <span editable-text="prod.dev">{{prod.dev}}</span></td>
+                        <td> <span editable-number="prod.del">{{prod.del}}</span></td>
+                        <td> <span editable-number="prod.dev">{{prod.dev}}</span></td>
                         <td> <span>{{prod.del - prod.dev}}</span></td>
                     </tr>
                     <tr style="font-weight: bold">
@@ -133,8 +133,8 @@
                     </tr>
                     <tr ng-repeat="prod in prod_list | filter:prod.tipo='Otros' ">
                         <td>{{prod.prod}}</td>
-                        <td> <span editable-text="prod.del">{{prod.del}}</span></td>
-                        <td> <span editable-text="prod.dev">{{prod.dev}}</span></td>
+                        <td> <span editable-number="prod.del">{{prod.del}}</span></td>
+                        <td> <span editable-number="prod.dev">{{prod.dev}}</span></td>
                         <td> <span>{{prod.del - prod.dev}}</span></td>
                     </tr>
                 </table>

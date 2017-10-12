@@ -44,7 +44,7 @@
                     <div class="col">
                         <strong>Avance: </strong>{{countUpdatedBarras()}}/{{Barrenos.length}}
                     </div>
-                    <div class="col">
+                    <!--div class="col">
                         <strong>Total de KG: </strong> {{Pe}}
                     </div>
                     <div class="col">
@@ -318,8 +318,11 @@
             <button id="editarVoladuraMapa-button31" ng-click="updateSelectedNewBarr(selectedBarreno,newBarrnam)" style="border-radius:50px 50px 50px 50px;" class="button button-positive button-block icon-left ion-android-checkmark-circle">Agregar Barreno</button>
         </div>
 
+
         <form ng-show="enableResults" class="list">
-            <table class="table table-bordered table-hover table-condensed">
+            <button id="editarVoladuraMapa-button34" ng-click="hideCalcs=true" ng-hide="hideCalcs" style="border-radius:50px 50px 50px 50px;" class="button button-positive button-block icon-right ion-android-arrow-dropdown-circle">Mostrar Resultados</button>
+            <button id="editarVoladuraMapa-button34" ng-click="hideCalcs=false" ng-show="hideCalcs" style="border-radius:50px 50px 50px 50px;" class="button button-positive button-block icon-right ion-android-arrow-dropup-circle">Ocultar Resultados</button>
+            <table class="table table-bordered table-hover table-condensed" ng-show="hideCalcs">
                 <tr>
                     <td>Valor</td>
                     <td>Resultados</td>
